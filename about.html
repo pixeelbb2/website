@@ -5,8 +5,9 @@
   Standard subpage: shared terminal skin (style.css) + the fake-[X]
   power-cut gag (shutdown.js). No boot sequence here — that only plays
   on the homepage and drops you straight onto this page.
-  Content: bio paragraphs + a SYSTEM SPECS table. Most spec answers
-  are 'X' on purpose; fill in real values whenever you feel like it.
+  Content: bio + SYSTEM SPECS table on the left, SONG OF THE WEEK
+  spinning vinyl on the right (art always comes from cover.jpg —
+  swap that file + edit the title/artist lines to change the song).
   =============================================================================
 -->
 <html lang="en">
@@ -61,6 +62,90 @@
     /* Wider key column than the other spec tables */
     .stat-table td.k {
       width: 38%;
+    }
+
+    /* Right column: song of the week (narrower than the bio) */
+    .about-side {
+      width: 26%;
+      border-left: 1px solid var(--line-purple);
+    }
+
+    /* Spinning vinyl: grooved black disc with the song cover as its
+       center label. Art always loads from cover.jpg, so changing the
+       song is just replacing that file (same name) plus the
+       title/artist lines below. */
+    .vinyl {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 4px auto;
+      border-radius: 50%;
+      background: repeating-radial-gradient(circle at 50% 50%, #0a0a0a 0 2px, #1c1c1c 2px 4px);
+      border: 1px solid var(--neon-purple);
+      box-shadow: 0 0 16px rgba(157, 0, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: vinylSpin 4s linear infinite;
+    }
+
+    @keyframes vinylSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Spindle hole: dead-center, so the spin is invisible on it */
+    .vinyl::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      margin: -4px 0 0 -4px;
+      border-radius: 50%;
+      background: var(--panel-darker);
+      border: 1px solid var(--neon-purple);
+    }
+
+    /* Center label: the song cover, cropped to a circle */
+    .vinyl-cover {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* Song button: same guts as the homepage buttons */
+    .song-btn {
+      display: inline-block;
+      background: var(--grad-a);
+      border: 1px solid var(--neon-purple);
+      color: var(--link-purple) !important;
+      font-size: 11px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      padding: 8px 14px;
+      margin-top: 8px;
+      text-decoration: none !important;
+      text-shadow: 0 0 8px var(--glow-purple);
+    }
+
+    .song-btn:hover {
+      background: var(--neon-purple);
+      color: var(--panel-black) !important;
+      text-shadow: none;
+      box-shadow: 0 0 20px var(--glow-violet-bright);
+    }
+
+
+    @media (max-width: 700px) {
+      .about-table td {
+        display: block;
+        width: 100%;
+        border: 0;
+      }
     }
   </style>
 </head>
@@ -135,6 +220,22 @@
                   <td>X</td>
                 </tr>
               </table>
+            </div>
+          </td>
+          <td class="about-side">
+            <div class="box">
+              <div class="box-title" style="text-align:center; font-size:11px; letter-spacing:1px; white-space:nowrap;">&gt; SONG OF THE WEEK &lt;</div>
+              <div class="box-body" style="text-align:center;">
+                <div class="vinyl" title="Oh My God — The Pretty Reckless">
+                  <img class="vinyl-cover" src="cover.jpg" alt="song cover">
+                </div>
+                <p style="margin-top:8px;"><b>OH MY GOD</b><br>
+                  <font size="2">THE PRETTY RECKLESS</font>
+                </p>
+                <hr class="rainbow-hr" style="margin-bottom:2px;">
+                <a href="https://www.youtube.com/watch?v=ldaYUkyDxx0" target="_blank" rel="noopener"
+                  class="song-btn">GO CHECK THAT OUT</a>
+              </div>
             </div>
           </td>
         </tr>
