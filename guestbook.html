@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<!--
+  =============================================================================
+  GUESTBOOK — PixeelBB2
+  Same terminal skin as the rest of the site.
+  Entries are stored in the visitor's own browser (localStorage), so the book
+  works instantly with zero backend. Real shared entries need a service like
+  comment-widget / neocities comments later — ask me when you want that!
+  =============================================================================
+-->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GUESTBOOK :: PIXEELBB2</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Inter:wght@300;400;600&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Shared terminal skin lives in style.css — page-specific rules below. */
+
+    .gb-wrap {
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .section h2 {
+      font-weight: normal;
+      font-size: 16px;
+      letter-spacing: 2px;
+      color: var(--card-purple-text);
+      text-shadow: 0 0 10px rgba(178, 44, 255, 0.95);
+      margin: 14px 0 6px 0;
+    }
+
+    .section h2:first-child {
+      margin-top: 0;
+    }
+
+    .section p {
+      margin: 6px 0;
+    }
+
+    .box {
+      background: #000;
+      border: 1px solid var(--neon-purple);
+      box-shadow: inset 0 0 24px rgba(157, 0, 255, 0.12), 0 0 16px rgba(157, 0, 255, 0.18);
+      margin-bottom: 12px;
+    }
+
+    .box-title {
+      background: linear-gradient(to right, #1a0033, #4c007a);
+      color: #e0aaff;
+      font-size: 12px;
+      padding: 4px 8px;
+      letter-spacing: 2px;
+      border-bottom: 1px solid var(--neon-purple);
+      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
+    }
+
+    .box-body {
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #e0aaff;
+      margin: 8px 0 4px 0;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      background: #050308;
+      border: 1px solid var(--neon-purple);
+      color: #e0aaff;
+      font-family: var(--font-stack);
+      font-size: 13px;
+      letter-spacing: 1px;
+      padding: 7px 9px;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      box-shadow: 0 0 14px rgba(157, 0, 255, 0.6);
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    button {
+      background: #1a0033;
+      border: 1px solid var(--neon-purple);
+      color: #e0aaff;
+      font-family: var(--font-stack);
+      font-size: 13px;
+      letter-spacing: 2px;
+      padding: 8px 18px;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #9d00ff;
+      color: #000;
+      box-shadow: 0 0 20px rgba(157, 0, 255, 0.9);
+    }
+
+    .entry {
+      margin-bottom: 10px;
+    }
+
+    .box-title .del {
+      float: right;
+      color: #ff1818 !important;
+      text-shadow: 0 0 8px rgba(255, 24, 24, 0.8);
+      text-decoration: none !important;
+    }
+
+    .entry .who {
+      color: #fff;
+      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
+    }
+
+    .entry .when {
+      font-size: 11px;
+      color: #9d4edd;
+    }
+
+    .entry .msg {
+      margin-top: 4px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .empty-note {
+      text-align: center;
+      padding: 14px;
+      color: #9d4edd;
+    }
+
+    /* (shared dividers live in style.css) */
+
+    .vintage-footer {
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: 1px;
+      padding: 12px 10px;
+      border-top: 1px solid var(--neon-purple);
+      color: #d9a7ff;
+    }
+
+    .webring {
+      border: 1px solid var(--neon-purple);
+      box-shadow: 0 0 14px rgba(157, 0, 255, 0.25);
+      padding: 8px 6px;
+      font-size: 12px;
+      margin: 8px auto;
+      max-width: 440px;
+      background: #0a0612;
+    }
+
+    @media (max-width: 700px) {
+      .banner h1 {
+        font-size: 32px;
+        letter-spacing: 3px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main id="realWebsite">
+    <div class="vintage-page">
+      <div class="title-bar">
+        <span>&gt; SIGN OR PERISH :: PIXEELBB2 &lt;</span>
+        <span class="x-btn">X</span>
+      </div>
+
+      <div class="banner">
+        <h1>~ GUESTBOOK ~</h1>
+        <div class="subtitle">&gt; prove you were here &lt;</div>
+      </div>
+
+      <div class="marquee-bar">
+        <marquee behavior="scroll" direction="left" scrollamount="5">+++ QUIET BOOK +++ INK LOADING +++ STAY TUNED +++</marquee>
+      </div>
+
+      <div class="vintage-nav">
+        <a href="index.html">[ HOME ]</a><a href="chat.html">[ CHAT ]</a><a href="about.html">[ ABOUT ME ]</a><a
+          href="games.html">[ GAMES ]</a><a href="homelab.html">[ HOMELAB ]</a><a href="links.html">[ LINKS ]</a><a
+          href="guestbook.html" class="active">[
+          GUESTBOOK ]</a>
+      </div>
+
+      <div class="section" style="text-align:center; padding:34px 12px;">
+        <h2 style="font-size:34px; letter-spacing:6px;">SOON_</h2>
+        <p>THE INK IS DRY... FOR NOW.</p>
+        <hr class="thin-hr">
+        <center><a href="index.html">← BACK TO HOMEPAGE</a></center>
+      </div>
+
+      <div class="vintage-footer">
+        <font size="2">(c) 2005-2026 PixeelBB2. NO RIGHTS RESERVED. STEAL WHATEVER YOU WANT.</font><br>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:11px;color:#d9a7ff;margin-top:10px;position:relative;z-index:2;">&gt;
+      ink runs dry soon &lt;</div>
+    <div id="killLine"></div>
+    <div id="killDot"></div>
+    <div id="shutOverlay">
+      <div class="shut-msg">AND NOW WHAT?<br><span class="shut-sub">...PROBABLY NOTHING BUT WE NEVER KNOW.</span><br><a
+          href="#" class="shut-reopen" id="shutReopen">[ CLICK TO REOPEN ]</a></div>
+    </div>
+  </main>
+
+  <!--
+    =====================================================================
+    REAL SHARED GUESTBOOK SETUP (owner: read this, ~10 min, free):
+    1. supabase.com → New project (free tier) → wait for it to boot.
+    2. SQL Editor → New query → paste this and RUN:
+         create table guestbook (
+           id bigint generated always as identity primary key,
+           name text not null,
+           msg text not null,
+           created_at timestamptz default now()
+         );
+         alter table guestbook enable row level security;
+         create policy "read all" on guestbook for select using (true);
+         create policy "insert all" on guestbook for insert with check (true);
+         alter publication supabase_realtime add table guestbook;
+    3. Project Settings → API → copy the URL + anon key into CONFIG below.
+    4. Moderate weird posts (delete for EVERYONE) in the Supabase
+       dashboard → Table Editor → delete the row. Instant everywhere.
+    Until the keys are pasted, the book runs in LOCAL mode (this browser
+    only) so the page never looks broken.
+    =====================================================================
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    (function () {
+      try {
+        var d = document.getElementById('lastUpdated');
+        if (d) d.textContent = new Date().toLocaleDateString();
+      } catch (e) { }
+
+      // Guestbook shelved for now — SOON. (Kept intact below for resurrection.)
+      if (!document.getElementById('gbSign')) return;
+      // ===== CONFIG: paste your Supabase URL + anon key here =====
+      var SUPABASE_URL = 'PASTE_SUPABASE_URL_HERE';
+      var SUPABASE_ANON_KEY = 'PASTE_SUPABASE_ANON_KEY_HERE';
+      var CLOUD = SUPABASE_URL.indexOf('PASTE') !== 0 &&
+        SUPABASE_ANON_KEY.indexOf('PASTE') !== 0 &&
+        typeof supabase !== 'undefined';
+      var db = CLOUD ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+      // Guestbook: SHARED cloud table when configured, LOCAL fallback else.
+      // (Local mode = each browser keeps its own copy; cloud = everyone
+      // shares one book, moderated from the Supabase dashboard.)
+      var KEY = 'pixeel_guestbook';
+      var list = document.getElementById('gbList');
+      var count = document.getElementById('gbCount');
+      var entries = [];
+
+      function esc(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+      function load() {
+        try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+        catch (e) { return []; }
+      }
+      function save(rows) {
+        try { localStorage.setItem(KEY, JSON.stringify(rows)); } catch (e) { }
+      }
+      function fmtWhen(row) {
+        try {
+          if (row.created_at) return new Date(row.created_at).toLocaleString();
+        } catch (e) { }
+        return row.when || '';
+      }
+      function render() {
+        count.textContent = entries.length;
+        if (!entries.length) {
+          list.innerHTML = '<div class="box"><div class="box-body empty-note">NO ENTRIES YET — BE THE FIRST LEGEND TO SIGN!</div></div>';
+          return;
+        }
+        list.innerHTML = entries.map(function (e, i) {
+          // No [X] in cloud mode: deletes happen in the Supabase dashboard
+          var del = CLOUD ? '' : ' <a href="#" class="del" data-i="' + i + '" title="delete this entry">[X]</a>';
+          return '<div class="box entry"><div class="box-title">&gt; ' + esc(e.name) + ' &lt;' + del + '</div>' +
+            '<div class="box-body"><span class="when">' + esc(fmtWhen(e)) + '</span>' +
+            '<div class="msg">' + esc(e.msg) + '</div></div></div>';
+        }).reverse().join('');
+      }
+      function refreshLocal() {
+        entries = load();
+        render();
+      }
+      function refreshCloud() {
+        if (!db) return;
+        db.from('guestbook').select('*').order('id', { ascending: false }).limit(100)
+          .then(function (res) {
+            if (res.error) return;
+            // render() expects oldest-first and flips to newest-first itself
+            entries = (res.data || []).slice().reverse();
+            render();
+          });
+      }
+      // Owner tools (local mode only; cloud is moderated via dashboard)
+      list.addEventListener('click', function (ev) {
+        if (CLOUD) return;
+        var a = ev.target.closest ? ev.target.closest('a.del') : null;
+        if (!a) return;
+        ev.preventDefault();
+        var rows = load();
+        rows.splice(parseInt(a.getAttribute('data-i'), 10), 1);
+        save(rows);
+        refreshLocal();
+      });
+      document.getElementById('gbPurge').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (CLOUD) return;
+        if (confirm('PURGE EVERY ENTRY? THIS CANNOT BE UNDONE.')) {
+          save([]);
+          refreshLocal();
+        }
+      });
+      document.getElementById('gbSign').addEventListener('click', function () {
+        var nameEl = document.getElementById('gbName');
+        var msgEl = document.getElementById('gbMsg');
+        var name = nameEl.value.trim() || 'ANON';
+        var msg = msgEl.value.trim();
+        if (!msg) { msgEl.focus(); return; }
+        var cleanName = name.toUpperCase().slice(0, 30);
+        // Signing adopts this machine: the boot loader will greet you by it
+        try { localStorage.setItem('pixeel_nick', cleanName.slice(0, 20)); } catch (e) { }
+        if (CLOUD) {
+          db.from('guestbook').insert({ name: cleanName, msg: msg.slice(0, 500) })
+            .then(function () { refreshCloud(); });
+        } else {
+          var rows = load();
+          rows.push({ name: cleanName, msg: msg.slice(0, 500), when: new Date().toLocaleString() });
+          save(rows);
+          refreshLocal();
+        }
+        nameEl.value = '';
+        msgEl.value = '';
+      });
+      if (CLOUD) {
+        document.getElementById('gbPurge').style.display = 'none';
+        refreshCloud();
+        // Live: new/deleted entries appear (and vanish) instantly
+        db.channel('guestbook-live')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'guestbook' }, function () { refreshCloud(); })
+          .subscribe();
+      } else {
+        refreshLocal();
+      }
+    })();
+  </script>
+
+  <script>
+    // Fake X button: yanked plug — wobble, flash line, dot, dark + snap/zap/thump.
+    (function () {
+      var page = document.querySelector('.vintage-page');
+      var overlay = document.getElementById('shutOverlay');
+      var line = document.getElementById('killLine');
+      var dot = document.getElementById('killDot');
+      var btn = document.querySelector('.title-bar .x-btn');
+      var reopen = document.getElementById('shutReopen');
+      if (!page || !overlay || !btn) return;
+      function playUnplug() {
+        try {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          var ctx = new AC();
+          var t = ctx.currentTime;
+          // 1. HV static snap: short filtered noise burst
+          var len = Math.floor(ctx.sampleRate * 0.09);
+          var buf = ctx.createBuffer(1, len, ctx.sampleRate);
+          var d = buf.getChannelData(0);
+          for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+          var noise = ctx.createBufferSource();
+          noise.buffer = buf;
+          var hp = ctx.createBiquadFilter();
+          hp.type = 'highpass';
+          hp.frequency.value = 1200;
+          var ng = ctx.createGain();
+          ng.gain.setValueAtTime(0.5, t);
+          ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
+          noise.connect(hp);
+          hp.connect(ng);
+          ng.connect(ctx.destination);
+          noise.start(t);
+          // 2. collapsing-picture whine: 2600 -> 70 Hz
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(2600, t + 0.02);
+          osc.frequency.exponentialRampToValueAtTime(70, t + 0.38);
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.exponentialRampToValueAtTime(0.14, t + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.42);
+          // 3. glass thump as the dot dies
+          var th = ctx.createOscillator();
+          var tg = ctx.createGain();
+          th.type = 'sine';
+          th.frequency.setValueAtTime(160, t + 0.34);
+          th.frequency.exponentialRampToValueAtTime(45, t + 0.5);
+          tg.gain.setValueAtTime(0.0001, t + 0.34);
+          tg.gain.exponentialRampToValueAtTime(0.25, t + 0.37);
+          tg.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+          th.connect(tg);
+          tg.connect(ctx.destination);
+          th.start(t + 0.34);
+          th.stop(t + 0.6);
+          setTimeout(function () { try { ctx.close(); } catch (e) { } }, 800);
+        } catch (e) { }
+      }
+      btn.addEventListener('click', function () {
+        playUnplug();
+        // Collapse around the middle of the SCREEN (where the light lives),
+        // not the middle of the (much taller) page.
+        try {
+          var r = page.getBoundingClientRect();
+          var yPct = ((window.innerHeight / 2 - r.top) / r.height) * 100;
+          yPct = Math.max(0, Math.min(100, yPct));
+          page.style.transformOrigin = '50% ' + yPct + '%';
+        } catch (e) { }
+        page.classList.add('kill-wobble');
+        setTimeout(function () {
+          page.classList.remove('kill-wobble');
+          page.classList.add('kill-line');
+          if (line) line.classList.add('on');
+        }, 140);
+        setTimeout(function () {
+          if (line) line.classList.remove('on');
+          page.classList.add('kill-dot');
+          if (dot) dot.classList.add('on');
+        }, 320);
+        setTimeout(function () { overlay.classList.add('show'); }, 560);
+      });
+      if (reopen) reopen.addEventListener('click', function (e) {
+        e.preventDefault();
+        overlay.classList.remove('show');
+        if (line) line.classList.remove('on');
+        if (dot) dot.classList.remove('on');
+        page.classList.remove('kill-dot');
+        page.classList.remove('kill-line');
+        page.classList.remove('kill-wobble');
+        page.style.transformOrigin = '';
+        window.scrollTo(0, 0);
+      });
+    })();
+  </script>
+</body>
+
+</html>
