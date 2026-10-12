@@ -40,18 +40,18 @@ API — there are zero audio files to host.
 | `style.css` | The one and only stylesheet — theme + layout for every page. Fully documented at the top, including how to restyle via CSS variables. |
 | `shutdown.js` | The fake `[X]` power-cut gag (wobble → bright line → dying dot → black screen). Loaded by every page. Documented at the top. |
 | `pixeelbb2-button.png` | 88×31 web-button, also embedded in the homepage LINKS box. |
-| `cover.jpg` | Current "Song of the Week" cover art — the round label in the middle of the about-page vinyl. |
+| `cover.png` | Current "Song of the Week" cover art — the round label in the middle of the about-page vinyl. |
 
 ## Song of the Week (about page)
 
-The about page spins a vinyl whose center label is `cover.jpg`. To change the
+The about page spins a vinyl whose center label is `cover.png`. To change the
 song:
 
-1. Rename the new cover to `cover.jpg` and delete the old one (or just upload
-   `cover.jpg` over it — same filename keeps the code untouched).
+1. Rename the new cover to `cover.png` and delete the old one (or just upload
+   `cover.png` over it — same filename keeps the code untouched).
 2. Update the song/artist title in the `> SONG OF THE WEEK <` block and/or the
    YouTube link on the `GO CHECK THAT OUT` button (spot on line `about.html`).
-3. Re-upload `about.html` + `cover.jpg` (see Deploying) and hard-refresh —
+3. Re-upload `about.html` + `cover.png` (see Deploying) and hard-refresh —
    image caching means the new cover may need `Cmd/Ctrl+Shift+R`.
 
 ## Theming
@@ -119,7 +119,7 @@ curl -H "Authorization: Bearer YOUR_API_KEY" -X POST https://neocities.org/api/u
   -F "index.html=@index.html" -F "style.css=@style.css" -F "shutdown.js=@shutdown.js" \
   -F "about.html=@about.html" -F "chat.html=@chat.html" -F "projects.html=@projects.html" \
   -F "links.html=@links.html" -F "guestbook.html=@guestbook.html" \
-  -F "cover.jpg=@cover.jpg" -F "pixeelbb2-button.png=@pixeelbb2-button.png"
+  -F "cover.png=@cover.png" -F "pixeelbb2-button.png=@pixeelbb2-button.png"
 
 # GitHub
 git add -A && git commit -m "update" && git push origin main
@@ -127,5 +127,3 @@ git add -A && git commit -m "update" && git push origin main
 
 After uploading, hard-refresh (`Cmd/Ctrl+Shift+R` / `Ctrl+F5`) — Neocities and
 browsers cache aggressively.
-
-This README was AI-generated, I'll rewrite it when I feel like it.
