@@ -113,3 +113,5 @@ git add -A && git commit -m "update" && git push origin main
 
 After uploading, hard-refresh (`Cmd/Ctrl+Shift+R` / `Ctrl+F5`) — Neocities and
 browsers cache aggressively.
+
+This README was AI-generated, I'll rewrite it when I feel like it.
