@@ -1,9 +1,9 @@
 # PIXEELBB2
 
-A retro CRT/terminal personal website — a phosphor-purple,
-old-web corner hosted on [Neocities](https://pixeel.neocities.org).
+A retro CRT/terminal personal website — a phosphor-purple, ULTRAKILL-flavored
+old-web corner hosted on [Neocities](https://pixeelbb2-node.neocities.org).
 
-**Live site:** <https://pixeel.neocities.org>
+**Live site:** <https://pixeelbb2-node.neocities.org>
 **Code:** <https://github.com/pixeelbb2/website>
 
 ---
@@ -13,6 +13,8 @@ old-web corner hosted on [Neocities](https://pixeel.neocities.org).
 The homepage boots up like a CRT monitor: synthesized keyboard clacks chime in
 while the machine types out its specs, a loading track fills, a neon purple beam
 rips past the screen's right edge, and the overlay dissolves into the real site.
+Underneath it greets you with a long welcome story about this "corner of the
+World Wide Web" and how the whole mess started with one late-night YouTube video.
 Every other page shares the same terminal skin — a black window with a gradient
 title bar and a fake `[X]` button that yanks the plug when you click it.
 
@@ -27,8 +29,7 @@ API — there are zero audio files to host.
 | Home | `index.html` | Only page with the boot sequence + visitor card |
 | About me | `about.html` | Bio + SYSTEM SPECS table |
 | Chat | `chat.html` | SOON_ placeholder |
-| Games | `games.html` | SOON_ placeholder |
-| Homelab | `homelab.html` | SOON_ placeholder (`log-entry` styles ready) |
+| Projects | `projects.html` | SOON_ placeholder — will fold in the old games + homelab content |
 | Links | `links.html` | SOON_ placeholder (`link-row` styles ready) |
 | Guestbook | `guestbook.html` | SOON_ placeholder (guestbook script kept intact) |
 
@@ -103,8 +104,8 @@ Everything that runs is uploaded to the Neocities site root. From this folder:
 # Neocities (API key from your dashboard)
 curl -H "Authorization: Bearer YOUR_API_KEY" -X POST https://neocities.org/api/upload \
   -F "index.html=@index.html" -F "style.css=@style.css" -F "shutdown.js=@shutdown.js" \
-  -F "about.html=@about.html" -F "chat.html=@chat.html" -F "games.html=@games.html" \
-  -F "homelab.html=@homelab.html" -F "links.html=@links.html" -F "guestbook.html=@guestbook.html"
+  -F "about.html=@about.html" -F "chat.html=@chat.html" -F "projects.html=@projects.html" \
+  -F "links.html=@links.html" -F "guestbook.html=@guestbook.html"
 
 # GitHub
 git add -A && git commit -m "update" && git push origin main
