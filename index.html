@@ -1065,6 +1065,15 @@
     .cyber-mid {
       margin: 10px 0 6px;
     }
+    .cyber-note {
+      font-family: 'VT323', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #2bf872;
+      text-shadow: 0 0 6px rgba(43, 248, 114, 0.7);
+      margin-top: 8px;
+      white-space: nowrap;
+    }
 
     .cyber-box {
       background: transparent;
@@ -1187,24 +1196,15 @@
             <div class="box">
               <div class="box-title">&gt; NAVIGATOR &lt;</div>
               <div class="box-body">
-                <img src="https://via.placeholder.com/120x90/1a0033/e0aaff?text=ME!" alt="me" width="100%"
-                  style="border:1px solid #9d00ff;"><br>
                 <b>Name:</b> PixeelBB2<br>
-                <b>Age:</b> ???<br>
+                <b>Age:</b> 21<br>
                 <b>Mood:</b> nostalgic<br>
-                <b>Now Playing:</b><br>
-                <i>MIDI - ULTRAKILL.mid ♫</i>
-                <hr class="thin-hr">
-                <a href="about.html">&gt; about me</a><br>
-                <a href="#">&gt; my shrine</a><br>
-                <a href="#">&gt; diary</a>
               </div>
             </div>
             <div class="box">
               <div class="box-title">&gt; STATUS &lt;</div>
               <div class="box-body">
                 <span class="blink">● ONLINE!</span><br>
-                Feeling: <b>creative</b><br>
                 <hr class="thin-hr">
                 Current objective:<br>
                 <font color="#ff1818"><b>HAVE FUN :]</b></font>
@@ -1216,32 +1216,8 @@
             <div class="center-welcome">
               <h2>Hello World!</h2>
               <hr class="rainbow-hr">
-              <p>Hi hi!! I'm <b>PixeelBB2</b> and this is my little homepage on the <b>world wide web</b>!! Thanks for
-                stopping by, make yourself at home~ (´･ω･`)</p>
-              <p>Here you will find my games, my art, my thoughts, and lots of blinking things. This site is <span
-                  class="blink">UNDER CONSTRUCTION</span> forever, so check back soon!!</p>
-              <center>
-                <img src="https://via.placeholder.com/400x20/1a0033/b22cff?text=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-                  alt="divider" class="badge" width="90%"><br>
-                <font size="2">-- please sign my guestbook before you leave!! --</font><br>
-                <a class="sign-guestbook" href="#">✎ SIGN MY GUESTBOOK ✎</a>
-              </center>
-              <hr class="rainbow-hr">
-              <div class="update-log">
-                <b><u>~ UPDATES ~</u></b><br><br>
-                <b>09/28/2026</b> - <b class="new">NEW!</b> site re-skinned to match the boot terminal!! all phosphor
-                now!!<br>
-                <b>09/20/2026</b> - added ULTRAKILL boot screen. MACHINE ID: 2137.<br>
-                <b>09/01/2026</b> - hello world!! first page uploaded via Neocities!!
-              </div>
+              <p>still under construction</p>
             </div>
-            <center style="margin-top:10px;font-size:13px;">
-              <img src="https://via.placeholder.com/88x31/1a0033/e0aaff?text=NOTEPAD" alt="made with notepad"
-                class="badge">
-              <img src="https://via.placeholder.com/88x31/ff1818/000000?text=NEW!!!" alt="new" class="badge">
-              <img src="https://via.placeholder.com/88x31/0a0612/33ff66?text=CRT+60HZ" alt="crt" class="badge"><br>
-              <font size="1">BEST VIEWED ON A CATHODIC TUBE :: 800X600 :: 60HZ</font>
-            </center>
           </td>
 
           <td class="col-right">
@@ -1251,6 +1227,7 @@
               <div class="cyber-box" id="myBox"></div>
               <div class="cyber-mid">TOTAL VISITS:</div>
               <div class="cyber-box" id="totalBox"></div>
+              <div class="cyber-note">it dont work properly yet</div>
             </div>
             <div class="box" style="margin-top:10px;">
               <div class="box-title">&gt; LINKS &lt;</div>
@@ -1266,6 +1243,7 @@
                   style="margin-top:4px;">
               </div>
             </div>
+            <!-- POLL shelved for later — uncomment to bring it back:
             <div class="box">
               <div class="box-title">&gt; POLL &lt;</div>
               <div class="box-body">
@@ -1277,6 +1255,7 @@
                 <center><button style="margin-top:4px;">VOTE!</button></center>
               </div>
             </div>
+            -->
           </td>
         </tr>
       </table>
@@ -1405,7 +1384,7 @@
       function showTotal(n) { totalBox.set(n); }
 
       function localFlow() {
-        var n = parseInt(lsGet(KEY) || '1336', 10) || 1336;
+        var n = parseInt(lsGet(KEY) || '0', 10) || 0;
         var my = parseInt(lsGet(MY) || '', 10) || 0;
         if (!my) {
           n += 1;
