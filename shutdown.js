@@ -1,5 +1,36 @@
-// Fake X button: yanked plug — wobble, flash line, dot, dark + snap/zap/thump.
-// Shared by every page (previously copy-pasted into each file).
+/*
+  shutdown.js — the fake [X] button (POWER-CUT gag)
+  =====================================================================
+  Shared by every page (it used to be copy-pasted into each file).
+
+  WHAT HAPPENS
+  Clicking [X] in the title bar:
+    1. AUDIO   an HV static snap -> collapsing-picture whine (2600->70Hz)
+               -> glass thump, all synthesized live with the Web Audio
+               API. No audio files to host.
+    2. VISION  the window wobbles (.kill-wobble), collapses into a
+               bright horizontal line (#killLine), then into a glowing
+               dot that dies (#killDot), then the screen goes black.
+    3. REPLY   #shutOverlay fades in with "AND NOW WHAT?" and a
+               "[ CLICK TO REOPEN ]" link that restores the page.
+
+  TIMELINE (milliseconds from the click)
+    0   wobble starts + sound
+  140   wobble off, window -> thin line, #killLine on
+  320   #killLine off, window -> dot, #killDot on
+  560   #shutOverlay shows
+
+  REQUIRED MARKUP (every page ships this)
+    .vintage-page            the window that gets "killed"
+    .title-bar .x-btn        the button this binds to
+    #killLine / #killDot     collapsing-light FX (optional; safe to omit)
+    #shutOverlay             "AND NOW WHAT?" overlay (optional)
+    #shutReopen              "reopen" link inside the overlay (optional)
+
+  Self-guarding: if the window or button is missing the script simply
+  does nothing, so it is safe to include on any future page.
+  =====================================================================
+*/
 (function () {
   var page = document.querySelector('.vintage-page');
   var overlay = document.getElementById('shutOverlay');

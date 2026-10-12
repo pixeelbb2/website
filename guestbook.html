@@ -2,10 +2,12 @@
 <!--
   =============================================================================
   GUESTBOOK — PixeelBB2
-  Same terminal skin as the rest of the site.
-  Entries are stored in the visitor's own browser (localStorage), so the book
-  works instantly with zero backend. Real shared entries need a service like
-  comment-widget / neocities comments later — ask me when you want that!
+  Standard subpage: shared terminal skin (style.css) + the fake-[X]
+  power-cut gag (shutdown.js). Currently shown as a SOON_ placeholder.
+  When it goes live: entries store in the visitor's own browser
+  (localStorage) so the book works instantly with zero backend; paste
+  the Supabase keys into CONFIG below to make it a truly shared,
+  realtime book. See the big setup comment before that script.
   =============================================================================
 -->
 <html lang="en">
@@ -140,6 +142,7 @@
           href="guestbook.html" class="active">[ GUESTBOOK ]</a>
       </div>
 
+      <!-- SOON_ placeholder: swap this block for the live guestbook form -->
       <div class="section" style="text-align:center; padding:34px 12px;">
         <h2 style="font-size:34px; letter-spacing:6px;">SOON_</h2>
         <p>THE INK IS DRY... FOR NOW.</p>

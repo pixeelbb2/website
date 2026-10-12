@@ -1,4 +1,28 @@
 <!DOCTYPE html>
+<!--
+  =============================================================================
+  INDEX / HOMEPAGE — PixeelBB2
+  The ONLY page with a BOOT SEQUENCE. On load, a CRT power-on animation
+  plays: it types out MACHINE ID / LOCATION / OBJECTIVE with synthesized
+  keystroke sounds, fills a loading track, then the purple beam blows
+  past the screen's right edge and the overlay dissolves into the real
+  site. One boot per tab — see `pixeel_booted` (sessionStorage) below.
+
+  VISITOR CARD (right-hand column)
+    #myBox     your personal number, assigned ONCE and frozen forever
+    #totalBox  the global visit count (only first-ever visits bump it)
+  Both run on a per-browser LOCAL fallback until Supabase keys are
+  pasted in CONFIG below — see the setup comment above that script.
+
+  Also on this page: the X-button power-cut gag (shutdown.js) and the
+  "ONLYFANS" rickroll gate (#rickOverlay).
+
+  STRUCTURE
+    <head>      skin + homepage-only CSS (boot overlay, widgets)
+    <main>      the real website under the boot screen (widgets/boxes)
+    3 scripts   visitor counter · boot sequence · onlyfans gate
+  =============================================================================
+-->
 <html lang="en">
 
 <head>
@@ -867,7 +891,6 @@
   <!--
     =============================================================================
     1. THE REAL WEBSITE (Underneath the boot screen)
-       Add your real HTML layout, headers, blog posts, or gallery here!
     =============================================================================
   -->
   <main id="realWebsite">
@@ -884,7 +907,8 @@
       </div>
 
       <div class="marquee-bar">
-        <marquee behavior="scroll" direction="left" scrollamount="5">+++ WELCOME TO MY HOMEPAGE +++ THANKS FOR VISITING +++ SIGN MY GUESTBOOK +++ UNDER CONSTRUCTION +++ TURN ON YOUR MIDI +++ HAVE FUN !!! +++</marquee>
+        <marquee behavior="scroll" direction="left" scrollamount="5">+++ WELCOME TO MY HOMEPAGE +++ THANKS FOR VISITING
+          +++ SIGN MY GUESTBOOK +++ UNDER CONSTRUCTION +++ TURN ON YOUR MIDI +++ HAVE FUN !!! +++</marquee>
       </div>
 
       <div class="vintage-nav">
@@ -964,7 +988,8 @@
       </table>
 
       <div class="vintage-footer">
-        <font size="2">(c) 2005-2026 PixeelBB2. Steal the code and the style — but not the name. The name stays mine.</font><br>
+        <font size="2">(c) 2005-2026 PixeelBB2. Steal the code and the style — but not the name. The name stays mine.
+        </font><br>
       </div>
     </div>
     <div style="text-align:center;font-size:11px;color:#d9a7ff;margin-top:10px;position:relative;z-index:2;">&gt; Thanks
@@ -1192,9 +1217,24 @@
   <script>
     /*
       =========================================================================
+      BOOT SEQUENCE SCRIPT (index.html only)
+      Drives the CRT power-on seen at the top of the page:
+        1. seed no-select audio, locking the keyclack sounds global-side
+        2. white slit folds out -> the black terminal card expands
+        3. text types line-by-line (the values come from sequenceData)
+        4. white loading bar fills, then a neon purple beam rips past the
+           right edge of the screen
+        5. classic switch-off: flash -> thin line -> dot -> black tube
+        6. after a beat, the overlay fades out to reveal the real site
+      Boot memory: `pixeel_booted` in sessionStorage makes the boot play
+      once per tab; in-tab navigation to other pages then skips it. Your
+      guestbook nickname (localStorage `pixeel_nick`) becomes MACHINE ID.
+      =========================================================================
+    */
+
+    /*
       AUDIO SYNTHESIZER (Web Audio API)
       Creates old mechanical keyboard clacks with zero audio files.
-      =========================================================================
     */
     class RetroSoundSystem {
       constructor() {
@@ -1606,7 +1646,8 @@
   <script src="shutdown.js"></script>
 
   <script>
-    // OnlyFans gate: straight to the question, no kill sequence.
+    // OnlyFans gate: clicking the "onlyfans" link shows #rickOverlay
+    // instead of navigating. YES -> rickroll in a new tab; NO -> back.
     (function () {
       var overlay = document.getElementById('rickOverlay');
       var link = document.getElementById('onlyfansLink');

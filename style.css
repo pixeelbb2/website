@@ -1,8 +1,43 @@
 /* =====================================================================
-   PIXEELBB2 — SHARED TERMINAL SKIN
-   One file styles every page. Page-specific rules stay inline in each
-   .html file (boot sequence, tables, chat frame, guestbook form, ...).
-   Every color is themed through the custom properties in :root below.
+   PIXEELBB2 — SHARED TERMINAL SKIN  (style.css)
+   =====================================================================
+   ONE stylesheet for the whole site. Every page loads it FIRST, before
+   its own inline <style>, so page-specific rules can safely override.
+
+   THEME THE WHOLE SITE IN ONE PLACE
+   ---------------------------------
+   All colors, glows and fonts are custom properties in :root below.
+   Edit a value there and it re-colors/every page instantly:
+       --neon-purple       primary accent (borders, active nav, buttons)
+       --card-purple-text  headings + labels
+       --body-purple       body copy
+       --term-green        terminal green (text)
+       --led-green         LED green (visitor counter glow)
+       --link-purple       unvisited links
+       --link-visited      visited links
+       --red-alert         warnings + X-button hover
+       --bg-dark           html/body background
+       --panel-black/dark/darker  panel fills (blackest -> grayest)
+       --grad-a / --grad-b gradient stops for bars, titles, buttons
+       --glow-*            reusable box/text glows (mostly purple/green)
+       --font-stack        terminal font stack
+
+   FILE LAYOUT
+   -----------
+   1. @font-face            VCR OSD Mono (the main terminal font)
+   2. :root                 the palette + typography tokens
+   3. Base reset            box-sizing, margins, html/body defaults
+   4. TERMINAL SKIN         the CRT window every page is built from
+      - #realWebsite        the "tube": background, scanline + vignette
+      - .vintage-page       the black window + title bar + [X] button
+      - Shutdown FX         .kill-* states, #killLine, #killDot, #shutOverlay
+      - .banner/.marquee-bar/.vintage-nav/.vintage-footer/.webring
+   5. CONSOLIDATED PAGE COMPONENTS   panels & tables used by the subpages
+      (these used to be copy-pasted into every .html — now shared here)
+   6. Responsive rules     small screens (bottom of file)
+
+   Page-specific rules (boot sequence, tables, chat frame, guestbook
+   form, ...) intentionally stay inline in each .html file.
    ===================================================================== */
 
 @font-face {
@@ -129,6 +164,8 @@ html {
   color: var(--panel-black);
 }
 
+/* Retro-window anatomy every page reuses: a dark CRT "glass" frame
+   (.vintage-page) topped by a gradient title bar with the fake [X]. */
 .vintage-page {
   width: 820px;
   max-width: 96vw;
@@ -221,7 +258,8 @@ html {
   opacity: 0;
 }
 
-/* Fullscreen kill FX: the light itself punches through the glass */
+/* Fullscreen kill FX: the light itself punches through the glass.
+   Only shown while the fake [X] shutdown plays (see shutdown.js). */
 #killLine {
   position: fixed;
   left: -2vw;
