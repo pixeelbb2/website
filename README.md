@@ -112,8 +112,3 @@ git add -A && git commit -m "update" && git push origin main
 
 After uploading, hard-refresh (`Cmd/Ctrl+Shift+R` / `Ctrl+F5`) — Neocities and
 browsers cache aggressively.
-
-## Legal
-
-(c) 2005-2026 PixeelBB2. **Steal the code and the style — but not the name.**
-The name PixeelBB2 and the image stay mine; code and design are free to borrow.
