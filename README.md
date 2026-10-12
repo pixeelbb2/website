@@ -1,6 +1,6 @@
 # PIXEELBB2
 
-A retro CRT/terminal personal website — a phosphor-purple, ULTRAKILL-flavored
+A retro CRT/terminal personal website — a phosphor-purple,
 old-web corner hosted on [Neocities](https://pixeel.neocities.org).
 
 **Live site:** <https://pixeel.neocities.org>
