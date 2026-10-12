@@ -745,6 +745,18 @@
       color: var(--panel-black);
     }
 
+    /* Steal-my-button: lights up on hover so visitors know it's clickable */
+    #myButtonImg {
+      transition: filter 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    /* Beats #realWebsite img.badge on specificity, or the purple wins */
+    #realWebsite #myButtonImg:hover {
+      filter: brightness(1.7);
+      border-color: #fff;
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.9);
+    }
+
     #realWebsite input[type="radio"] {
       accent-color: var(--neon-purple);
     }
@@ -991,7 +1003,9 @@
                 <hr class="thin-hr">
                 <font size="2">Want to link me?<br>Steal my button:</font><br>
                 <img src="pixeelbb2-button.png" alt="my button" class="badge" width="88" height="31"
-                  style="margin-top:4px;">
+                  id="myButtonImg" title="click to copy the embed code" style="margin-top:4px; cursor:pointer;">
+                <div id="copyBtnMsg" style="display:none; margin-top:4px;"><font size="2" color="#33ff66">COPIED!
+                  </font></div>
               </div>
             </div>
             <!-- POLL shelved for later — uncomment to bring it back:
@@ -1685,6 +1699,42 @@
         e.preventDefault();
         overlay.classList.remove('show');
         window.scrollTo(0, 0);
+      });
+    })();
+  </script>
+
+  <script>
+    // "Steal my button": clicking the 88x31 itself copies the embed
+    // code and flashes a confirmation.
+    (function () {
+      var btn = document.getElementById('myButtonImg');
+      var msg = document.getElementById('copyBtnMsg');
+      if (!btn) return;
+      var code = '<a href="https://pixeelbb2-node.neocities.org/" target="_blank"><img src="https://pixeelbb2-node.neocities.org/pixeelbb2-button.png" alt="PixeelBB2"></a>';
+      function done() {
+        if (!msg) return;
+        msg.style.display = 'block';
+        setTimeout(function () { msg.style.display = 'none'; }, 2200);
+      }
+      function fallback() {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = code;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          done();
+        } catch (e) { }
+      }
+      btn.addEventListener('click', function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(done, fallback);
+        } else {
+          fallback();
+        }
       });
     })();
   </script>
