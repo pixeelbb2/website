@@ -24,50 +24,10 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* Shared terminal skin lives in style.css — page-specific rules below. */
+    /* Shared terminal skin + panels live in style.css — page-specific rules below. */
 
     .gb-wrap {
       padding: 12px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .section h2 {
-      font-weight: normal;
-      font-size: 16px;
-      letter-spacing: 2px;
-      color: var(--card-purple-text);
-      text-shadow: 0 0 10px rgba(178, 44, 255, 0.95);
-      margin: 14px 0 6px 0;
-    }
-
-    .section h2:first-child {
-      margin-top: 0;
-    }
-
-    .section p {
-      margin: 6px 0;
-    }
-
-    .box {
-      background: #000;
-      border: 1px solid var(--neon-purple);
-      box-shadow: inset 0 0 24px rgba(157, 0, 255, 0.12), 0 0 16px rgba(157, 0, 255, 0.18);
-      margin-bottom: 12px;
-    }
-
-    .box-title {
-      background: linear-gradient(to right, #1a0033, #4c007a);
-      color: #e0aaff;
-      font-size: 12px;
-      padding: 4px 8px;
-      letter-spacing: 2px;
-      border-bottom: 1px solid var(--neon-purple);
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
-    }
-
-    .box-body {
-      padding: 10px;
       font-size: 13px;
       line-height: 1.6;
     }
@@ -76,16 +36,16 @@
       display: block;
       font-size: 12px;
       letter-spacing: 2px;
-      color: #e0aaff;
+      color: var(--link-purple);
       margin: 8px 0 4px 0;
     }
 
     input[type="text"],
     textarea {
       width: 100%;
-      background: #050308;
+      background: var(--panel-darker);
       border: 1px solid var(--neon-purple);
-      color: #e0aaff;
+      color: var(--link-purple);
       font-family: var(--font-stack);
       font-size: 13px;
       letter-spacing: 1px;
@@ -104,9 +64,9 @@
     }
 
     button {
-      background: #1a0033;
+      background: var(--grad-a);
       border: 1px solid var(--neon-purple);
-      color: #e0aaff;
+      color: var(--link-purple);
       font-family: var(--font-stack);
       font-size: 13px;
       letter-spacing: 2px;
@@ -116,9 +76,9 @@
     }
 
     button:hover {
-      background: #9d00ff;
-      color: #000;
-      box-shadow: 0 0 20px rgba(157, 0, 255, 0.9);
+      background: var(--neon-purple);
+      color: var(--panel-black);
+      box-shadow: 0 0 20px var(--glow-violet-bright);
     }
 
     .entry {
@@ -133,13 +93,13 @@
     }
 
     .entry .who {
-      color: #fff;
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
+      color: var(--term-white);
+      text-shadow: 0 0 8px var(--glow-purple);
     }
 
     .entry .when {
       font-size: 11px;
-      color: #9d4edd;
+      color: var(--link-visited);
     }
 
     .entry .msg {
@@ -151,35 +111,7 @@
     .empty-note {
       text-align: center;
       padding: 14px;
-      color: #9d4edd;
-    }
-
-    /* (shared dividers live in style.css) */
-
-    .vintage-footer {
-      text-align: center;
-      font-size: 12px;
-      letter-spacing: 1px;
-      padding: 12px 10px;
-      border-top: 1px solid var(--neon-purple);
-      color: #d9a7ff;
-    }
-
-    .webring {
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 14px rgba(157, 0, 255, 0.25);
-      padding: 8px 6px;
-      font-size: 12px;
-      margin: 8px auto;
-      max-width: 440px;
-      background: #0a0612;
-    }
-
-    @media (max-width: 700px) {
-      .banner h1 {
-        font-size: 32px;
-        letter-spacing: 3px;
-      }
+      color: var(--link-visited);
     }
   </style>
 </head>
@@ -205,8 +137,7 @@
       <div class="vintage-nav">
         <a href="index.html">[ HOME ]</a><a href="chat.html">[ CHAT ]</a><a href="about.html">[ ABOUT ME ]</a><a
           href="games.html">[ GAMES ]</a><a href="homelab.html">[ HOMELAB ]</a><a href="links.html">[ LINKS ]</a><a
-          href="guestbook.html" class="active">[
-          GUESTBOOK ]</a>
+          href="guestbook.html" class="active">[ GUESTBOOK ]</a>
       </div>
 
       <div class="section" style="text-align:center; padding:34px 12px;">
@@ -254,11 +185,6 @@
 
   <script>
     (function () {
-      try {
-        var d = document.getElementById('lastUpdated');
-        if (d) d.textContent = new Date().toLocaleDateString();
-      } catch (e) { }
-
       // Guestbook shelved for now — SOON. (Kept intact below for resurrection.)
       if (!document.getElementById('gbSign')) return;
       // ===== CONFIG: paste your Supabase URL + anon key here =====
@@ -376,103 +302,7 @@
     })();
   </script>
 
-  <script>
-    // Fake X button: yanked plug — wobble, flash line, dot, dark + snap/zap/thump.
-    (function () {
-      var page = document.querySelector('.vintage-page');
-      var overlay = document.getElementById('shutOverlay');
-      var line = document.getElementById('killLine');
-      var dot = document.getElementById('killDot');
-      var btn = document.querySelector('.title-bar .x-btn');
-      var reopen = document.getElementById('shutReopen');
-      if (!page || !overlay || !btn) return;
-      function playUnplug() {
-        try {
-          var AC = window.AudioContext || window.webkitAudioContext;
-          var ctx = new AC();
-          var t = ctx.currentTime;
-          // 1. HV static snap: short filtered noise burst
-          var len = Math.floor(ctx.sampleRate * 0.09);
-          var buf = ctx.createBuffer(1, len, ctx.sampleRate);
-          var d = buf.getChannelData(0);
-          for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
-          var noise = ctx.createBufferSource();
-          noise.buffer = buf;
-          var hp = ctx.createBiquadFilter();
-          hp.type = 'highpass';
-          hp.frequency.value = 1200;
-          var ng = ctx.createGain();
-          ng.gain.setValueAtTime(0.5, t);
-          ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
-          noise.connect(hp);
-          hp.connect(ng);
-          ng.connect(ctx.destination);
-          noise.start(t);
-          // 2. collapsing-picture whine: 2600 -> 70 Hz
-          var osc = ctx.createOscillator();
-          var gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(2600, t + 0.02);
-          osc.frequency.exponentialRampToValueAtTime(70, t + 0.38);
-          gain.gain.setValueAtTime(0.0001, t);
-          gain.gain.exponentialRampToValueAtTime(0.14, t + 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.42);
-          // 3. glass thump as the dot dies
-          var th = ctx.createOscillator();
-          var tg = ctx.createGain();
-          th.type = 'sine';
-          th.frequency.setValueAtTime(160, t + 0.34);
-          th.frequency.exponentialRampToValueAtTime(45, t + 0.5);
-          tg.gain.setValueAtTime(0.0001, t + 0.34);
-          tg.gain.exponentialRampToValueAtTime(0.25, t + 0.37);
-          tg.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
-          th.connect(tg);
-          tg.connect(ctx.destination);
-          th.start(t + 0.34);
-          th.stop(t + 0.6);
-          setTimeout(function () { try { ctx.close(); } catch (e) { } }, 800);
-        } catch (e) { }
-      }
-      btn.addEventListener('click', function () {
-        playUnplug();
-        // Collapse around the middle of the SCREEN (where the light lives),
-        // not the middle of the (much taller) page.
-        try {
-          var r = page.getBoundingClientRect();
-          var yPct = ((window.innerHeight / 2 - r.top) / r.height) * 100;
-          yPct = Math.max(0, Math.min(100, yPct));
-          page.style.transformOrigin = '50% ' + yPct + '%';
-        } catch (e) { }
-        page.classList.add('kill-wobble');
-        setTimeout(function () {
-          page.classList.remove('kill-wobble');
-          page.classList.add('kill-line');
-          if (line) line.classList.add('on');
-        }, 140);
-        setTimeout(function () {
-          if (line) line.classList.remove('on');
-          page.classList.add('kill-dot');
-          if (dot) dot.classList.add('on');
-        }, 320);
-        setTimeout(function () { overlay.classList.add('show'); }, 560);
-      });
-      if (reopen) reopen.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.classList.remove('show');
-        if (line) line.classList.remove('on');
-        if (dot) dot.classList.remove('on');
-        page.classList.remove('kill-dot');
-        page.classList.remove('kill-line');
-        page.classList.remove('kill-wobble');
-        page.style.transformOrigin = '';
-        window.scrollTo(0, 0);
-      });
-    })();
-  </script>
+  <script src="shutdown.js"></script>
 </body>
 
 </html>

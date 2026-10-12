@@ -1,12 +1,8 @@
 /* =====================================================================
    PIXEELBB2 — SHARED TERMINAL SKIN
    One file styles every page. Page-specific rules stay inline in each
-   .html file (boot sequence, tables, gallery, guestbook form, ...).
-   Known intentional inline leftovers (do NOT "fix" by deleting):
-     - index.html   :: boot/CRT/progress CSS, home table/counter/poll CSS,
-                       caution stripe, extra nav a:active rule.
-     - about.html   :: a few redundant font-family lines + own layout CSS.
-     - Every page    :: its own small @media block (same banner size everywhere).
+   .html file (boot sequence, tables, chat frame, guestbook form, ...).
+   Every color is themed through the custom properties in :root below.
    ===================================================================== */
 
 @font-face {
@@ -18,10 +14,35 @@
 }
 
 :root {
+  /* --- palette --- */
   --neon-purple: #9d00ff;
   --card-purple-text: #b22cff;
   --red-alert: #ff1818;
   --bg-dark: #020005;
+
+  --link-purple: #e0aaff;
+  --link-visited: #9d4edd;
+  --body-purple: #d9a7ff;
+  --term-white: #fff;
+  --panel-black: #000;
+  --panel-dark: #0a0612;
+  --panel-darker: #050308;
+
+  --grad-a: #1a0033;
+  --grad-b: #4c007a;
+
+  --term-green: #33ff66;
+  --led-green: #2bf872;
+
+  /* --- reusable glows --- */
+  --glow-purple: rgba(178, 44, 255, 0.9);
+  --glow-purple-soft: rgba(178, 44, 255, 0.8);
+  --glow-violet-bright: rgba(157, 0, 255, 0.9);
+  --line-purple: rgba(157, 0, 255, 0.5);
+  --glow-violet: rgba(157, 0, 255, 0.35);
+  --glow-green: rgba(51, 255, 102, 0.7);
+  --glow-led: rgba(43, 248, 114, 0.7);
+
   --font-stack: 'VCR OSD Mono', 'VT323', monospace;
 }
 
@@ -37,7 +58,7 @@ body {
   min-height: 100%;
   background-color: var(--bg-dark);
   font-family: var(--font-stack);
-  color: #fff;
+  color: var(--term-white);
 }
 
 html {
@@ -57,7 +78,7 @@ html {
   position: relative;
   z-index: 1;
   font-family: var(--font-stack);
-  color: #d9a7ff;
+  color: var(--body-purple);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -85,44 +106,44 @@ html {
 }
 
 #realWebsite a:link {
-  color: #e0aaff;
+  color: var(--link-purple);
   text-decoration: underline;
-  text-shadow: 0 0 6px rgba(178, 44, 255, 0.8);
+  text-shadow: 0 0 6px var(--glow-purple-soft);
 }
 
 #realWebsite a:visited {
-  color: #9d4edd;
+  color: var(--link-visited);
 }
 
 #realWebsite a:active {
-  color: #ff1818;
+  color: var(--red-alert);
 }
 
 #realWebsite a:hover {
   color: #ffffff;
-  text-shadow: 0 0 10px #b22cff;
+  text-shadow: 0 0 10px var(--card-purple-text);
 }
 
 #realWebsite ::selection {
-  background: #9d00ff;
-  color: #000;
+  background: var(--neon-purple);
+  color: var(--panel-black);
 }
 
 .vintage-page {
   width: 820px;
   max-width: 96vw;
   margin: 0 auto;
-  background: #050308;
+  background: var(--panel-darker);
   border: 1px solid var(--neon-purple);
-  box-shadow: 0 0 0 1px #000, 0 0 34px rgba(157, 0, 255, 0.35), 0 16px 50px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0 0 1px var(--panel-black), 0 0 34px var(--glow-violet), 0 16px 50px rgba(0, 0, 0, 0.9);
   text-align: left;
   position: relative;
   z-index: 2;
 }
 
 .title-bar {
-  background: linear-gradient(to right, #1a0033, #4c007a);
-  color: #e0aaff;
+  background: linear-gradient(to right, var(--grad-a), var(--grad-b));
+  color: var(--link-purple);
   font-size: 13px;
   padding: 5px 10px;
   letter-spacing: 2px;
@@ -130,13 +151,13 @@ html {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--neon-purple);
-  text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
+  text-shadow: 0 0 8px var(--glow-purple);
 }
 
 .title-bar .x-btn {
-  background: #1a0033;
+  background: var(--grad-a);
   border: 1px solid var(--neon-purple);
-  color: #e0aaff;
+  color: var(--link-purple);
   font-size: 12px;
   width: 22px;
   height: 20px;
@@ -157,7 +178,7 @@ html {
 .title-bar .x-btn:hover {
   background: var(--red-alert);
   border-color: var(--red-alert);
-  color: #000;
+  color: var(--panel-black);
 }
 
 /* Fake window shutdown: yanked plug — wobble, flash line, dot, dark */
@@ -263,7 +284,7 @@ html {
   display: none;
   align-items: center;
   justify-content: center;
-  background: #000;
+  background: var(--panel-black);
   text-align: center;
   padding: 20px;
 }
@@ -304,7 +325,7 @@ html {
   display: block;
   font-size: 13px;
   letter-spacing: 2px;
-  color: #9d4edd;
+  color: var(--link-visited);
   margin-top: 12px;
 }
 
@@ -327,7 +348,7 @@ html {
 }
 
 .banner {
-  background: #000;
+  background: var(--panel-black);
   color: var(--card-purple-text);
   text-align: center;
   padding: 26px 10px 20px 10px;
@@ -352,20 +373,20 @@ html {
 
 .banner .subtitle {
   font-size: 14px;
-  color: #e0aaff;
+  color: var(--link-purple);
   margin-top: 8px;
   letter-spacing: 2px;
-  text-shadow: 0 0 8px rgba(178, 44, 255, 0.8);
+  text-shadow: 0 0 8px var(--glow-purple-soft);
 }
 
 .marquee-bar {
-  background: #0a0612;
+  background: var(--panel-dark);
   border-top: 1px solid var(--neon-purple);
   border-bottom: 1px solid var(--neon-purple);
   font-size: 13px;
   padding: 5px 0;
   color: var(--card-purple-text);
-  text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
+  text-shadow: 0 0 8px var(--glow-purple);
 }
 
 .marquee-bar marquee {
@@ -373,7 +394,7 @@ html {
 }
 
 .vintage-nav {
-  background: #050308;
+  background: var(--panel-darker);
   padding: 10px 8px;
   text-align: center;
   border-bottom: 1px solid var(--neon-purple);
@@ -382,41 +403,41 @@ html {
 
 .vintage-nav a {
   display: inline-block;
-  background: #0a0612;
+  background: var(--panel-dark);
   border: 1px solid var(--neon-purple);
   padding: 5px 10px;
   margin: 2px 2px;
   text-decoration: none !important;
-  color: #e0aaff !important;
-  text-shadow: 0 0 6px rgba(178, 44, 255, 0.8);
+  color: var(--link-purple) !important;
+  text-shadow: 0 0 6px var(--glow-purple-soft);
   letter-spacing: 1px;
   white-space: nowrap;
 }
 
 .vintage-nav a:hover {
-  background: #1a0033;
+  background: var(--grad-a);
   color: #fff !important;
   box-shadow: 0 0 14px rgba(157, 0, 255, 0.7);
 }
 
 .vintage-nav a.active {
-  background: #9d00ff;
-  color: #000 !important;
+  background: var(--neon-purple);
+  color: var(--panel-black) !important;
   text-shadow: none;
-  box-shadow: 0 0 16px rgba(157, 0, 255, 0.9);
+  box-shadow: 0 0 16px var(--glow-violet-bright);
 }
 
 .rainbow-hr {
   border: 0;
   height: 3px;
-  background: linear-gradient(to right, transparent, #9d00ff, #e0aaff, #9d00ff, transparent);
+  background: linear-gradient(to right, transparent, var(--neon-purple), var(--link-purple), var(--neon-purple), transparent);
   box-shadow: 0 0 12px rgba(157, 0, 255, 0.7);
   margin: 12px 0;
 }
 
 .thin-hr {
   border: 0;
-  border-top: 1px solid rgba(157, 0, 255, 0.5);
+  border-top: 1px solid var(--line-purple);
   margin: 10px 0;
 }
 
@@ -426,7 +447,7 @@ html {
   letter-spacing: 1px;
   padding: 12px 10px;
   border-top: 1px solid var(--neon-purple);
-  color: #d9a7ff;
+  color: var(--body-purple);
 }
 
 .webring {
@@ -436,5 +457,132 @@ html {
   font-size: 12px;
   margin: 8px auto;
   max-width: 440px;
-  background: #0a0612;
+  background: var(--panel-dark);
+}
+
+/* =====================================================================
+   CONSOLIDATED PAGE COMPONENTS
+   These blocks used to be copy-pasted into every page's inline <style>.
+   They are shared here so each page only carries its own unique rules.
+   ===================================================================== */
+
+/* Content panels */
+.box {
+  background: var(--panel-black);
+  border: 1px solid var(--neon-purple);
+  box-shadow: inset 0 0 24px rgba(157, 0, 255, 0.12), 0 0 16px rgba(157, 0, 255, 0.18);
+  margin-bottom: 12px;
+}
+
+.box-title {
+  background: linear-gradient(to right, var(--grad-a), var(--grad-b));
+  color: var(--link-purple);
+  font-size: 12px;
+  padding: 4px 8px;
+  letter-spacing: 2px;
+  border-bottom: 1px solid var(--neon-purple);
+  text-shadow: 0 0 8px var(--glow-purple);
+}
+
+.box-body {
+  padding: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.box-body b {
+  color: var(--term-white);
+}
+
+/* Section headings + body copy */
+.section h2 {
+  font-weight: normal;
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--card-purple-text);
+  text-shadow: 0 0 10px rgba(178, 44, 255, 0.95);
+  margin: 14px 0 6px 0;
+}
+
+.section h2:first-child {
+  margin-top: 0;
+}
+
+.section p {
+  margin: 6px 0;
+}
+
+/* Placeholder markers: bright so you can spot what to fill in */
+.todo {
+  color: var(--term-green);
+  text-shadow: 0 0 8px var(--glow-green);
+}
+
+/* Key/value spec tables */
+.stat-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.stat-table td {
+  border: 1px solid var(--line-purple);
+  padding: 5px 8px;
+  vertical-align: top;
+}
+
+.stat-table td.k {
+  color: var(--link-purple);
+  width: 34%;
+  letter-spacing: 2px;
+  text-shadow: 0 0 6px var(--glow-purple-soft);
+}
+
+/* Two-column content table (side + main) */
+.content-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.content-table td {
+  vertical-align: top;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--body-purple);
+}
+
+.col-side {
+  width: 30%;
+}
+
+.col-main {
+  width: 70%;
+  border-left: 1px solid var(--line-purple);
+}
+
+/* Link buttons + badges */
+#realWebsite img {
+  image-rendering: pixelated;
+}
+
+#realWebsite img.badge {
+  border: 1px solid var(--neon-purple);
+}
+
+/* Responsive: shrink the banner, stack two-column tables */
+@media (max-width: 700px) {
+  .banner h1 {
+    font-size: 32px;
+    letter-spacing: 3px;
+  }
+
+  .col-side,
+  .col-main {
+    display: block;
+    width: 100%;
+    border: 0;
+  }
 }

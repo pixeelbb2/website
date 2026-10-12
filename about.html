@@ -23,142 +23,7 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* (shared fonts + reset live in style.css) */
-
-    /* ================= REAL WEBSITE — TERMINAL SKIN (mirrors index.html) ================= */
-    /* (shared page background + glass live in style.css) */
-
-    .vintage-page {
-      width: 820px;
-      max-width: 96vw;
-      margin: 0 auto;
-      background: #050308;
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 0 1px #000, 0 0 34px rgba(157, 0, 255, 0.35), 0 16px 50px rgba(0, 0, 0, 0.9);
-      text-align: left;
-      position: relative;
-      z-index: 2;
-    }
-
-    .title-bar {
-      background: linear-gradient(to right, #1a0033, #4c007a);
-      color: #e0aaff;
-      font-family: var(--font-stack);
-      font-size: 13px;
-      padding: 5px 10px;
-      letter-spacing: 2px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--neon-purple);
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
-    }
-
-    .title-bar .x-btn {
-      background: #1a0033;
-      border: 1px solid var(--neon-purple);
-      color: #e0aaff;
-      font-size: 12px;
-      width: 22px;
-      height: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      /* The bar's 2px letter-spacing adds invisible space after a lone
-         character, pushing it left — zero it here for true centering. */
-      letter-spacing: 0;
-      /* Optical lift: measured from the real VCR OSD Mono file, its X ink
-         sits ~0.6px below the line center — this puts the glyph dead-center. */
-      padding-bottom: 2px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .title-bar .x-btn:hover {
-      background: var(--red-alert);
-      border-color: var(--red-alert);
-      color: #000;
-    }
-
-    /* (shared shutdown FX live in style.css) */
-
-    .banner {
-      background: #000;
-      color: var(--card-purple-text);
-      text-align: center;
-      padding: 26px 10px 20px 10px;
-      border-bottom: 1px solid var(--neon-purple);
-    }
-
-    .banner h1 {
-      font-family: var(--font-stack);
-      font-weight: normal;
-      font-size: 46px;
-      margin: 0;
-      letter-spacing: 6px;
-      color: var(--card-purple-text);
-      text-shadow: 0 0 10px rgba(178, 44, 255, 0.95), 0 0 34px rgba(157, 0, 255, 0.6), 1px 0 0 rgba(255, 0, 60, 0.45), -1px 0 0 rgba(0, 255, 255, 0.45);
-    }
-
-    .banner .subtitle {
-      font-family: var(--font-stack);
-      font-size: 14px;
-      color: #e0aaff;
-      margin-top: 8px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.8);
-    }
-
-    .marquee-bar {
-      background: #0a0612;
-      border-top: 1px solid var(--neon-purple);
-      border-bottom: 1px solid var(--neon-purple);
-      font-family: var(--font-stack);
-      font-size: 13px;
-      padding: 5px 0;
-      color: var(--card-purple-text);
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
-    }
-
-    .marquee-bar marquee {
-      display: block;
-    }
-
-    .vintage-nav {
-      background: #050308;
-      padding: 10px 8px;
-      text-align: center;
-      border-bottom: 1px solid var(--neon-purple);
-      font-family: var(--font-stack);
-      font-size: 13px;
-    }
-
-    .vintage-nav a {
-      display: inline-block;
-      background: #0a0612;
-      border: 1px solid var(--neon-purple);
-      padding: 5px 10px;
-      margin: 2px 2px;
-      text-decoration: none !important;
-      color: #e0aaff !important;
-      text-shadow: 0 0 6px rgba(178, 44, 255, 0.8);
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-
-    .vintage-nav a:hover {
-      background: #1a0033;
-      color: #fff !important;
-      box-shadow: 0 0 14px rgba(157, 0, 255, 0.7);
-    }
-
-    .vintage-nav a.active {
-      background: #9d00ff;
-      color: #000 !important;
-      text-shadow: none;
-      box-shadow: 0 0 16px rgba(157, 0, 255, 0.9);
-    }
+    /* Shared terminal skin + panels live in style.css — page-specific rules below. */
 
     .about-table {
       width: 100%;
@@ -171,35 +36,7 @@
       padding: 12px;
       font-size: 13px;
       line-height: 1.6;
-      color: #d9a7ff;
-    }
-
-    .box {
-      background: #000;
-      border: 1px solid var(--neon-purple);
-      box-shadow: inset 0 0 24px rgba(157, 0, 255, 0.12), 0 0 16px rgba(157, 0, 255, 0.18);
-      margin-bottom: 12px;
-    }
-
-    .box-title {
-      background: linear-gradient(to right, #1a0033, #4c007a);
-      color: #e0aaff;
-      font-family: var(--font-stack);
-      font-size: 12px;
-      padding: 4px 8px;
-      letter-spacing: 2px;
-      border-bottom: 1px solid var(--neon-purple);
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
-    }
-
-    .box-body {
-      padding: 10px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .box-body b {
-      color: #fff;
+      color: var(--body-purple);
     }
 
     .bio-section h2 {
@@ -219,67 +56,9 @@
       margin: 6px 0;
     }
 
-    /* Placeholder markers: bright so you can spot what to fill in */
-    .todo {
-      color: #33ff66;
-      text-shadow: 0 0 8px rgba(51, 255, 102, 0.7);
-    }
-
-    .stat-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 6px;
-      font-size: 12px;
-    }
-
-    .stat-table td {
-      border: 1px solid rgba(157, 0, 255, 0.5);
-      padding: 5px 8px;
-      vertical-align: top;
-    }
-
+    /* Wider key column than the other spec tables */
     .stat-table td.k {
-      color: #e0aaff;
       width: 38%;
-      letter-spacing: 2px;
-      text-shadow: 0 0 6px rgba(178, 44, 255, 0.8);
-    }
-
-    /* (shared dividers live in style.css) */
-
-    .vintage-footer {
-      text-align: center;
-      font-family: var(--font-stack);
-      font-size: 12px;
-      letter-spacing: 1px;
-      padding: 12px 10px;
-      border-top: 1px solid var(--neon-purple);
-      color: #d9a7ff;
-    }
-
-    .webring {
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 14px rgba(157, 0, 255, 0.25);
-      padding: 8px 6px;
-      font-size: 12px;
-      margin: 8px auto;
-      max-width: 440px;
-      background: #0a0612;
-    }
-
-    #realWebsite img {
-      image-rendering: pixelated;
-    }
-
-    #realWebsite img.badge {
-      border: 1px solid var(--neon-purple);
-    }
-
-    @media (max-width: 700px) {
-      .banner h1 {
-        font-size: 32px;
-        letter-spacing: 3px;
-      }
     }
   </style>
 </head>
@@ -299,15 +78,13 @@
       </div>
 
       <div class="marquee-bar">
-        <marquee behavior="scroll" direction="left" scrollamount="5">+++ WHO IS PIXEELBB2 +++ MACHINE ID: 2137 +++
-          LOCATION: NOT FOUND +++ CURRENT OBJECTIVE: HAVE FUN +++</marquee>
+        <marquee behavior="scroll" direction="left" scrollamount="5">+++ WHO IS PIXEELBB2 +++ MACHINE ID: 2137 +++ LOCATION: NOT FOUND +++ CURRENT OBJECTIVE: HAVE FUN +++</marquee>
       </div>
 
       <div class="vintage-nav">
         <a href="index.html">[ HOME ]</a><a href="chat.html">[ CHAT ]</a><a href="about.html" class="active">[ ABOUT ME
-          ]</a><a href="games.html">[
-          GAMES ]</a><a href="homelab.html">[ HOMELAB ]</a><a href="links.html">[ LINKS ]</a><a href="guestbook.html">[
-          GUESTBOOK ]</a>
+          ]</a><a href="games.html">[ GAMES ]</a><a href="homelab.html">[ HOMELAB ]</a><a href="links.html">[ LINKS
+          ]</a><a href="guestbook.html">[ GUESTBOOK ]</a>
       </div>
 
       <table class="about-table" cellpadding="0" cellspacing="0" border="0">
@@ -375,112 +152,7 @@
     </div>
   </main>
 
-  <script>
-    (function () {
-      try {
-        var d = document.getElementById('lastUpdated');
-        if (d) d.textContent = new Date().toLocaleDateString();
-      } catch (e) { }
-    })();
-  </script>
-
-  <script>
-    // Fake X button: yanked plug — wobble, flash line, dot, dark + snap/zap/thump.
-    (function () {
-      var page = document.querySelector('.vintage-page');
-      var overlay = document.getElementById('shutOverlay');
-      var line = document.getElementById('killLine');
-      var dot = document.getElementById('killDot');
-      var btn = document.querySelector('.title-bar .x-btn');
-      var reopen = document.getElementById('shutReopen');
-      if (!page || !overlay || !btn) return;
-      function playUnplug() {
-        try {
-          var AC = window.AudioContext || window.webkitAudioContext;
-          var ctx = new AC();
-          var t = ctx.currentTime;
-          // 1. HV static snap: short filtered noise burst
-          var len = Math.floor(ctx.sampleRate * 0.09);
-          var buf = ctx.createBuffer(1, len, ctx.sampleRate);
-          var d = buf.getChannelData(0);
-          for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
-          var noise = ctx.createBufferSource();
-          noise.buffer = buf;
-          var hp = ctx.createBiquadFilter();
-          hp.type = 'highpass';
-          hp.frequency.value = 1200;
-          var ng = ctx.createGain();
-          ng.gain.setValueAtTime(0.5, t);
-          ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
-          noise.connect(hp);
-          hp.connect(ng);
-          ng.connect(ctx.destination);
-          noise.start(t);
-          // 2. collapsing-picture whine: 2600 -> 70 Hz
-          var osc = ctx.createOscillator();
-          var gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(2600, t + 0.02);
-          osc.frequency.exponentialRampToValueAtTime(70, t + 0.38);
-          gain.gain.setValueAtTime(0.0001, t);
-          gain.gain.exponentialRampToValueAtTime(0.14, t + 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.42);
-          // 3. glass thump as the dot dies
-          var th = ctx.createOscillator();
-          var tg = ctx.createGain();
-          th.type = 'sine';
-          th.frequency.setValueAtTime(160, t + 0.34);
-          th.frequency.exponentialRampToValueAtTime(45, t + 0.5);
-          tg.gain.setValueAtTime(0.0001, t + 0.34);
-          tg.gain.exponentialRampToValueAtTime(0.25, t + 0.37);
-          tg.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
-          th.connect(tg);
-          tg.connect(ctx.destination);
-          th.start(t + 0.34);
-          th.stop(t + 0.6);
-          setTimeout(function () { try { ctx.close(); } catch (e) { } }, 800);
-        } catch (e) { }
-      }
-      btn.addEventListener('click', function () {
-        playUnplug();
-        // Collapse around the middle of the SCREEN (where the light lives),
-        // not the middle of the (much taller) page.
-        try {
-          var r = page.getBoundingClientRect();
-          var yPct = ((window.innerHeight / 2 - r.top) / r.height) * 100;
-          yPct = Math.max(0, Math.min(100, yPct));
-          page.style.transformOrigin = '50% ' + yPct + '%';
-        } catch (e) { }
-        page.classList.add('kill-wobble');
-        setTimeout(function () {
-          page.classList.remove('kill-wobble');
-          page.classList.add('kill-line');
-          if (line) line.classList.add('on');
-        }, 140);
-        setTimeout(function () {
-          if (line) line.classList.remove('on');
-          page.classList.add('kill-dot');
-          if (dot) dot.classList.add('on');
-        }, 320);
-        setTimeout(function () { overlay.classList.add('show'); }, 560);
-      });
-      if (reopen) reopen.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.classList.remove('show');
-        if (line) line.classList.remove('on');
-        if (dot) dot.classList.remove('on');
-        page.classList.remove('kill-dot');
-        page.classList.remove('kill-line');
-        page.classList.remove('kill-wobble');
-        page.style.transformOrigin = '';
-        window.scrollTo(0, 0);
-      });
-    })();
-  </script>
+  <script src="shutdown.js"></script>
 </body>
 
 </html>

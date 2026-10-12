@@ -23,407 +23,11 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    @font-face {
-      font-family: 'VCR OSD Mono';
-      src: url('https://fonts.cdnfonts.com/s/14798/VCR_OSD_MONO_1.001[1].woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    :root {
-      --neon-purple: #9d00ff;
-      --card-purple-text: #b22cff;
-      --red-alert: #ff1818;
-      --bg-dark: #020005;
-      --font-stack: 'VCR OSD Mono', 'VT323', monospace;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html,
-    body {
-      width: 100%;
-      min-height: 100%;
-      background-color: var(--bg-dark);
-      font-family: var(--font-stack);
-      color: #fff;
-    }
-
-    /* ================= TERMINAL SKIN (mirrors index.html) ================= */
-    #realWebsite {
-      width: 100%;
-      min-height: 100vh;
-      display: block;
-      padding: 26px 10px 60px 10px;
-      background: radial-gradient(ellipse 95% 75% at 35% 70%, #5d117e 0%, #2a0440 45%, #0e0018 75%, #020005 100%);
-      background-attachment: fixed;
-      position: relative;
-      z-index: 1;
-      font-family: var(--font-stack);
-      color: #d9a7ff;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    #realWebsite::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 60;
-      pointer-events: none;
-      background: repeating-linear-gradient(to bottom,
-          transparent 0px, transparent 2px,
-          rgba(0, 0, 0, 0.30) 2px, rgba(0, 0, 0, 0.30) 4px);
-      opacity: 0.5;
-    }
-
-    #realWebsite::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 61;
-      pointer-events: none;
-      background: radial-gradient(ellipse 95% 90% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.35) 85%, rgba(0, 0, 0, 0.7) 100%);
-    }
-
-    #realWebsite a:link {
-      color: #e0aaff;
-      text-decoration: underline;
-      text-shadow: 0 0 6px rgba(178, 44, 255, 0.8);
-    }
-
-    #realWebsite a:visited {
-      color: #9d4edd;
-    }
-
-    #realWebsite a:active {
-      color: #ff1818;
-    }
-
-    #realWebsite a:hover {
-      color: #ffffff;
-      text-shadow: 0 0 10px #b22cff;
-    }
-
-    #realWebsite ::selection {
-      background: #9d00ff;
-      color: #000;
-    }
-
-    .vintage-page {
-      width: 820px;
-      max-width: 96vw;
-      margin: 0 auto;
-      background: #050308;
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 0 1px #000, 0 0 34px rgba(157, 0, 255, 0.35), 0 16px 50px rgba(0, 0, 0, 0.9);
-      text-align: left;
-      position: relative;
-      z-index: 2;
-    }
-
-    .title-bar {
-      background: linear-gradient(to right, #1a0033, #4c007a);
-      color: #e0aaff;
-      font-size: 13px;
-      padding: 5px 10px;
-      letter-spacing: 2px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--neon-purple);
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
-    }
-
-    .title-bar .x-btn {
-      background: #1a0033;
-      border: 1px solid var(--neon-purple);
-      color: #e0aaff;
-      font-size: 12px;
-      width: 22px;
-      height: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      /* The bar's 2px letter-spacing adds invisible space after a lone
-         character, pushing it left — zero it here for true centering. */
-      letter-spacing: 0;
-      /* Optical lift: measured from the real VCR OSD Mono file, its X ink
-         sits ~0.6px below the line center — this puts the glyph dead-center. */
-      padding-bottom: 2px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .title-bar .x-btn:hover {
-      background: var(--red-alert);
-      border-color: var(--red-alert);
-      color: #000;
-    }
-
-    /* Fake window shutdown: yanked plug — wobble, flash line, dot, dark */
-    .vintage-page.kill-wobble {
-      animation: killWobble 0.13s linear 1;
-      filter: brightness(2);
-    }
-
-    @keyframes killWobble {
-      0% {
-        transform: scale(1, 1) skewX(0);
-      }
-
-      25% {
-        transform: scale(1.02, 0.97) skewX(0.8deg);
-      }
-
-      50% {
-        transform: scale(0.985, 1.015) skewX(-0.8deg);
-      }
-
-      75% {
-        transform: scale(1.01, 0.99) skewX(0.4deg);
-      }
-
-      100% {
-        transform: scale(1, 1) skewX(0);
-      }
-    }
-
-    .vintage-page.kill-line {
-      transition: transform 0.16s ease-in, filter 0.12s ease;
-      filter: brightness(4) saturate(0.2);
-      transform: scaleY(0.008);
-    }
-
-    .vintage-page.kill-dot {
-      transition: transform 0.14s ease-in, opacity 0.3s ease 0.05s;
-      transform: scale(0.004);
-      opacity: 0;
-    }
-
-    /* Fullscreen kill FX: the light itself punches through the glass */
-    #killLine {
-      position: fixed;
-      left: -2vw;
-      right: -2vw;
-      top: 50%;
-      height: 5px;
-      margin-top: -2.5px;
-      z-index: 291;
-      pointer-events: none;
-      display: none;
-      background: linear-gradient(to bottom, rgba(178, 44, 255, 0) 0%, #fff 35%, #fff 65%, rgba(178, 44, 255, 0) 100%);
-      box-shadow: 0 0 18px 5px rgba(255, 255, 255, 0.9), 0 0 70px 16px rgba(178, 44, 255, 0.75), 0 0 140px 40px rgba(157, 0, 255, 0.45);
-    }
-
-    #killLine.on {
-      display: block;
-    }
-
-    #killDot {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      width: 16px;
-      height: 16px;
-      margin: -8px 0 0 -8px;
-      z-index: 292;
-      pointer-events: none;
-      display: none;
-      border-radius: 50%;
-      background: radial-gradient(circle, #ffffff 0%, #f3e8ff 30%, rgba(178, 44, 255, 0.9) 58%, rgba(157, 0, 255, 0) 72%);
-      box-shadow: 0 0 26px 10px rgba(255, 255, 255, 0.85), 0 0 90px 34px rgba(178, 44, 255, 0.6);
-    }
-
-    #killDot.on {
-      display: block;
-      animation: dotDie 0.7s ease-out forwards;
-    }
-
-    @keyframes dotDie {
-      0% {
-        transform: scale(1.8);
-        opacity: 1;
-      }
-
-      30% {
-        transform: scale(1);
-        opacity: 1;
-      }
-
-      100% {
-        transform: scale(0.2);
-        opacity: 0;
-      }
-    }
-
-    #shutOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: 55;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: #000;
-      text-align: center;
-      padding: 20px;
-    }
-
-    #shutOverlay.show {
-      display: flex;
-    }
-
-    #shutOverlay .shut-msg {
-      font-size: clamp(24px, 5vw, 40px);
-      letter-spacing: 6px;
-      color: var(--card-purple-text);
-      text-shadow: 0 0 12px rgba(178, 44, 255, 0.95), 0 0 40px rgba(157, 0, 255, 0.6), 1px 0 0 rgba(255, 0, 60, 0.45), -1px 0 0 rgba(0, 255, 255, 0.45);
-      animation: shutFlicker 3s infinite;
-    }
-
-    @keyframes shutFlicker {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      92% {
-        opacity: 1;
-      }
-
-      93% {
-        opacity: 0.4;
-      }
-
-      94% {
-        opacity: 1;
-      }
-    }
-
-    #shutOverlay .shut-sub {
-      display: block;
-      font-size: 13px;
-      letter-spacing: 2px;
-      color: #9d4edd;
-      margin-top: 12px;
-    }
-
-    #shutOverlay .shut-reopen {
-      display: inline-block;
-      margin-top: 18px;
-      font-size: 14px;
-      letter-spacing: 2px;
-    }
-
-    /* Beats #realWebsite a:link on specificity in every state — no underline, ever. */
-    #shutOverlay a.shut-reopen:link,
-    #shutOverlay a.shut-reopen:visited,
-    #shutOverlay a.shut-reopen:hover,
-    #shutOverlay a.shut-reopen:active {
-      text-decoration: none;
-    }
-
-    .banner {
-      background: #000;
-      color: var(--card-purple-text);
-      text-align: center;
-      padding: 26px 10px 20px 10px;
-      border-bottom: 1px solid var(--neon-purple);
-    }
-
-    .banner h1 {
-      font-weight: normal;
-      font-size: 46px;
-      margin: 0;
-      letter-spacing: 6px;
-      color: var(--card-purple-text);
-      text-shadow: 0 0 10px rgba(178, 44, 255, 0.95), 0 0 34px rgba(157, 0, 255, 0.6), 1px 0 0 rgba(255, 0, 60, 0.45), -1px 0 0 rgba(0, 255, 255, 0.45);
-    }
-
-    .banner .subtitle {
-      font-size: 14px;
-      color: #e0aaff;
-      margin-top: 8px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.8);
-    }
-
-    .marquee-bar {
-      background: #0a0612;
-      border-top: 1px solid var(--neon-purple);
-      border-bottom: 1px solid var(--neon-purple);
-      font-size: 13px;
-      padding: 5px 0;
-      color: var(--card-purple-text);
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
-    }
-
-    .marquee-bar marquee {
-      display: block;
-    }
-
-    .vintage-nav {
-      background: #050308;
-      padding: 10px 8px;
-      text-align: center;
-      border-bottom: 1px solid var(--neon-purple);
-      font-size: 13px;
-    }
-
-    .vintage-nav a {
-      display: inline-block;
-      background: #0a0612;
-      border: 1px solid var(--neon-purple);
-      padding: 5px 10px;
-      margin: 2px 2px;
-      text-decoration: none !important;
-      color: #e0aaff !important;
-      text-shadow: 0 0 6px rgba(178, 44, 255, 0.8);
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-
-    .vintage-nav a:hover {
-      background: #1a0033;
-      color: #fff !important;
-      box-shadow: 0 0 14px rgba(157, 0, 255, 0.7);
-    }
-
-    .vintage-nav a.active {
-      background: #9d00ff;
-      color: #000 !important;
-      text-shadow: none;
-      box-shadow: 0 0 16px rgba(157, 0, 255, 0.9);
-    }
+    /* Shared terminal skin + panels live in style.css — page-specific rules below. */
 
     .chat-wrap {
       padding: 12px;
       font-size: 13px;
-    }
-
-    .section h2 {
-      font-weight: normal;
-      font-size: 16px;
-      letter-spacing: 2px;
-      color: var(--card-purple-text);
-      text-shadow: 0 0 10px rgba(178, 44, 255, 0.95);
-      margin: 14px 0 6px 0;
-    }
-
-    .section h2:first-child {
-      margin-top: 0;
-    }
-
-    .section p {
-      margin: 6px 0;
     }
 
     /* Live public chat (IRC). The frame is a guest from another server,
@@ -432,40 +36,17 @@
       display: block;
       width: 100%;
       height: 480px;
-      background: #000;
+      background: var(--panel-black);
       border: 1px solid var(--neon-purple);
       box-shadow: inset 0 0 30px rgba(157, 0, 255, 0.12), 0 0 16px rgba(157, 0, 255, 0.25);
     }
 
     .rules-box {
-      background: #0a0612;
-      border: 1px solid rgba(157, 0, 255, 0.5);
+      background: var(--panel-dark);
+      border: 1px solid var(--line-purple);
       padding: 8px 10px;
       font-size: 12px;
       margin-top: 8px;
-      line-height: 1.6;
-    }
-
-    .box {
-      background: #000;
-      border: 1px solid var(--neon-purple);
-      box-shadow: inset 0 0 24px rgba(157, 0, 255, 0.12), 0 0 16px rgba(157, 0, 255, 0.18);
-      margin-bottom: 12px;
-    }
-
-    .box-title {
-      background: linear-gradient(to right, #1a0033, #4c007a);
-      color: #e0aaff;
-      font-size: 12px;
-      padding: 4px 8px;
-      letter-spacing: 2px;
-      border-bottom: 1px solid var(--neon-purple);
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
-    }
-
-    .box-body {
-      padding: 10px;
-      font-size: 13px;
       line-height: 1.6;
     }
 
@@ -473,15 +54,15 @@
       display: block;
       font-size: 12px;
       letter-spacing: 2px;
-      color: #e0aaff;
+      color: var(--link-purple);
       margin: 0 0 4px 0;
     }
 
     .chat-wrap input[type="text"] {
       width: 100%;
-      background: #050308;
+      background: var(--panel-darker);
       border: 1px solid var(--neon-purple);
-      color: #e0aaff;
+      color: var(--link-purple);
       font-family: var(--font-stack);
       font-size: 13px;
       letter-spacing: 1px;
@@ -494,9 +75,9 @@
     }
 
     .chat-wrap button {
-      background: #1a0033;
+      background: var(--grad-a);
       border: 1px solid var(--neon-purple);
-      color: #e0aaff;
+      color: var(--link-purple);
       font-family: var(--font-stack);
       font-size: 12px;
       letter-spacing: 2px;
@@ -506,8 +87,8 @@
     }
 
     .chat-wrap button:hover {
-      background: #9d00ff;
-      color: #000;
+      background: var(--neon-purple);
+      color: var(--panel-black);
     }
 
     #nickAs {
@@ -516,48 +97,10 @@
     }
 
     #nickAs b {
-      color: #fff;
-    }
-
-    .rainbow-hr {
-      border: 0;
-      height: 3px;
-      background: linear-gradient(to right, transparent, #9d00ff, #e0aaff, #9d00ff, transparent);
-      box-shadow: 0 0 12px rgba(157, 0, 255, 0.7);
-      margin: 12px 0;
-    }
-
-    .thin-hr {
-      border: 0;
-      border-top: 1px solid rgba(157, 0, 255, 0.5);
-      margin: 10px 0;
-    }
-
-    .vintage-footer {
-      text-align: center;
-      font-size: 12px;
-      letter-spacing: 1px;
-      padding: 12px 10px;
-      border-top: 1px solid var(--neon-purple);
-      color: #d9a7ff;
-    }
-
-    .webring {
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 14px rgba(157, 0, 255, 0.25);
-      padding: 8px 6px;
-      font-size: 12px;
-      margin: 8px auto;
-      max-width: 440px;
-      background: #0a0612;
+      color: var(--term-white);
     }
 
     @media (max-width: 700px) {
-      .banner h1 {
-        font-size: 32px;
-        letter-spacing: 3px;
-      }
-
       .irc-frame {
         height: 380px;
       }
@@ -609,110 +152,7 @@
         class="shut-reopen" id="shutReopen">[ CLICK TO REOPEN ]</a></div>
   </div>
 
-  <script>
-    (function () {
-      try {
-        var d = document.getElementById('lastUpdated');
-        if (d) d.textContent = new Date().toLocaleDateString();
-      } catch (e) { }
-
-      /* Chat room shelved for now — SOON. (Saved nicknames stay put for the boot greeting.) */
-    })();
-  </script>
-
-  <script>
-    // Fake X button: yanked plug — wobble, flash line, dot, dark + snap/zap/thump.
-    (function () {
-      var page = document.querySelector('.vintage-page');
-      var overlay = document.getElementById('shutOverlay');
-      var line = document.getElementById('killLine');
-      var dot = document.getElementById('killDot');
-      var btn = document.querySelector('.title-bar .x-btn');
-      var reopen = document.getElementById('shutReopen');
-      if (!page || !overlay || !btn) return;
-      function playUnplug() {
-        try {
-          var AC = window.AudioContext || window.webkitAudioContext;
-          var ctx = new AC();
-          var t = ctx.currentTime;
-          var len = Math.floor(ctx.sampleRate * 0.09);
-          var buf = ctx.createBuffer(1, len, ctx.sampleRate);
-          var d = buf.getChannelData(0);
-          for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
-          var noise = ctx.createBufferSource();
-          noise.buffer = buf;
-          var hp = ctx.createBiquadFilter();
-          hp.type = 'highpass';
-          hp.frequency.value = 1200;
-          var ng = ctx.createGain();
-          ng.gain.setValueAtTime(0.5, t);
-          ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
-          noise.connect(hp);
-          hp.connect(ng);
-          ng.connect(ctx.destination);
-          noise.start(t);
-          var osc = ctx.createOscillator();
-          var gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(2600, t + 0.02);
-          osc.frequency.exponentialRampToValueAtTime(70, t + 0.38);
-          gain.gain.setValueAtTime(0.0001, t);
-          gain.gain.exponentialRampToValueAtTime(0.14, t + 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.42);
-          var th = ctx.createOscillator();
-          var tg = ctx.createGain();
-          th.type = 'sine';
-          th.frequency.setValueAtTime(160, t + 0.34);
-          th.frequency.exponentialRampToValueAtTime(45, t + 0.5);
-          tg.gain.setValueAtTime(0.0001, t + 0.34);
-          tg.gain.exponentialRampToValueAtTime(0.25, t + 0.37);
-          tg.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
-          th.connect(tg);
-          tg.connect(ctx.destination);
-          th.start(t + 0.34);
-          th.stop(t + 0.6);
-          setTimeout(function () { try { ctx.close(); } catch (e) { } }, 800);
-        } catch (e) { }
-      }
-      btn.addEventListener('click', function () {
-        playUnplug();
-        try {
-          var r = page.getBoundingClientRect();
-          var yPct = ((window.innerHeight / 2 - r.top) / r.height) * 100;
-          yPct = Math.max(0, Math.min(100, yPct));
-          page.style.transformOrigin = '50% ' + yPct + '%';
-        } catch (e) { }
-        page.classList.add('kill-wobble');
-        setTimeout(function () {
-          page.classList.remove('kill-wobble');
-          page.classList.add('kill-line');
-          if (line) line.classList.add('on');
-        }, 140);
-        setTimeout(function () {
-          if (line) line.classList.remove('on');
-          page.classList.add('kill-dot');
-          if (dot) dot.classList.add('on');
-        }, 320);
-        setTimeout(function () { overlay.classList.add('show'); }, 560);
-      });
-      if (reopen) reopen.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.classList.remove('show');
-        if (line) line.classList.remove('on');
-        if (dot) dot.classList.remove('on');
-        page.classList.remove('kill-dot');
-        page.classList.remove('kill-line');
-        page.classList.remove('kill-wobble');
-        page.style.transformOrigin = '';
-        window.scrollTo(0, 0);
-      });
-    })();
-  </script>
-
+  <script src="shutdown.js"></script>
 </body>
 
 </html>

@@ -16,42 +16,18 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* 
-      AUTHENTIC ULTRAKILL FONT:
-      VCR OSD Mono is imported directly via CDN so you don't need to host any files.
+    /*
+      HOMEPAGE — index-only styles.
+      Shared terminal skin lives in style.css; this block holds the boot
+      loader (CRT power-on sequence) and the homepage-only widgets.
     */
-    @font-face {
-      font-family: 'VCR OSD Mono';
-      src: url('https://fonts.cdnfonts.com/s/14798/VCR_OSD_MONO_1.001[1].woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-    }
 
-    /* 
-      EASY COLOR PALETTE:
-      You can change any color code here to re-theme the terminal anytime.
-    */
+    /* Homepage-only palette additions (shared palette lives in style.css) */
     :root {
-      --neon-purple: #9d00ff;
-      /* Vibrant neon purple for beam & accents */
-      --card-purple-text: #b22cff;
-      /* The purple color used for the terminal text */
-      --red-alert: #ff1818;
-      /* The bright red color for "HAVE FUN" */
-      --bg-dark: #020005;
-      /* Deep blackish-purple canvas background */
       --term-black: #000000;
       /* Pitch-black interior of the terminal card */
       --site-bg: #0b0813;
       /* Background color of your real website */
-      --font-stack: 'VCR OSD Mono', 'VT323', monospace;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     html,
@@ -130,11 +106,10 @@
     }
 
     /* ---- Phosphor image ---- */
-    /* STREAMING_CHUNK:Styling the terminal card and loading bars... -->
     /* The Black Terminal Card = phosphor screen content */
     .terminal-card {
       position: relative;
-      background-color: #000;
+      background-color: var(--panel-black);
       border-radius: 6px;
       box-shadow: 0 16px 50px rgba(0, 0, 0, 0.95), 0 0 70px rgba(157, 0, 255, 0.22);
       width: 0px;
@@ -168,7 +143,7 @@
       padding: 46px 50px;
       opacity: 1;
       overflow: visible;
-      background: #000;
+      background: var(--panel-black);
       box-shadow: 0 16px 50px rgba(0, 0, 0, 0.95), 0 0 70px rgba(157, 0, 255, 0.22);
     }
 
@@ -296,7 +271,7 @@
       width: 100%;
       height: 26px;
       background: linear-gradient(to bottom, #030303 0%, #101010 48%, #050505 52%, #000 100%);
-      border: 1px solid #000;
+      border: 1px solid var(--panel-black);
       outline: 1px solid #454545;
       border-radius: 3px;
       position: relative;
@@ -571,170 +546,8 @@
     }
 
     /* =====================================================================
-       REAL WEBSITE — SAME STYLE AS THE BOOT LOADER
-       Dark phosphor terminal: black panels, purple glow, VCR OSD Mono.
-       (Same old-web structure underneath: banner, marquee, table columns.)
+       HOMEPAGE WIDGETS
        ===================================================================== */
-    #realWebsite {
-      width: 100%;
-      min-height: 100vh;
-      display: block;
-      padding: 26px 10px 60px 10px;
-      background: radial-gradient(ellipse 95% 75% at 35% 70%, #5d117e 0%, #2a0440 45%, #0e0018 75%, #020005 100%);
-      background-attachment: fixed;
-      position: relative;
-      z-index: 1;
-      font-family: var(--font-stack);
-      color: #d9a7ff;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    /* Persistent tube glass over the site (boot overlay has its own copy) */
-    #realWebsite::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 60;
-      pointer-events: none;
-      background: repeating-linear-gradient(to bottom,
-          transparent 0px, transparent 2px,
-          rgba(0, 0, 0, 0.30) 2px, rgba(0, 0, 0, 0.30) 4px);
-      opacity: 0.5;
-    }
-
-    #realWebsite::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 61;
-      pointer-events: none;
-      background: radial-gradient(ellipse 95% 90% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.35) 85%, rgba(0, 0, 0, 0.7) 100%);
-    }
-
-    #realWebsite a:link {
-      color: #e0aaff;
-      text-decoration: underline;
-      text-shadow: 0 0 6px rgba(178, 44, 255, 0.8);
-    }
-
-    #realWebsite a:visited {
-      color: #9d4edd;
-    }
-
-    #realWebsite a:active {
-      color: #ff1818;
-    }
-
-    #realWebsite a:hover {
-      color: #ffffff;
-      text-shadow: 0 0 10px #b22cff;
-    }
-
-    #realWebsite ::selection {
-      background: #9d00ff;
-      color: #000;
-    }
-
-    .vintage-page {
-      width: 820px;
-      max-width: 96vw;
-      margin: 0 auto;
-      background: #050308;
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 0 1px #000, 0 0 34px rgba(157, 0, 255, 0.35), 0 16px 50px rgba(0, 0, 0, 0.9);
-      text-align: left;
-      position: relative;
-      z-index: 2;
-    }
-
-    .title-bar {
-      background: linear-gradient(to right, #1a0033, #4c007a);
-      color: #e0aaff;
-      font-family: var(--font-stack);
-      font-weight: normal;
-      font-size: 13px;
-      padding: 5px 10px;
-      letter-spacing: 2px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--neon-purple);
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
-    }
-
-    .title-bar .x-btn {
-      background: #1a0033;
-      border: 1px solid var(--neon-purple);
-      color: #e0aaff;
-      font-size: 12px;
-      width: 22px;
-      height: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      /* The bar's 2px letter-spacing adds invisible space after a lone
-         character, pushing it left — zero it here for true centering. */
-      letter-spacing: 0;
-      /* Optical lift: measured from the real VCR OSD Mono file, its X ink
-         sits ~0.6px below the line center — this puts the glyph dead-center. */
-      padding-bottom: 2px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .title-bar .x-btn:hover {
-      background: var(--red-alert);
-      border-color: var(--red-alert);
-      color: #000;
-    }
-
-    /* (shared shutdown FX live in style.css) */
-
-    .banner {
-      background: #000;
-      color: var(--card-purple-text);
-      text-align: center;
-      padding: 26px 10px 20px 10px;
-      border-bottom: 1px solid var(--neon-purple);
-    }
-
-    .banner h1 {
-      font-family: var(--font-stack);
-      font-weight: normal;
-      font-size: 46px;
-      margin: 0;
-      letter-spacing: 6px;
-      color: var(--card-purple-text);
-      text-shadow: 0 0 10px rgba(178, 44, 255, 0.95), 0 0 34px rgba(157, 0, 255, 0.6), 1px 0 0 rgba(255, 0, 60, 0.45), -1px 0 0 rgba(0, 255, 255, 0.45);
-    }
-
-    .banner .subtitle {
-      font-family: var(--font-stack);
-      font-size: 14px;
-      color: #e0aaff;
-      margin-top: 8px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.8);
-    }
-
-    .marquee-bar {
-      background: #0a0612;
-      border-top: 1px solid var(--neon-purple);
-      border-bottom: 1px solid var(--neon-purple);
-      font-family: var(--font-stack);
-      font-size: 13px;
-      padding: 5px 0;
-      color: var(--card-purple-text);
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
-    }
-
-    .marquee-bar marquee {
-      display: block;
-    }
-
     /* Rickroll gate: same staging as the X shutdown overlay */
     #rickOverlay {
       position: fixed;
@@ -743,7 +556,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      background: #000;
+      background: var(--panel-black);
       text-align: center;
       padding: 20px;
     }
@@ -768,44 +581,10 @@
       }
     }
 
-    .vintage-nav {
-      background: #050308;
-      padding: 10px 8px;
-      text-align: center;
-      border-bottom: 1px solid var(--neon-purple);
-      font-family: var(--font-stack);
-      font-size: 13px;
-    }
-
-    .vintage-nav a {
-      display: inline-block;
-      background: #0a0612;
-      border: 1px solid var(--neon-purple);
-      padding: 5px 10px;
-      margin: 2px 2px;
-      text-decoration: none !important;
-      color: #e0aaff !important;
-      text-shadow: 0 0 6px rgba(178, 44, 255, 0.8);
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-
-    .vintage-nav a:hover {
-      background: #1a0033;
-      color: #fff !important;
-      box-shadow: 0 0 14px rgba(157, 0, 255, 0.7);
-    }
-
+    /* Homepage nav: pressed state (extra to the shared .vintage-nav rules) */
     .vintage-nav a:active {
-      background: #9d00ff;
-      color: #000 !important;
-    }
-
-    .vintage-nav a.active {
-      background: #9d00ff;
-      color: #000 !important;
-      text-shadow: none;
-      box-shadow: 0 0 16px rgba(157, 0, 255, 0.9);
+      background: var(--neon-purple);
+      color: var(--panel-black) !important;
     }
 
     .vintage-table {
@@ -819,7 +598,7 @@
       padding: 12px;
       font-size: 13px;
       line-height: 1.6;
-      color: #d9a7ff;
+      color: var(--body-purple);
     }
 
     .col-left,
@@ -829,40 +608,12 @@
 
     .col-center {
       width: 56%;
-      border-left: 1px solid rgba(157, 0, 255, 0.5);
-      border-right: 1px solid rgba(157, 0, 255, 0.5);
-    }
-
-    .box {
-      background: #000;
-      border: 1px solid var(--neon-purple);
-      box-shadow: inset 0 0 24px rgba(157, 0, 255, 0.12), 0 0 16px rgba(157, 0, 255, 0.18);
-      margin-bottom: 12px;
-    }
-
-    .box-title {
-      background: linear-gradient(to right, #1a0033, #4c007a);
-      color: #e0aaff;
-      font-family: var(--font-stack);
-      font-size: 12px;
-      padding: 4px 8px;
-      letter-spacing: 2px;
-      border-bottom: 1px solid var(--neon-purple);
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
-    }
-
-    .box-body {
-      padding: 10px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .box-body b {
-      color: #fff;
+      border-left: 1px solid var(--line-purple);
+      border-right: 1px solid var(--line-purple);
     }
 
     .center-welcome {
-      background: #000;
+      background: var(--panel-black);
       border: 1px solid var(--neon-purple);
       box-shadow: inset 0 0 24px rgba(157, 0, 255, 0.12), 0 0 16px rgba(157, 0, 255, 0.18);
       padding: 14px;
@@ -883,20 +634,6 @@
       margin: 8px 0;
     }
 
-    .rainbow-hr {
-      border: 0;
-      height: 3px;
-      background: linear-gradient(to right, transparent, #9d00ff, #e0aaff, #9d00ff, transparent);
-      box-shadow: 0 0 12px rgba(157, 0, 255, 0.7);
-      margin: 12px 0;
-    }
-
-    .thin-hr {
-      border: 0;
-      border-top: 1px solid rgba(157, 0, 255, 0.5);
-      margin: 10px 0;
-    }
-
     .blink {
       animation: vintageBlink 1s steps(2, start) infinite;
       font-weight: bold;
@@ -912,22 +649,22 @@
 
     .counter-box {
       font-family: var(--font-stack);
-      background: #000;
-      color: #33ff66;
+      background: var(--panel-black);
+      color: var(--term-green);
       border: 1px solid var(--neon-purple);
       box-shadow: inset 0 0 24px rgba(157, 0, 255, 0.12), 0 0 16px rgba(157, 0, 255, 0.18);
       padding: 10px 8px;
       text-align: center;
       font-size: 12px;
       letter-spacing: 2px;
-      text-shadow: 0 0 8px rgba(51, 255, 102, 0.7);
+      text-shadow: 0 0 8px var(--glow-green);
     }
 
     .counter-digits {
       display: inline-block;
-      background: #000;
-      color: #33ff66;
-      border: 1px solid #33ff66;
+      background: var(--panel-black);
+      color: var(--term-green);
+      border: 1px solid var(--term-green);
       box-shadow: 0 0 10px rgba(51, 255, 102, 0.4);
       padding: 2px 8px;
       font-size: 18px;
@@ -937,23 +674,23 @@
     .sign-guestbook {
       display: block;
       text-align: center;
-      background: #1a0033;
+      background: var(--grad-a);
       border: 1px solid var(--neon-purple);
       font-family: var(--font-stack);
       font-size: 13px;
       letter-spacing: 2px;
       padding: 10px;
       margin-top: 8px;
-      color: #e0aaff !important;
+      color: var(--link-purple) !important;
       text-decoration: none !important;
-      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
+      text-shadow: 0 0 8px var(--glow-purple);
     }
 
     .sign-guestbook:hover {
-      background: #9d00ff;
-      color: #000 !important;
+      background: var(--neon-purple);
+      color: var(--panel-black) !important;
       text-shadow: none;
-      box-shadow: 0 0 20px rgba(157, 0, 255, 0.9);
+      box-shadow: 0 0 20px var(--glow-violet-bright);
     }
 
     .update-log {
@@ -962,35 +699,15 @@
 
     .update-log b.new {
       background: var(--red-alert);
-      color: #000;
+      color: var(--panel-black);
       font-size: 10px;
       padding: 1px 4px;
     }
 
-    .vintage-footer {
-      text-align: center;
-      font-family: var(--font-stack);
-      font-size: 12px;
-      letter-spacing: 1px;
-      padding: 12px 10px;
-      border-top: 1px solid var(--neon-purple);
-      color: #d9a7ff;
-    }
-
-    .webring {
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 14px rgba(157, 0, 255, 0.25);
-      padding: 8px 6px;
-      font-size: 12px;
-      margin: 8px auto;
-      max-width: 440px;
-      background: #0a0612;
-    }
-
     #realWebsite button {
-      background: #1a0033;
+      background: var(--grad-a);
       border: 1px solid var(--neon-purple);
-      color: #e0aaff;
+      color: var(--link-purple);
       font-family: var(--font-stack);
       font-size: 12px;
       letter-spacing: 2px;
@@ -1000,20 +717,12 @@
     }
 
     #realWebsite button:hover {
-      background: #9d00ff;
-      color: #000;
+      background: var(--neon-purple);
+      color: var(--panel-black);
     }
 
     #realWebsite input[type="radio"] {
-      accent-color: #9d00ff;
-    }
-
-    #realWebsite img {
-      image-rendering: pixelated;
-    }
-
-    #realWebsite img.badge {
-      border: 1px solid var(--neon-purple);
+      accent-color: var(--neon-purple);
     }
 
     @media (max-width: 700px) {
@@ -1024,11 +733,6 @@
         display: block;
         width: 100%;
         border: 0;
-      }
-
-      .banner h1 {
-        font-size: 32px;
-        letter-spacing: 3px;
       }
     }
 
@@ -1044,8 +748,8 @@
     .cyber-head {
       font-size: 13px;
       letter-spacing: 2px;
-      color: #2bf872;
-      text-shadow: 0 0 6px rgba(43, 248, 114, 0.7), 0 0 12px rgba(43, 248, 114, 0.3);
+      color: var(--led-green);
+      text-shadow: 0 0 6px var(--glow-led), 0 0 12px rgba(43, 248, 114, 0.3);
     }
 
     .cyber-sub,
@@ -1054,8 +758,8 @@
       font-size: 19px;
       line-height: 1.25;
       letter-spacing: 1px;
-      color: #2bf872;
-      text-shadow: 0 0 6px rgba(43, 248, 114, 0.7), 0 0 12px rgba(43, 248, 114, 0.3);
+      color: var(--led-green);
+      text-shadow: 0 0 6px var(--glow-led), 0 0 12px rgba(43, 248, 114, 0.3);
     }
 
     .cyber-sub {
@@ -1065,12 +769,13 @@
     .cyber-mid {
       margin: 10px 0 6px;
     }
+
     .cyber-note {
       font-family: 'VT323', monospace;
       font-size: 11px;
       letter-spacing: 1px;
-      color: #2bf872;
-      text-shadow: 0 0 6px rgba(43, 248, 114, 0.7);
+      color: var(--led-green);
+      text-shadow: 0 0 6px var(--glow-led);
       margin-top: 8px;
       white-space: nowrap;
     }
@@ -1102,7 +807,7 @@
     }
 
     .cseg.on {
-      background: #2bf872;
+      background: var(--led-green);
       box-shadow: 0 0 6px rgba(43, 248, 114, 0.9), 0 0 14px rgba(43, 248, 114, 0.4);
     }
 
@@ -1159,7 +864,7 @@
 
 <body>
 
-  <!-- 
+  <!--
     =============================================================================
     1. THE REAL WEBSITE (Underneath the boot screen)
        Add your real HTML layout, headers, blog posts, or gallery here!
@@ -1179,15 +884,13 @@
       </div>
 
       <div class="marquee-bar">
-        <marquee behavior="scroll" direction="left" scrollamount="5">+++ WELCOME TO MY HOMEPAGE +++ THANKS FOR VISITING
-          +++ SIGN MY GUESTBOOK +++ UNDER CONSTRUCTION +++ TURN ON YOUR MIDI +++ HAVE FUN !!! +++</marquee>
+        <marquee behavior="scroll" direction="left" scrollamount="5">+++ WELCOME TO MY HOMEPAGE +++ THANKS FOR VISITING +++ SIGN MY GUESTBOOK +++ UNDER CONSTRUCTION +++ TURN ON YOUR MIDI +++ HAVE FUN !!! +++</marquee>
       </div>
 
       <div class="vintage-nav">
         <a href="index.html" class="active">[ HOME ]</a><a href="chat.html">[ CHAT ]</a><a href="about.html">[ ABOUT ME
-          ]</a><a href="games.html">[
-          GAMES ]</a><a href="homelab.html">[ HOMELAB ]</a><a href="links.html">[ LINKS ]</a><a href="guestbook.html">[
-          GUESTBOOK ]</a>
+          ]</a><a href="games.html">[ GAMES ]</a><a href="homelab.html">[ HOMELAB ]</a><a href="links.html">[ LINKS
+          ]</a><a href="guestbook.html">[ GUESTBOOK ]</a>
       </div>
 
       <table class="vintage-table" cellpadding="0" cellspacing="0" border="0">
@@ -1296,8 +999,6 @@
            update site_stats set visits = visits + 1 where id = 1 returning visits into n;
            return n;
          end $$;
-    Then paste the SAME URL + anon key as guestbook.html into CONFIG below.
-    Until then, TOTAL shows this browser's own visits (local fallback).
     Then paste the SAME URL + anon key as guestbook.html into CONFIG below.
     Until then, TOTAL shows this browser's own visits (local fallback).
     =====================================================================
@@ -1423,12 +1124,10 @@
       } else {
         localFlow();
       }
-      var d = document.getElementById('lastUpdated');
-      if (d) d.textContent = new Date().toLocaleDateString();
     })();
   </script>
 
-  <!-- 
+  <!--
     =============================================================================
     2. THE BOOT SEQUENCE OVERLAY (Sits on top and disappears automatically)
     =============================================================================
@@ -1903,103 +1602,9 @@
       startBootSequence();
     });
   </script>
-  <script>
-    // Fake X button: yanked plug — wobble, flash line, dot, dark + snap/zap/thump.
-    (function () {
-      var page = document.querySelector('.vintage-page');
-      var overlay = document.getElementById('shutOverlay');
-      var line = document.getElementById('killLine');
-      var dot = document.getElementById('killDot');
-      var btn = document.querySelector('.title-bar .x-btn');
-      var reopen = document.getElementById('shutReopen');
-      if (!page || !overlay || !btn) return;
-      function playUnplug() {
-        try {
-          var AC = window.AudioContext || window.webkitAudioContext;
-          var ctx = new AC();
-          var t = ctx.currentTime;
-          // 1. HV static snap: short filtered noise burst
-          var len = Math.floor(ctx.sampleRate * 0.09);
-          var buf = ctx.createBuffer(1, len, ctx.sampleRate);
-          var d = buf.getChannelData(0);
-          for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
-          var noise = ctx.createBufferSource();
-          noise.buffer = buf;
-          var hp = ctx.createBiquadFilter();
-          hp.type = 'highpass';
-          hp.frequency.value = 1200;
-          var ng = ctx.createGain();
-          ng.gain.setValueAtTime(0.5, t);
-          ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
-          noise.connect(hp);
-          hp.connect(ng);
-          ng.connect(ctx.destination);
-          noise.start(t);
-          // 2. collapsing-picture whine: 2600 -> 70 Hz
-          var osc = ctx.createOscillator();
-          var gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(2600, t + 0.02);
-          osc.frequency.exponentialRampToValueAtTime(70, t + 0.38);
-          gain.gain.setValueAtTime(0.0001, t);
-          gain.gain.exponentialRampToValueAtTime(0.14, t + 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.42);
-          // 3. glass thump as the dot dies
-          var th = ctx.createOscillator();
-          var tg = ctx.createGain();
-          th.type = 'sine';
-          th.frequency.setValueAtTime(160, t + 0.34);
-          th.frequency.exponentialRampToValueAtTime(45, t + 0.5);
-          tg.gain.setValueAtTime(0.0001, t + 0.34);
-          tg.gain.exponentialRampToValueAtTime(0.25, t + 0.37);
-          tg.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
-          th.connect(tg);
-          tg.connect(ctx.destination);
-          th.start(t + 0.34);
-          th.stop(t + 0.6);
-          setTimeout(function () { try { ctx.close(); } catch (e) { } }, 800);
-        } catch (e) { }
-      }
-      btn.addEventListener('click', function () {
-        playUnplug();
-        // Collapse around the middle of the SCREEN (where the light lives),
-        // not the middle of the (much taller) page.
-        try {
-          var r = page.getBoundingClientRect();
-          var yPct = ((window.innerHeight / 2 - r.top) / r.height) * 100;
-          yPct = Math.max(0, Math.min(100, yPct));
-          page.style.transformOrigin = '50% ' + yPct + '%';
-        } catch (e) { }
-        page.classList.add('kill-wobble');
-        setTimeout(function () {
-          page.classList.remove('kill-wobble');
-          page.classList.add('kill-line');
-          if (line) line.classList.add('on');
-        }, 140);
-        setTimeout(function () {
-          if (line) line.classList.remove('on');
-          page.classList.add('kill-dot');
-          if (dot) dot.classList.add('on');
-        }, 320);
-        setTimeout(function () { overlay.classList.add('show'); }, 560);
-      });
-      if (reopen) reopen.addEventListener('click', function (e) {
-        e.preventDefault();
-        overlay.classList.remove('show');
-        if (line) line.classList.remove('on');
-        if (dot) dot.classList.remove('on');
-        page.classList.remove('kill-dot');
-        page.classList.remove('kill-line');
-        page.classList.remove('kill-wobble');
-        page.style.transformOrigin = '';
-        window.scrollTo(0, 0);
-      });
-    })();
-  </script>
+
+  <script src="shutdown.js"></script>
+
   <script>
     // OnlyFans gate: straight to the question, no kill sequence.
     (function () {
