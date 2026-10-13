@@ -62,9 +62,9 @@ Manual changes (no code edits needed):
 1. Upload a new `cover.png` over the old one.
 2. Upload a new `song.txt` (exactly 3 lines):
    ```
-   SEASONAL DEPRESSION
-   THE HAUNT
-   https://www.youtube.com/watch?v=4H3ImwtTvpw
+   SHADOWS
+   A THOUSAND HORSES
+   https://www.youtube.com/results?search_query=A%20Thousand%20Horses%20-%20Shadows
    ```
 3. Hard-refresh — `Cmd/Ctrl+Shift+R`. (Neocities and browsers cache the
    text and image files, so the new song may need the hard refresh to show.)
