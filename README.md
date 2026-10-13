@@ -40,7 +40,6 @@ API — there are zero audio files to host.
 | `style.css` | The one and only stylesheet — theme + layout for every page. Fully documented at the top, including how to restyle via CSS variables. |
 | `shutdown.js` | The fake `[X]` power-cut gag (wobble → bright line → dying dot → black screen). Loaded by every page. Documented at the top. |
 | `pixeelbb2-button.png` | 88×31 web-button, also embedded in the homepage LINKS box. |
-| `pixeelbb2-logo.png` | Same button at 3x (264×93, nearest-neighbor) — spare Atabook header logo. |
 | `pixeelbb2-blank.png` | 16×16 `#020005` square — Atabook Logo field, keeps the header minimal so entries sit higher. |
 | `cover.png` | Current "Song of the Week" cover art — the round label in the middle of the about-page vinyl. |
 | `song.txt` | Current "Song of the Week" text — 3 lines: `SONG` / `ARTIST` / `YOUTUBE-URL`. The about page loads it live. |
@@ -197,7 +196,7 @@ curl -H "Authorization: Bearer YOUR_API_KEY" -X POST https://neocities.org/api/u
   -F "about.html=@about.html" -F "chat.html=@chat.html" -F "projects.html=@projects.html" \
   -F "links.html=@links.html" -F "guestbook.html=@guestbook.html" \
   -F "cover.png=@cover.png" -F "song.txt=@song.txt" -F "pixeelbb2-button.png=@pixeelbb2-button.png" \
-  -F "guestbook-embed.css=@guestbook-embed.css" -F "pixeelbb2-logo.png=@pixeelbb2-logo.png" \
+  -F "guestbook-embed.css=@guestbook-embed.css" \
   -F "pixeelbb2-blank.png=@pixeelbb2-blank.png"
 
 # GitHub
