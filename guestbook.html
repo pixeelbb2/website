@@ -41,6 +41,12 @@
       height: 600px;
       border: 0;
       background: var(--panel-darker);
+      /* Dark-mode hack: the book page is white and cross-origin CSS can't
+         reach it, so the frame itself is inverted (hue rotated back so
+         colors survive). Downside: images/smileys inside render as
+         negatives. If you ever theme Atabook dark in its dashboard,
+         DELETE this filter or it inverts you back to white. */
+      filter: invert(1) hue-rotate(180deg);
     }
 
     .gb-alt {
