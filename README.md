@@ -7,7 +7,6 @@ old-web corner hosted on [Neocities](https://pixeelbb2-node.neocities.org).
 **Code:** <https://github.com/pixeelbb2/website>
 
 ---
-[![.github/workflows/weekly-song.yml](https://github.com/pixeelbb2/website/actions/workflows/weekly-song.yml/badge.svg?branch=main&event=schedule)](https://github.com/pixeelbb2/website/actions/workflows/weekly-song.yml)
 
 ## What it is
 
@@ -32,7 +31,7 @@ API — there are zero audio files to host.
 | Chat | `chat.html` | SOON_ placeholder |
 | Projects | `projects.html` | SOON_ placeholder — will fold in the old games + homelab content |
 | Links | `links.html` | SOON_ placeholder (`link-row` styles ready) |
-| Guestbook | `guestbook.html` | Live Atabook iframe (`pixeelbb2.atabook.org`) |
+| Guestbook | `guestbook.html` | Live BlackPirateX iframe (`tools.blackpiratex.com/u/pixeelbb2`), skinned by `guestbook-embed.css` |
 
 ## Files
 
@@ -43,6 +42,7 @@ API — there are zero audio files to host.
 | `pixeelbb2-button.png` | 88×31 web-button, also embedded in the homepage LINKS box. |
 | `cover.png` | Current "Song of the Week" cover art — the round label in the middle of the about-page vinyl. |
 | `song.txt` | Current "Song of the Week" text — 3 lines: `SONG` / `ARTIST` / `YOUTUBE-URL`. The about page loads it live. |
+| `guestbook-embed.css` | Skin for the book *inside* its iframe — loaded by the BlackPirateX app via the dashboard's Embed CSS URL, since parent CSS can't cross the frame. |
 | `scripts/weekly_song.py` | The Monday picker — pulls your Last.fm top 5, rotates, writes `song.txt` + `cover.png`. |
 | `.github/workflows/weekly-song.yml` | The schedule: runs the script Mondays 06:00 UTC, commits, uploads to Neocities. |
 
@@ -163,13 +163,19 @@ skin stays clean.
   then comes from an atomic `bump_visits()` call, so it can't double-assign.
 
 ### Guestbook (`guestbook.html`)
-- Live book hosted on **Atabook** (`pixeelbb2.atabook.org`), shown in an
-  `<iframe>` — the frame is Atabook's page with its own rules, so Neocities'
-  strict CSP doesn't touch it.
-- The old localStorage/Supabase implementation is gone (nothing to configure
-  in this file). Moderation — approvals, word filter, IP blocks — happens in
-  the Atabook dashboard. Theme tweaks (colors/fonts) happen in the Atabook UI;
-  pixel-perfect custom CSS needs their Supporter plan.
+- Live book hosted on **BlackPirateX Website Tools**
+  (`tools.blackpiratex.com/u/pixeelbb2`), shown in an `<iframe>` in
+  `?embed=1` mode — the frame is their page with its own rules, so
+  Neocities' strict CSP doesn't touch it. Auto-resize arrives via
+  `postMessage`; the 600px frame height is the fallback.
+- Its in-frame skin is **`guestbook-embed.css`**, loaded by *their* app from
+  the dashboard's **Embed CSS URL** field
+  (`https://pixeelbb2-node.neocities.org/guestbook-embed.css`) — parent-page
+  CSS can't cross the iframe boundary, hence the separate file. Selectors
+  mirror their `PublicGuestbook.jsx` (see the file header); re-check them if
+  the book ever renders unstyled after one of their deploys.
+- Moderation happens in their dashboard. (History: localStorage/Supabase
+  implementation, then an Atabook iframe — both retired.)
 
 ### Shutdown gag (`shutdown.js`)
 - Timeline: `0` wobble + noise snap → `140ms` window becomes a bright line →
@@ -188,7 +194,8 @@ curl -H "Authorization: Bearer YOUR_API_KEY" -X POST https://neocities.org/api/u
   -F "index.html=@index.html" -F "style.css=@style.css" -F "shutdown.js=@shutdown.js" \
   -F "about.html=@about.html" -F "chat.html=@chat.html" -F "projects.html=@projects.html" \
   -F "links.html=@links.html" -F "guestbook.html=@guestbook.html" \
-  -F "cover.png=@cover.png" -F "song.txt=@song.txt" -F "pixeelbb2-button.png=@pixeelbb2-button.png"
+  -F "cover.png=@cover.png" -F "song.txt=@song.txt" -F "pixeelbb2-button.png=@pixeelbb2-button.png" \
+  -F "guestbook-embed.css=@guestbook-embed.css"
 
 # GitHub
 git add -A && git commit -m "update" && git push origin main

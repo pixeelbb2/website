@@ -1,0 +1,207 @@
+/* =====================================================================
+   GUESTBOOK EMBED SKIN — PixeelBB2
+   This file styles the book INSIDE its iframe. It is loaded by the
+   BlackPirateX guestbook app itself (dashboard → Embed CSS URL), because
+   parent-page CSS cannot cross the iframe boundary. Hosted alongside the
+   site (https://pixeelbb2-node.neocities.org/guestbook-embed.css) so the
+   URL never rots.
+   Selectors mirror src/pages/PublicGuestbook.jsx in
+   github.com/blackpirateapps/guestbook-service. The app's own rules are
+   single-class specificity and this file loads after them, so plain
+   matches win; !important is only used against the app's inline <style>.
+   Palette = style.css :root (neon-purple #9d00ff, body #d9a7ff, ...).
+   ===================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+/* Page chrome: beat the app's inline `html, body` rule (loads later). */
+html body {
+  background: #020005 !important;
+  color: #d9a7ff !important;
+  font-family: 'Share Tech Mono', 'VCR OSD Mono', monospace !important;
+  font-size: 13px !important;
+  letter-spacing: 1px !important;
+}
+
+/* Book header ("pixeelbb2's Guestbook" + subtitle). */
+header h1 {
+  color: #b22cff !important;
+  font-size: 20px !important;
+  letter-spacing: 3px !important;
+  text-shadow: 0 0 8px rgba(178, 44, 255, 0.9) !important;
+}
+header p {
+  color: #9d4edd !important;
+}
+
+/* Sign form card. */
+.entry-form-wrapper {
+  background: #0a0612 !important;
+  border: 1px solid #9d00ff !important;
+  box-shadow: 0 0 14px rgba(157, 0, 255, 0.35) !important;
+  border-radius: 0 !important;
+  padding: 12px !important;
+}
+.entry-form-wrapper h3 {
+  color: #b22cff !important;
+  letter-spacing: 2px !important;
+  font-size: 13px !important;
+  text-shadow: 0 0 8px rgba(178, 44, 255, 0.9) !important;
+}
+.entry-form-wrapper label,
+.form-group label {
+  color: #e0aaff !important;
+  font-size: 12px !important;
+  letter-spacing: 2px !important;
+}
+.entry-form-wrapper input[type="text"],
+.entry-form-wrapper input[type="url"],
+.entry-form-wrapper textarea {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: #050308 !important;
+  border: 1px solid #9d00ff !important;
+  border-radius: 0 !important;
+  color: #e0aaff !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  letter-spacing: 1px !important;
+  padding: 7px 9px !important;
+}
+.entry-form-wrapper input:focus,
+.entry-form-wrapper textarea:focus {
+  outline: none !important;
+  box-shadow: 0 0 14px rgba(157, 0, 255, 0.6) !important;
+}
+/* Spam honeypot: the app never hides it, so a bare rule would show a
+   stray text field — keep it off-screen. */
+.honeypot {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+}
+.checkbox-label {
+  color: #9d4edd !important;
+}
+.entry-form-wrapper button[type="submit"] {
+  background: #1a0033 !important;
+  border: 1px solid #9d00ff !important;
+  border-radius: 0 !important;
+  color: #e0aaff !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  letter-spacing: 2px !important;
+  padding: 8px 18px !important;
+  cursor: pointer !important;
+}
+.entry-form-wrapper button[type="submit"]:hover {
+  background: #9d00ff !important;
+  color: #000 !important;
+  box-shadow: 0 0 20px rgba(157, 0, 255, 0.9) !important;
+}
+button.secondary {
+  background: #050308 !important;
+  border: 1px solid #9d00ff !important;
+  border-radius: 0 !important;
+  color: #e0aaff !important;
+  font-family: inherit !important;
+}
+
+/* Divider + entries header. */
+hr {
+  border: 0 !important;
+  border-top: 1px solid rgba(157, 0, 255, 0.5) !important;
+}
+.entries-header h3 {
+  color: #b22cff !important;
+  letter-spacing: 2px !important;
+  font-size: 13px !important;
+}
+.entries-count {
+  background: #1a0033 !important;
+  border: 1px solid #9d00ff !important;
+  border-radius: 0 !important;
+  color: #e0aaff !important;
+}
+
+/* Entry cards. */
+.entries-list .entry-card {
+  background: #0a0612 !important;
+  border: 1px solid #9d00ff !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 14px rgba(157, 0, 255, 0.35) !important;
+  margin-bottom: 10px !important;
+}
+.entries-list .entry-card:hover {
+  box-shadow: 0 0 20px rgba(157, 0, 255, 0.9) !important;
+}
+.entry-card-header {
+  background: linear-gradient(to right, #1a0033, #4c007a) !important;
+  border-bottom: 1px solid #9d00ff !important;
+  padding: 4px 8px !important;
+}
+.entry-author,
+a.entry-author-link {
+  color: #fff !important;
+  text-shadow: 0 0 8px rgba(178, 44, 255, 0.9) !important;
+  letter-spacing: 1px !important;
+}
+.entry-date-inline {
+  font-size: 11px !important;
+  color: #9d4edd !important;
+}
+.badge.owner {
+  background: #1a0033 !important;
+  border: 1px solid #33ff66 !important;
+  border-radius: 0 !important;
+  color: #33ff66 !important;
+  text-shadow: 0 0 8px rgba(51, 255, 102, 0.7) !important;
+}
+.entry-action-button {
+  border-radius: 0 !important;
+}
+.entry-action-button svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+.entry-content {
+  color: #d9a7ff !important;
+  padding: 8px !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Replies. */
+.replies {
+  margin: 8px 0 0 16px !important;
+}
+.reply-card {
+  background: #050308 !important;
+  border: 1px solid rgba(157, 0, 255, 0.5) !important;
+  border-radius: 0 !important;
+  padding: 8px !important;
+  margin-bottom: 8px !important;
+}
+.reply-name {
+  color: #fff !important;
+  letter-spacing: 1px !important;
+}
+.reply-date {
+  font-size: 11px !important;
+  color: #9d4edd !important;
+}
+.reply-content {
+  color: #d9a7ff !important;
+  margin-top: 4px !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Generic links inside the book. */
+a {
+  color: #e0aaff !important;
+}
+a:hover {
+  color: #fff !important;
+}

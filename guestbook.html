@@ -3,11 +3,10 @@
   =============================================================================
   GUESTBOOK — PixeelBB2
   Standard subpage: shared terminal skin (style.css) + the fake-[X]
-  power-cut gag (shutdown.js). The book itself is hosted on Atabook
-  (pixeelbb2.atabook.org) and shown here in an iframe — the frame is
-  Atabook's page with its own rules, so Neocities' strict CSP doesn't
-  touch it. Moderation (approvals, word filter, IP blocks) happens in
-  the Atabook dashboard, not in this file.
+  power-cut gag (shutdown.js). The book itself is hosted on BlackPirateX
+  Website Tools (tools.blackpiratex.com/u/pixeelbb2) and shown here in an
+  iframe; its in-frame skin is guestbook-embed.css (see that file header).
+  Moderation happens in their dashboard, not in this file.
   =============================================================================
 -->
 <html lang="en">
@@ -28,7 +27,7 @@
   <style>
     /* Shared terminal skin + panels live in style.css — page-specific rules below. */
 
-    /* Atabook book as a native terminal panel: the shared .box gives the
+    /* Book as a native terminal panel: the shared .box gives the
        border + title bar, the frame sits flush inside. Height fits
        ~5 entries; the book scrolls internally. */
     .gb-body {
@@ -41,12 +40,6 @@
       height: 600px;
       border: 0;
       background: var(--panel-darker);
-      /* Dark-mode hack: the book page is white and cross-origin CSS can't
-         reach it, so the frame itself is inverted (hue rotated back so
-         colors survive). Downside: images/smileys inside render as
-         negatives. If you ever theme Atabook dark in its dashboard,
-         DELETE this filter or it inverts you back to white. */
-      filter: invert(1) hue-rotate(180deg);
     }
 
     .gb-alt {
@@ -102,16 +95,20 @@
           href="guestbook.html" class="active">[ GUESTBOOK ]</a>
       </div>
 
-      <!-- Live guestbook: hosted on Atabook (pixeelbb2.atabook.org),
-           shown here in an iframe. The frame is Atabook's page with its
-           own rules, so Neocities' strict CSP doesn't touch it. Theme it
-           toward the site skin in the Atabook UI (free tier); pixel-perfect
-           custom CSS needs their Supporter plan. -->
+      <!-- Live guestbook: hosted on BlackPirateX Website Tools
+           (tools.blackpiratex.com/u/pixeelbb2), shown here in an iframe.
+           The frame is their page with its own rules, so Neocities'
+           strict CSP doesn't touch it. Its skin comes from
+           guestbook-embed.css, loaded INSIDE the frame via the dashboard's
+           Embed CSS URL field (parent CSS can't cross the iframe
+           boundary). Moderation happens in their dashboard. -->
       <div class="box">
         <div class="box-title" style="text-align:center;">&gt; SIGN OR PERISH &lt;</div>
         <div class="box-body gb-body">
-          <iframe src="https://pixeelbb2.atabook.org" title="Guestbook" class="gb-frame" loading="lazy"></iframe>
-          <p class="gb-alt"><a href="https://pixeelbb2.atabook.org" target="_blank" rel="noopener" class="gb-btn">OPEN
+          <iframe src="https://tools.blackpiratex.com/u/pixeelbb2?embed=1" title="Guestbook" id="gbFrame"
+            class="gb-frame" loading="lazy"></iframe>
+          <p class="gb-alt"><a href="https://tools.blackpiratex.com/u/pixeelbb2" target="_blank" rel="noopener"
+              class="gb-btn">OPEN
               FULL GUESTBOOK</a></p>
         </div>
       </div>
@@ -131,6 +128,22 @@
   </main>
 
   <script src="shutdown.js"></script>
+  <script>
+    // Guestbook auto-resize: the embedded app posts
+    // { type: 'guestbook:resize', height } as it grows. Origin-checked;
+    // the 600px frame height in CSS stays as fallback if it never fires.
+    (function () {
+      var frame = document.getElementById('gbFrame');
+      if (!frame) return;
+      window.addEventListener('message', function (ev) {
+        if (ev.origin !== 'https://tools.blackpiratex.com') return;
+        var d = ev.data || {};
+        if (d.type === 'guestbook:resize' && +d.height > 0) {
+          frame.style.height = Math.max(400, +d.height) + 'px';
+        }
+      });
+    })();
+  </script>
 </body>
 
 </html>
