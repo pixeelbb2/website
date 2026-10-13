@@ -11,6 +11,11 @@ on:
 permissions:
   contents: write
 
+# A manual trigger overlapping the Monday cron shouldn't race song.txt.
+concurrency:
+  group: weekly-song
+  cancel-in-progress: false
+
 jobs:
   update-song:
     runs-on: ubuntu-latest
@@ -19,7 +24,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - run: pip install pillow
+      - run: python -m pip install pillow
       - name: Pick the new song
         run: python scripts/weekly_song.py
         env:
@@ -28,7 +33,7 @@ jobs:
       - id: commit
         run: |
           git config user.name pixeelbb2
-          git config user.email pixeelbb2@users.noreply.github.com
+          git config user.email 99426355+pixeelbb2@users.noreply.github.com
           git add song.txt cover.png
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -41,6 +46,6 @@ jobs:
       - name: Upload to Neocities
         if: steps.commit.outputs.changed == 'true'
         run: |
-          curl -s -H "Authorization: Bearer ${{ secrets.NEOCITIES_API_KEY }}" \
+          curl -f -s -H "Authorization: Bearer ${{ secrets.NEOCITIES_API_KEY }}" \
             -X POST https://neocities.org/api/upload \
             -F "song.txt=@song.txt" -F "cover.png=@cover.png"
