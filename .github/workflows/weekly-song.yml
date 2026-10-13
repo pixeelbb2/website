@@ -1,3 +1,5 @@
+# /// This script was AI-generated ///
+
 # Every Monday: pick the new Song of the Week from your Last.fm chart
 # (Deezer scrobbles there automatically) and ship it to GitHub + Neocities.
 # Manual runs: Actions tab -> "Weekly song" -> Run workflow.
