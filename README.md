@@ -169,11 +169,9 @@ skin stays clean.
 - **Free-tier naps:** Supabase pauses projects after ~1 week of no activity.
   Symptom = counter frozen on old numbers → Dashboard → Restore project and
   it resumes. Returning visitors keep their frozen souvenir numbers.
-- **Draw log:** `visit_log` records every assigned number + timestamp (owner
-  eyes only — no anon read/write policies, only `bump_visits()` inserts).
-  Table Editor → `visit_log` answers "was that draw me testing or a real
-  stranger". No IPs stored: the pooler hides them anyway, and numbers +
-  timestamps are enough without personal data.
+- **Anonymous by design:** the counter stores only the aggregate total —
+  no per-visit log, no IPs, no timestamps. There is nothing identifying
+  to leak or to maintain.
 
 ### Guestbook (`guestbook.html`)
 - **Interim: Atabook** (`pixeelbb2.atabook.org`) in an `<iframe>`, themed
