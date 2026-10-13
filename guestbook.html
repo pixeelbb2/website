@@ -3,11 +3,11 @@
   =============================================================================
   GUESTBOOK — PixeelBB2
   Standard subpage: shared terminal skin (style.css) + the fake-[X]
-  power-cut gag (shutdown.js). Currently shown as a SOON_ placeholder.
-  When it goes live: entries store in the visitor's own browser
-  (localStorage) so the book works instantly with zero backend; paste
-  the Supabase keys into CONFIG below to make it a truly shared,
-  realtime book. See the big setup comment before that script.
+  power-cut gag (shutdown.js). The book itself is hosted on Atabook
+  (pixeelbb2.atabook.org) and shown here in an iframe — the frame is
+  Atabook's page with its own rules, so Neocities' strict CSP doesn't
+  touch it. Moderation (approvals, word filter, IP blocks) happens in
+  the Atabook dashboard, not in this file.
   =============================================================================
 -->
 <html lang="en">
@@ -28,92 +28,25 @@
   <style>
     /* Shared terminal skin + panels live in style.css — page-specific rules below. */
 
-    .gb-wrap {
+    /* Atabook frame: full-width book with a neon border so it sits in
+       the terminal skin. Height fits ~5 entries; the book scrolls inside. */
+    .gb-frame-wrap {
       padding: 12px;
-      font-size: 13px;
-      line-height: 1.6;
+      text-align: center;
     }
 
-    label {
-      display: block;
+    .gb-frame {
+      width: 100%;
+      height: 600px;
+      border: 1px solid var(--neon-purple);
+      box-shadow: 0 0 14px rgba(157, 0, 255, 0.35);
+      background: var(--panel-darker);
+    }
+
+    .gb-alt {
+      margin-top: 8px;
       font-size: 12px;
       letter-spacing: 2px;
-      color: var(--link-purple);
-      margin: 8px 0 4px 0;
-    }
-
-    input[type="text"],
-    textarea {
-      width: 100%;
-      background: var(--panel-darker);
-      border: 1px solid var(--neon-purple);
-      color: var(--link-purple);
-      font-family: var(--font-stack);
-      font-size: 13px;
-      letter-spacing: 1px;
-      padding: 7px 9px;
-    }
-
-    input[type="text"]:focus,
-    textarea:focus {
-      outline: none;
-      box-shadow: 0 0 14px rgba(157, 0, 255, 0.6);
-    }
-
-    textarea {
-      min-height: 84px;
-      resize: vertical;
-    }
-
-    button {
-      background: var(--grad-a);
-      border: 1px solid var(--neon-purple);
-      color: var(--link-purple);
-      font-family: var(--font-stack);
-      font-size: 13px;
-      letter-spacing: 2px;
-      padding: 8px 18px;
-      margin-top: 8px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: var(--neon-purple);
-      color: var(--panel-black);
-      box-shadow: 0 0 20px var(--glow-violet-bright);
-    }
-
-    .entry {
-      margin-bottom: 10px;
-    }
-
-    .box-title .del {
-      float: right;
-      color: #ff1818 !important;
-      text-shadow: 0 0 8px rgba(255, 24, 24, 0.8);
-      text-decoration: none !important;
-    }
-
-    .entry .who {
-      color: var(--term-white);
-      text-shadow: 0 0 8px var(--glow-purple);
-    }
-
-    .entry .when {
-      font-size: 11px;
-      color: var(--link-visited);
-    }
-
-    .entry .msg {
-      margin-top: 4px;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-
-    .empty-note {
-      text-align: center;
-      padding: 14px;
-      color: var(--link-visited);
     }
   </style>
 </head>
@@ -133,7 +66,7 @@
       </div>
 
       <div class="marquee-bar">
-        <marquee behavior="scroll" direction="left" scrollamount="5">+++ QUIET BOOK +++ INK LOADING +++ STAY TUNED +++</marquee>
+        <marquee behavior="scroll" direction="left" scrollamount="5">+++ SIGN OR PERISH +++ PROVE YOU WERE HERE +++ STAY A WHILE +++</marquee>
       </div>
 
       <div class="vintage-nav">
@@ -142,10 +75,15 @@
           href="guestbook.html" class="active">[ GUESTBOOK ]</a>
       </div>
 
-      <!-- SOON_ placeholder: swap this block for the live guestbook form -->
-      <div class="section" style="text-align:center; padding:34px 12px;">
-        <h2 style="font-size:34px; letter-spacing:6px;">SOON_</h2>
-        <p>THE INK IS DRY... FOR NOW.</p>
+      <!-- Live guestbook: hosted on Atabook (pixeelbb2.atabook.org),
+           shown here in an iframe. The frame is Atabook's page with its
+           own rules, so Neocities' strict CSP doesn't touch it. Theme it
+           toward the site skin in the Atabook UI (free tier); pixel-perfect
+           custom CSS needs their Supporter plan. -->
+      <div class="section gb-frame-wrap">
+        <iframe src="https://pixeelbb2.atabook.org" title="Guestbook" class="gb-frame" loading="lazy"></iframe>
+        <p class="gb-alt"><a href="https://pixeelbb2.atabook.org" target="_blank" rel="noopener">[ OPEN FULL
+            GUESTBOOK ]</a></p>
       </div>
 
       <div class="vintage-footer">
@@ -153,7 +91,7 @@
       </div>
     </div>
     <div style="text-align:center;font-size:11px;color:#d9a7ff;margin-top:10px;position:relative;z-index:2;">&gt;
-      ink runs dry soon &lt;</div>
+      ink never runs dry &lt;</div>
     <div id="killLine"></div>
     <div id="killDot"></div>
     <div id="shutOverlay">
@@ -161,149 +99,6 @@
           href="#" class="shut-reopen" id="shutReopen">[ CLICK TO REOPEN ]</a></div>
     </div>
   </main>
-
-  <!--
-    =====================================================================
-    REAL SHARED GUESTBOOK SETUP (owner: read this, ~10 min, free):
-    1. supabase.com → New project (free tier) → wait for it to boot.
-    2. SQL Editor → New query → paste this and RUN:
-         create table guestbook (
-           id bigint generated always as identity primary key,
-           name text not null,
-           msg text not null,
-           created_at timestamptz default now()
-         );
-         alter table guestbook enable row level security;
-         create policy "read all" on guestbook for select using (true);
-         create policy "insert all" on guestbook for insert with check (true);
-         alter publication supabase_realtime add table guestbook;
-    3. Project Settings → API → copy the URL + anon key into CONFIG below.
-    4. Moderate weird posts (delete for EVERYONE) in the Supabase
-       dashboard → Table Editor → delete the row. Instant everywhere.
-    Until the keys are pasted, the book runs in LOCAL mode (this browser
-    only) so the page never looks broken.
-    =====================================================================
-  -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script>
-    (function () {
-      // Guestbook shelved for now — SOON. (Kept intact below for resurrection.)
-      if (!document.getElementById('gbSign')) return;
-      // ===== CONFIG: paste your Supabase URL + anon key here =====
-      var SUPABASE_URL = 'PASTE_SUPABASE_URL_HERE';
-      var SUPABASE_ANON_KEY = 'PASTE_SUPABASE_ANON_KEY_HERE';
-      var CLOUD = SUPABASE_URL.indexOf('PASTE') !== 0 &&
-        SUPABASE_ANON_KEY.indexOf('PASTE') !== 0 &&
-        typeof supabase !== 'undefined';
-      var db = CLOUD ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-
-      // Guestbook: SHARED cloud table when configured, LOCAL fallback else.
-      // (Local mode = each browser keeps its own copy; cloud = everyone
-      // shares one book, moderated from the Supabase dashboard.)
-      var KEY = 'pixeel_guestbook';
-      var list = document.getElementById('gbList');
-      var count = document.getElementById('gbCount');
-      var entries = [];
-
-      function esc(s) {
-        return String(s).replace(/[&<>"']/g, function (c) {
-          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-        });
-      }
-      function load() {
-        try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
-        catch (e) { return []; }
-      }
-      function save(rows) {
-        try { localStorage.setItem(KEY, JSON.stringify(rows)); } catch (e) { }
-      }
-      function fmtWhen(row) {
-        try {
-          if (row.created_at) return new Date(row.created_at).toLocaleString();
-        } catch (e) { }
-        return row.when || '';
-      }
-      function render() {
-        count.textContent = entries.length;
-        if (!entries.length) {
-          list.innerHTML = '<div class="box"><div class="box-body empty-note">NO ENTRIES YET — BE THE FIRST LEGEND TO SIGN!</div></div>';
-          return;
-        }
-        list.innerHTML = entries.map(function (e, i) {
-          // No [X] in cloud mode: deletes happen in the Supabase dashboard
-          var del = CLOUD ? '' : ' <a href="#" class="del" data-i="' + i + '" title="delete this entry">[X]</a>';
-          return '<div class="box entry"><div class="box-title">&gt; ' + esc(e.name) + ' &lt;' + del + '</div>' +
-            '<div class="box-body"><span class="when">' + esc(fmtWhen(e)) + '</span>' +
-            '<div class="msg">' + esc(e.msg) + '</div></div></div>';
-        }).reverse().join('');
-      }
-      function refreshLocal() {
-        entries = load();
-        render();
-      }
-      function refreshCloud() {
-        if (!db) return;
-        db.from('guestbook').select('*').order('id', { ascending: false }).limit(100)
-          .then(function (res) {
-            if (res.error) return;
-            // render() expects oldest-first and flips to newest-first itself
-            entries = (res.data || []).slice().reverse();
-            render();
-          });
-      }
-      // Owner tools (local mode only; cloud is moderated via dashboard)
-      list.addEventListener('click', function (ev) {
-        if (CLOUD) return;
-        var a = ev.target.closest ? ev.target.closest('a.del') : null;
-        if (!a) return;
-        ev.preventDefault();
-        var rows = load();
-        rows.splice(parseInt(a.getAttribute('data-i'), 10), 1);
-        save(rows);
-        refreshLocal();
-      });
-      document.getElementById('gbPurge').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (CLOUD) return;
-        if (confirm('PURGE EVERY ENTRY? THIS CANNOT BE UNDONE.')) {
-          save([]);
-          refreshLocal();
-        }
-      });
-      document.getElementById('gbSign').addEventListener('click', function () {
-        var nameEl = document.getElementById('gbName');
-        var msgEl = document.getElementById('gbMsg');
-        var name = nameEl.value.trim() || 'ANON';
-        var msg = msgEl.value.trim();
-        if (!msg) { msgEl.focus(); return; }
-        var cleanName = name.toUpperCase().slice(0, 30);
-        // Signing adopts this machine: the boot loader will greet you by it
-        try { localStorage.setItem('pixeel_nick', cleanName.slice(0, 20)); } catch (e) { }
-        if (CLOUD) {
-          db.from('guestbook').insert({ name: cleanName, msg: msg.slice(0, 500) })
-            .then(function () { refreshCloud(); });
-        } else {
-          var rows = load();
-          rows.push({ name: cleanName, msg: msg.slice(0, 500), when: new Date().toLocaleString() });
-          save(rows);
-          refreshLocal();
-        }
-        nameEl.value = '';
-        msgEl.value = '';
-      });
-      if (CLOUD) {
-        document.getElementById('gbPurge').style.display = 'none';
-        refreshCloud();
-        // Live: new/deleted entries appear (and vanish) instantly
-        db.channel('guestbook-live')
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'guestbook' }, function () { refreshCloud(); })
-          .subscribe();
-      } else {
-        refreshLocal();
-      }
-    })();
-  </script>
 
   <script src="shutdown.js"></script>
 </body>

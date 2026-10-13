@@ -1,8 +1,6 @@
 # PIXEELBB2
 
-/// This README file was AI-generated ///
-
-A retro CRT/terminal personal website — a phosphor-purple,
+A retro CRT/terminal personal website — a phosphor-purple, ULTRAKILL-flavored
 old-web corner hosted on [Neocities](https://pixeelbb2-node.neocities.org).
 
 **Live site:** <https://pixeelbb2-node.neocities.org>
@@ -34,7 +32,7 @@ API — there are zero audio files to host.
 | Chat | `chat.html` | SOON_ placeholder |
 | Projects | `projects.html` | SOON_ placeholder — will fold in the old games + homelab content |
 | Links | `links.html` | SOON_ placeholder (`link-row` styles ready) |
-| Guestbook | `guestbook.html` | SOON_ placeholder (guestbook script kept intact) |
+| Guestbook | `guestbook.html` | Live Atabook iframe (`pixeelbb2.atabook.org`) |
 
 ## Files
 
@@ -148,8 +146,9 @@ skin stays clean.
 ### Boot sequence (`index.html`)
 - Plays once per **tab**: `pixeel_booted` in `sessionStorage` skips it on
   in-tab navigation back to the homepage; a fresh tab still gets the full show.
-- Typing a nickname in the guestbook (`pixeel_nick` in `localStorage`) turns
-  your name into the boot screen's `MACHINE ID`. Otherwise it stays `2137`.
+- A stored nickname (`pixeel_nick` in `localStorage`, legacy from the old
+  local guestbook) becomes the boot screen's `MACHINE ID`. Nothing writes
+  it anymore, so new visitors always get `2137`.
 
 ### Visitor counter (`index.html`, right column)
 - `#myBox` = your **personal number**, assigned once and frozen forever.
@@ -164,12 +163,13 @@ skin stays clean.
   then comes from an atomic `bump_visits()` call, so it can't double-assign.
 
 ### Guestbook (`guestbook.html`)
-- Shelved behind a `SOON_` placeholder right now — the full script is still
-  there and just early-returns until you wire up the form again.
-- Works the same dual way as the counter: **local mode** (`pixeel_guestbook` in
-  `localStorage`, per-browser) or **shared mode** once Supabase URL + anon key
-  are in `CONFIG` (one book for everyone, realtime via Supabase, moderation in
-  the dashboard). Full SQL setup is in the comment above that script.
+- Live book hosted on **Atabook** (`pixeelbb2.atabook.org`), shown in an
+  `<iframe>` — the frame is Atabook's page with its own rules, so Neocities'
+  strict CSP doesn't touch it.
+- The old localStorage/Supabase implementation is gone (nothing to configure
+  in this file). Moderation — approvals, word filter, IP blocks — happens in
+  the Atabook dashboard. Theme tweaks (colors/fonts) happen in the Atabook UI;
+  pixel-perfect custom CSS needs their Supporter plan.
 
 ### Shutdown gag (`shutdown.js`)
 - Timeline: `0` wobble + noise snap → `140ms` window becomes a bright line →

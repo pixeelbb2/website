@@ -1049,7 +1049,7 @@
 
   <!--
     =====================================================================
-    GLOBAL VISIT COUNTER SETUP (owner: same Supabase project as guestbook):
+    GLOBAL VISIT COUNTER SETUP (owner: needs its own Supabase project):
     SQL Editor → New query → paste this and RUN (once):
          create table site_stats (id int primary key, visits bigint not null default 0);
          insert into site_stats (id, visits) values (1, 0);
@@ -1062,7 +1062,7 @@
            update site_stats set visits = visits + 1 where id = 1 returning visits into n;
            return n;
          end $$;
-    Then paste the SAME URL + anon key as guestbook.html into CONFIG below.
+    Then paste that project's URL + anon key into CONFIG below.
     Until then, TOTAL shows this browser's own visits (local fallback).
     =====================================================================
   -->
@@ -1073,7 +1073,7 @@
     // frozen forever); TOTAL is the live count. Only first-ever visits bump
     // the total — coming back never changes your number or inflates it.
     (function () {
-      // ===== CONFIG: same Supabase URL + anon key as guestbook.html =====
+      // ===== CONFIG: paste your Supabase URL + anon key here =====
       var SUPABASE_URL = 'PASTE_SUPABASE_URL_HERE';
       var SUPABASE_ANON_KEY = 'PASTE_SUPABASE_ANON_KEY_HERE';
       var CLOUD = SUPABASE_URL.indexOf('PASTE') !== 0 &&
@@ -1265,8 +1265,9 @@
         5. classic switch-off: flash -> thin line -> dot -> black tube
         6. after a beat, the overlay fades out to reveal the real site
       Boot memory: `pixeel_booted` in sessionStorage makes the boot play
-      once per tab; in-tab navigation to other pages then skips it. Your
-      guestbook nickname (localStorage `pixeel_nick`) becomes MACHINE ID.
+      once per tab; in-tab navigation to other pages then skips it. A stored
+      nickname (localStorage `pixeel_nick`, legacy from the old guestbook)
+      becomes MACHINE ID.
       =========================================================================
     */
 
