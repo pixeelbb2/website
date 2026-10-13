@@ -1,5 +1,7 @@
 # PIXEELBB2
 
+/// This README file was AI-generated ///
+
 A retro CRT/terminal personal website — a phosphor-purple, ULTRAKILL-flavored
 old-web corner hosted on [Neocities](https://pixeelbb2-node.neocities.org).
 
