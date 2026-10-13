@@ -1053,7 +1053,8 @@
     LIVE since Oct 2026 — project gvvlbffccrcdxpzbluwl. History: site_stats
     was seeded at 110 (Neocities views), then RESET to 0 so the shared
     sequence starts clean — first visitor after the reset drew #1. Storage
-    keys are v2 for the same reason (pre-cloud souvenirs retired). To
+    keys are v3 for the same reason (v1 pre-cloud souvenirs + v2 early
+    112-115 draws, both retired). To
     rebuild from scratch, run:
          create table site_stats (id int primary key, visits bigint not null default 0);
          insert into site_stats (id, visits) values (1, 110);
@@ -1087,11 +1088,11 @@
         typeof supabase !== 'undefined';
       var db = CLOUD ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-      // Storage keys are v2: the pre-cloud souvenir numbers (every browser
-      // was its own #1) were retired when the shared sequence restarted,
+      // Storage keys are v3: v1 held pre-cloud souvenirs (every browser
+      // its own #1), v2 drew 112-115 before the reset ran — both retired,
       // so all browsers draw fresh from the cloud total below.
-      var KEY = 'pixeel_counter2';
-      var MY = 'pixeel_my_number2';
+      var KEY = 'pixeel_counter3';
+      var MY = 'pixeel_my_number3';
       function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
       function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
 

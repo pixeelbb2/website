@@ -158,8 +158,9 @@ skin stays clean.
 - **Live in shared mode** (since Oct 2026): Supabase project
   `gvvlbffccrcdxpzbluwl`, personal numbers from an atomic `bump_visits()`
   call. History: seeded at 110 (Neocities views), then reset to 0 so the
-  shared sequence starts clean at #1 — storage keys are v2 because every
-  pre-cloud browser was its own souvenir #1 and those numbers retired.
+  shared sequence starts clean at #1 — storage keys are v3 because every
+  pre-cloud browser was its own souvenir #1 (v1) and v2 drew 112-115 before
+  the reset ran; both generations retired.
   The anon key in `CONFIG` is public by design (RLS: reads + bump only —
   nothing writable through it).
 - If cloud reads fail, the page silently falls back to per-browser local
