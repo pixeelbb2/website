@@ -1050,9 +1050,10 @@
   <!--
     =====================================================================
     GLOBAL VISIT COUNTER SETUP (owner: needs its own Supabase project):
-    SQL Editor → New query → paste this and RUN (once):
+    LIVE since Oct 2026 — project gvvlbffccrcdxpzbluwl, site_stats seeded
+    at 110 (Neocities views). Kept here for reference; to rebuild, run:
          create table site_stats (id int primary key, visits bigint not null default 0);
-         insert into site_stats (id, visits) values (1, 0);
+         insert into site_stats (id, visits) values (1, 110);
          alter table site_stats enable row level security;
          create policy "read all" on site_stats for select using (true);
          create or replace function bump_visits() returns bigint
@@ -1073,9 +1074,11 @@
     // frozen forever); TOTAL is the live count. Only first-ever visits bump
     // the total — coming back never changes your number or inflates it.
     (function () {
-      // ===== CONFIG: paste your Supabase URL + anon key here =====
-      var SUPABASE_URL = 'PASTE_SUPABASE_URL_HERE';
-      var SUPABASE_ANON_KEY = 'PASTE_SUPABASE_ANON_KEY_HERE';
+      // ===== CONFIG: Supabase counter backend (URL + public anon key).
+      // The anon key is public by design: RLS allows reads + bump_visits()
+      // only, so it is safe in page source and in the public repo. =====
+      var SUPABASE_URL = 'https://gvvlbffccrcdxpzbluwl.supabase.co';
+      var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2dmxiZmZjY3JjZHhwemJsdXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4ODQyMDAsImV4cCI6MjEwNzQ2MDIwMH0.F_0wiuCn37CzxADee8VbwNqEDKweBNmwF4Md8dsagLo';
       var CLOUD = SUPABASE_URL.indexOf('PASTE') !== 0 &&
         SUPABASE_ANON_KEY.indexOf('PASTE') !== 0 &&
         typeof supabase !== 'undefined';
@@ -1146,6 +1149,12 @@
       totalBox.set(0);
       function showMy(n) { myBox.set(n); }
       function showTotal(n) { totalBox.set(n); }
+      // Cloud is proven working: drop the "dont work properly yet" note.
+      // Failures keep it (and fall back to local counting below).
+      function hideNote() {
+        var n = document.querySelector('.cyber-note');
+        if (n) n.style.display = 'none';
+      }
 
       function localFlow() {
         var n = parseInt(lsGet(KEY) || '0', 10) || 0;
@@ -1163,7 +1172,7 @@
         if (!db) return;
         db.from('site_stats').select('visits').eq('id', 1).single()
           .then(function (res) {
-            if (!res.error && res.data) showTotal(res.data.visits);
+            if (!res.error && res.data) { showTotal(res.data.visits); hideNote(); }
             else localFlow();
           });
       }
@@ -1176,6 +1185,7 @@
               lsSet(MY, String(res.data));
               showMy(res.data);
               showTotal(res.data);
+              hideNote();
             } else {
               localFlow();
             }

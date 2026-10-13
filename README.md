@@ -155,13 +155,16 @@ skin stays clean.
 - `#myBox` = your **personal number**, assigned once and frozen forever.
 - `#totalBox` = the global visit count. **Only first-ever visits bump it** —
   coming back never changes your number or inflates the total.
-- **Out of the box** it runs in *local* mode: each browser counts its own visits
-  (`pixeel_counter`, `pixeel_my_number` in `localStorage`) and shows
-  "it dont work properly yet" until cloud counting is enabled.
-- **Shared counting** is one optional step — paste Supabase keys into `CONFIG`
-  in `index.html` after running the SQL snippet in the comment above that
-  script (`site_stats` table + `bump_visits()` function). The assigned number
-  then comes from an atomic `bump_visits()` call, so it can't double-assign.
+- **Live in shared mode** (since Oct 2026): Supabase project
+  `gvvlbffccrcdxpzbluwl`, `site_stats` seeded at 110, personal numbers from
+  an atomic `bump_visits()` call. The anon key in `CONFIG` is public by
+  design (RLS: reads + bump only — nothing writable through it).
+- If cloud reads fail, the page silently falls back to per-browser local
+  counting and keeps the *"it dont work properly yet"* note; the note hides
+  only once a real cloud number loads.
+- **Free-tier naps:** Supabase pauses projects after ~1 week of no activity.
+  Symptom = counter frozen on old numbers → Dashboard → Restore project and
+  it resumes. Returning visitors keep their frozen souvenir numbers.
 
 ### Guestbook (`guestbook.html`)
 - **Interim: Atabook** (`pixeelbb2.atabook.org`) in an `<iframe>`, themed
