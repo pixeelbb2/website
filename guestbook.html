@@ -40,11 +40,6 @@
       height: 600px;
       border: 0;
       background: var(--panel-darker);
-      /* INTERIM: Atabook page is white and cross-origin CSS can't reach
-         it, so the frame is inverted (hue rotated back so colors survive).
-         Remove this the day the book moves back to BlackPirateX (their
-         page is skinned by guestbook-embed.css instead). */
-      filter: invert(1) hue-rotate(180deg);
     }
 
     .gb-alt {
@@ -104,9 +99,10 @@
            BlackPirateX has an upstream focus-loss bug (form remounts per
            keystroke — issue filed on their repo), so Atabook holds the
            fort until that's fixed; then the src flips back to
-           tools.blackpiratex.com/u/pixeelbb2?embed=1 and this filter goes.
-           The frame is Atabook's page with its own rules, so Neocities'
-           strict CSP doesn't touch it. -->
+           tools.blackpiratex.com/u/pixeelbb2?embed=1. The book's own
+           colors are set in Atabook's Change-layout page (values in the
+           README/guestbook section); the frame is Atabook's page with its
+           own rules, so Neocities' strict CSP doesn't touch it. -->
       <div class="box">
         <div class="box-title" style="text-align:center;">&gt; SIGN OR PERISH &lt;</div>
         <div class="box-body gb-body">

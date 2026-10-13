@@ -163,9 +163,10 @@ skin stays clean.
   then comes from an atomic `bump_visits()` call, so it can't double-assign.
 
 ### Guestbook (`guestbook.html`)
-- **Interim: Atabook** (`pixeelbb2.atabook.org`) in an `<iframe>`, dark-forced
-  with an invert filter (their page is white; cross-origin CSS can't reach
-  it, and free-tier custom CSS is paid).
+- **Interim: Atabook** (`pixeelbb2.atabook.org`) in an `<iframe>`, themed
+  dark in Atabook's own Change-layout page (Page `#020005` / Message
+  `#0a0612` / Reply `#050308`; fonts `#d9a7ff` / `#e0aaff` / `#d9a7ff`;
+  dark inputs ON, radius 0px, monospace if offered).
 - **Blocked move: BlackPirateX Website Tools** (`tools.blackpiratex.com/u/pixeelbb2`)
   with a native skin (`guestbook-embed.css`, loaded inside the frame via
   their dashboard's Embed CSS URL). Parked because their sign form loses
