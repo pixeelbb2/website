@@ -1050,8 +1050,11 @@
   <!--
     =====================================================================
     GLOBAL VISIT COUNTER SETUP (owner: needs its own Supabase project):
-    LIVE since Oct 2026 — project gvvlbffccrcdxpzbluwl, site_stats seeded
-    at 110 (Neocities views). Kept here for reference; to rebuild, run:
+    LIVE since Oct 2026 — project gvvlbffccrcdxpzbluwl. History: site_stats
+    was seeded at 110 (Neocities views), then RESET to 0 so the shared
+    sequence starts clean — first visitor after the reset drew #1. Storage
+    keys are v2 for the same reason (pre-cloud souvenirs retired). To
+    rebuild from scratch, run:
          create table site_stats (id int primary key, visits bigint not null default 0);
          insert into site_stats (id, visits) values (1, 110);
          alter table site_stats enable row level security;
@@ -1084,8 +1087,11 @@
         typeof supabase !== 'undefined';
       var db = CLOUD ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-      var KEY = 'pixeel_counter';
-      var MY = 'pixeel_my_number';
+      // Storage keys are v2: the pre-cloud souvenir numbers (every browser
+      // was its own #1) were retired when the shared sequence restarted,
+      // so all browsers draw fresh from the cloud total below.
+      var KEY = 'pixeel_counter2';
+      var MY = 'pixeel_my_number2';
       function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
       function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
 

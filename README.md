@@ -156,9 +156,12 @@ skin stays clean.
 - `#totalBox` = the global visit count. **Only first-ever visits bump it** —
   coming back never changes your number or inflates the total.
 - **Live in shared mode** (since Oct 2026): Supabase project
-  `gvvlbffccrcdxpzbluwl`, `site_stats` seeded at 110, personal numbers from
-  an atomic `bump_visits()` call. The anon key in `CONFIG` is public by
-  design (RLS: reads + bump only — nothing writable through it).
+  `gvvlbffccrcdxpzbluwl`, personal numbers from an atomic `bump_visits()`
+  call. History: seeded at 110 (Neocities views), then reset to 0 so the
+  shared sequence starts clean at #1 — storage keys are v2 because every
+  pre-cloud browser was its own souvenir #1 and those numbers retired.
+  The anon key in `CONFIG` is public by design (RLS: reads + bump only —
+  nothing writable through it).
 - If cloud reads fail, the page silently falls back to per-browser local
   counting and keeps the *"it dont work properly yet"* note; the note hides
   only once a real cloud number loads.
