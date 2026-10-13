@@ -1,0 +1,44 @@
+# Every Monday: pick the new Song of the Week from your Last.fm chart
+# (Deezer scrobbles there automatically) and ship it to GitHub + Neocities.
+# Manual runs: Actions tab -> "Weekly song" -> Run workflow.
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC = 08:00 CEST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-song:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - run: pip install pillow
+      - name: Pick the new song
+        run: python scripts/weekly_song.py
+        env:
+          LASTFM_USER: ${{ secrets.LASTFM_USER }}
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+      - id: commit
+        run: |
+          git config user.name pixeelbb2
+          git config user.email pixeelbb2@users.noreply.github.com
+          git add song.txt cover.png
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "nothing new — keeping last week's song"
+          else
+            git commit -m "Weekly song: $(head -1 song.txt) — $(sed -n 2p song.txt)"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Upload to Neocities
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          curl -s -H "Authorization: Bearer ${{ secrets.NEOCITIES_API_KEY }}" \
+            -X POST https://neocities.org/api/upload \
+            -F "song.txt=@song.txt" -F "cover.png=@cover.png"
