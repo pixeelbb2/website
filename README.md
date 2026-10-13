@@ -1,6 +1,6 @@
 # PIXEELBB2
 /// This file was AI-generated ///
-   -> I will rewrite it when I feel like it.
+-> I will rewrite it when I feel like it.
 
 A retro CRT/terminal personal website — a phosphor-purple,
 old-web corner hosted on [Neocities](https://pixeelbb2-node.neocities.org).
