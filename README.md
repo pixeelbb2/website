@@ -1,6 +1,7 @@
 # PIXEELBB2
+/// This file was AI-generated ///
 
-A retro CRT/terminal personal website — a phosphor-purple, ULTRAKILL-flavored
+A retro CRT/terminal personal website — a phosphor-purple,
 old-web corner hosted on [Neocities](https://pixeelbb2-node.neocities.org).
 
 **Live site:** <https://pixeelbb2-node.neocities.org>
