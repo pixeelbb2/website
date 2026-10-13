@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Weekly "Song of the Week" updater.
+"""
+/// This script was AI-generated ///
+
+
+Weekly "Song of the Week" updater.
 
 Runs every Monday from GitHub Actions (see .github/workflows/weekly-song.yml):
 
