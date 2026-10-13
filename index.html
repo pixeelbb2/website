@@ -1065,8 +1065,23 @@
          declare n bigint;
          begin
            update site_stats set visits = visits + 1 where id = 1 returning visits into n;
+           insert into visit_log (num) values (n);
            return n;
          end $$;
+    DRAW LOG (who drew which number, when — owner eyes only):
+    SQL Editor → New query → paste this and RUN (once):
+         create table visit_log (
+           id bigint generated always as identity primary key,
+           num bigint not null,
+           created_at timestamptz default now()
+         );
+         alter table visit_log enable row level security;
+         -- NO policies on purpose: anon can neither read nor write it.
+         -- Only bump_visits() (owner) inserts; you read it in Table Editor.
+         -- Then re-run the function block above so bumps start logging.
+    Deliberately no IPs: Supabase's pooler hides real visitor IPs anyway,
+    and timestamps + numbers already answer "was that me or a stranger"
+    without storing personal data (GDPR-friendly).
     Then paste that project's URL + anon key into CONFIG below.
     Until then, TOTAL shows this browser's own visits (local fallback).
     =====================================================================
