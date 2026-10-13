@@ -31,7 +31,7 @@ API — there are zero audio files to host.
 | Chat | `chat.html` | SOON_ placeholder |
 | Projects | `projects.html` | SOON_ placeholder — will fold in the old games + homelab content |
 | Links | `links.html` | SOON_ placeholder (`link-row` styles ready) |
-| Guestbook | `guestbook.html` | Live BlackPirateX iframe (`tools.blackpiratex.com/u/pixeelbb2`), skinned by `guestbook-embed.css` |
+| Guestbook | `guestbook.html` | Atabook iframe, interim (BlackPirateX blocked on an upstream focus bug) |
 
 ## Files
 
@@ -163,19 +163,18 @@ skin stays clean.
   then comes from an atomic `bump_visits()` call, so it can't double-assign.
 
 ### Guestbook (`guestbook.html`)
-- Live book hosted on **BlackPirateX Website Tools**
-  (`tools.blackpiratex.com/u/pixeelbb2`), shown in an `<iframe>` in
-  `?embed=1` mode — the frame is their page with its own rules, so
-  Neocities' strict CSP doesn't touch it. Auto-resize arrives via
-  `postMessage`; the 600px frame height is the fallback.
-- Its in-frame skin is **`guestbook-embed.css`**, loaded by *their* app from
-  the dashboard's **Embed CSS URL** field
-  (`https://pixeelbb2-node.neocities.org/guestbook-embed.css`) — parent-page
-  CSS can't cross the iframe boundary, hence the separate file. Selectors
-  mirror their `PublicGuestbook.jsx` (see the file header); re-check them if
-  the book ever renders unstyled after one of their deploys.
-- Moderation happens in their dashboard. (History: localStorage/Supabase
-  implementation, then an Atabook iframe — both retired.)
+- **Interim: Atabook** (`pixeelbb2.atabook.org`) in an `<iframe>`, dark-forced
+  with an invert filter (their page is white; cross-origin CSS can't reach
+  it, and free-tier custom CSS is paid).
+- **Blocked move: BlackPirateX Website Tools** (`tools.blackpiratex.com/u/pixeelbb2`)
+  with a native skin (`guestbook-embed.css`, loaded inside the frame via
+  their dashboard's Embed CSS URL). Parked because their sign form loses
+  focus after every keystroke — `EntryForm` is declared inside the page
+  component so React remounts it per character. Issue filed upstream; the
+  frame src flips back once fixed. `guestbook-embed.css` stays in the repo
+  (dormant) for that day.
+- Moderation happens in the host's dashboard. (History: localStorage/Supabase
+  implementation retired.)
 
 ### Shutdown gag (`shutdown.js`)
 - Timeline: `0` wobble + noise snap → `140ms` window becomes a bright line →

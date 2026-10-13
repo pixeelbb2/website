@@ -3,10 +3,10 @@
   =============================================================================
   GUESTBOOK — PixeelBB2
   Standard subpage: shared terminal skin (style.css) + the fake-[X]
-  power-cut gag (shutdown.js). The book itself is hosted on BlackPirateX
-  Website Tools (tools.blackpiratex.com/u/pixeelbb2) and shown here in an
-  iframe; its in-frame skin is guestbook-embed.css (see that file header).
-  Moderation happens in their dashboard, not in this file.
+  power-cut gag (shutdown.js). The book itself is currently Atabook
+  (pixeelbb2.atabook.org) in an iframe — interim, until BlackPirateX
+  fixes its form focus-loss bug (see the block comment above the frame).
+  Moderation happens in the host's dashboard, not in this file.
   =============================================================================
 -->
 <html lang="en">
@@ -40,6 +40,11 @@
       height: 600px;
       border: 0;
       background: var(--panel-darker);
+      /* INTERIM: Atabook page is white and cross-origin CSS can't reach
+         it, so the frame is inverted (hue rotated back so colors survive).
+         Remove this the day the book moves back to BlackPirateX (their
+         page is skinned by guestbook-embed.css instead). */
+      filter: invert(1) hue-rotate(180deg);
     }
 
     .gb-alt {
@@ -95,19 +100,19 @@
           href="guestbook.html" class="active">[ GUESTBOOK ]</a>
       </div>
 
-      <!-- Live guestbook: hosted on BlackPirateX Website Tools
-           (tools.blackpiratex.com/u/pixeelbb2), shown here in an iframe.
-           The frame is their page with its own rules, so Neocities'
-           strict CSP doesn't touch it. Its skin comes from
-           guestbook-embed.css, loaded INSIDE the frame via the dashboard's
-           Embed CSS URL field (parent CSS can't cross the iframe
-           boundary). Moderation happens in their dashboard. -->
+      <!-- INTERIM book: Atabook (pixeelbb2.atabook.org) in an iframe.
+           BlackPirateX has an upstream focus-loss bug (form remounts per
+           keystroke — issue filed on their repo), so Atabook holds the
+           fort until that's fixed; then the src flips back to
+           tools.blackpiratex.com/u/pixeelbb2?embed=1 and this filter goes.
+           The frame is Atabook's page with its own rules, so Neocities'
+           strict CSP doesn't touch it. -->
       <div class="box">
         <div class="box-title" style="text-align:center;">&gt; SIGN OR PERISH &lt;</div>
         <div class="box-body gb-body">
-          <iframe src="https://tools.blackpiratex.com/u/pixeelbb2?embed=1" title="Guestbook" id="gbFrame"
+          <iframe src="https://pixeelbb2.atabook.org" title="Guestbook" id="gbFrame"
             class="gb-frame" loading="lazy"></iframe>
-          <p class="gb-alt"><a href="https://tools.blackpiratex.com/u/pixeelbb2" target="_blank" rel="noopener"
+          <p class="gb-alt"><a href="https://pixeelbb2.atabook.org" target="_blank" rel="noopener"
               class="gb-btn">OPEN
               FULL GUESTBOOK</a></p>
         </div>
@@ -129,9 +134,9 @@
 
   <script src="shutdown.js"></script>
   <script>
-    // Guestbook auto-resize: the embedded app posts
-    // { type: 'guestbook:resize', height } as it grows. Origin-checked;
-    // the 600px frame height in CSS stays as fallback if it never fires.
+    // Guestbook auto-resize (dormant while Atabook is embedded): the
+    // BlackPirateX app posts { type: 'guestbook:resize', height } as it
+    // grows. Origin-checked; the 600px frame height stays as fallback.
     (function () {
       var frame = document.getElementById('gbFrame');
       if (!frame) return;
