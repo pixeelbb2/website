@@ -28,25 +28,46 @@
   <style>
     /* Shared terminal skin + panels live in style.css — page-specific rules below. */
 
-    /* Atabook frame: full-width book with a neon border so it sits in
-       the terminal skin. Height fits ~5 entries; the book scrolls inside. */
-    .gb-frame-wrap {
-      padding: 12px;
-      text-align: center;
+    /* Atabook book as a native terminal panel: the shared .box gives the
+       border + title bar, the frame sits flush inside. Height fits
+       ~5 entries; the book scrolls internally. */
+    .gb-body {
+      padding: 0;
     }
 
     .gb-frame {
+      display: block;
       width: 100%;
       height: 600px;
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 14px rgba(157, 0, 255, 0.35);
+      border: 0;
       background: var(--panel-darker);
     }
 
     .gb-alt {
-      margin-top: 8px;
-      font-size: 12px;
-      letter-spacing: 2px;
+      margin: 0;
+      padding: 10px;
+      text-align: center;
+    }
+
+    /* Fallback link as a real site button (same guts as the song button) */
+    .gb-btn {
+      display: inline-block;
+      background: var(--grad-a);
+      border: 1px solid var(--neon-purple);
+      color: var(--link-purple) !important;
+      font-size: 11px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      padding: 8px 14px;
+      text-decoration: none !important;
+      text-shadow: 0 0 8px var(--glow-purple);
+    }
+
+    .gb-btn:hover {
+      background: var(--neon-purple);
+      color: var(--panel-black) !important;
+      text-shadow: none;
+      box-shadow: 0 0 20px var(--glow-violet-bright);
     }
   </style>
 </head>
@@ -80,10 +101,13 @@
            own rules, so Neocities' strict CSP doesn't touch it. Theme it
            toward the site skin in the Atabook UI (free tier); pixel-perfect
            custom CSS needs their Supporter plan. -->
-      <div class="section gb-frame-wrap">
-        <iframe src="https://pixeelbb2.atabook.org" title="Guestbook" class="gb-frame" loading="lazy"></iframe>
-        <p class="gb-alt"><a href="https://pixeelbb2.atabook.org" target="_blank" rel="noopener">[ OPEN FULL
-            GUESTBOOK ]</a></p>
+      <div class="box">
+        <div class="box-title" style="text-align:center;">&gt; SIGN OR PERISH &lt;</div>
+        <div class="box-body gb-body">
+          <iframe src="https://pixeelbb2.atabook.org" title="Guestbook" class="gb-frame" loading="lazy"></iframe>
+          <p class="gb-alt"><a href="https://pixeelbb2.atabook.org" target="_blank" rel="noopener" class="gb-btn">OPEN
+              FULL GUESTBOOK</a></p>
+        </div>
       </div>
 
       <div class="vintage-footer">
