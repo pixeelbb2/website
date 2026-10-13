@@ -9,6 +9,7 @@ old-web corner hosted on [Neocities](https://pixeelbb2-node.neocities.org).
 **Code:** <https://github.com/pixeelbb2/website>
 
 ---
+[![.github/workflows/weekly-song.yml](https://github.com/pixeelbb2/website/actions/workflows/weekly-song.yml/badge.svg?branch=main&event=schedule)](https://github.com/pixeelbb2/website/actions/workflows/weekly-song.yml)
 
 ## What it is
 
