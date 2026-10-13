@@ -1054,11 +1054,17 @@
     was seeded at 110 (Neocities views), then RESET to 0 so the shared
     sequence starts clean — first visitor after the reset drew #1. Storage
     keys are v3 for the same reason (v1 pre-cloud souvenirs + v2 early
-    112-115 draws, both retired). To
-    rebuild from scratch, run:
-         create table site_stats (id int primary key, visits bigint not null default 0);
-         insert into site_stats (id, visits) values (1, 110);
+    112-115 draws, both retired).
+    Canonical setup — the ONLY query needed, safe to re-run any time
+    (it never resets the number; the reset stays a separate manual step):
+         create table if not exists site_stats (
+           id int primary key,
+           visits bigint not null default 0
+         );
+         insert into site_stats (id, visits) values (1, 0)
+         on conflict (id) do nothing;
          alter table site_stats enable row level security;
+         drop policy if exists "read all" on site_stats;
          create policy "read all" on site_stats for select using (true);
          create or replace function bump_visits() returns bigint
          language plpgsql security definer set search_path = public as $$
@@ -1067,6 +1073,8 @@
            update site_stats set visits = visits + 1 where id = 1 returning visits into n;
            return n;
          end $$;
+         grant execute on function bump_visits() to anon;
+         drop table if exists visit_log;
     No per-visit logging on purpose: the counter stores only the aggregate
     total — no IPs, no timestamps, nothing identifying. Your visitors stay
     anonymous by design.
