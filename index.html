@@ -989,7 +989,7 @@
               <div class="cyber-box" id="myBox"></div>
               <div class="cyber-mid">TOTAL VISITS:</div>
               <div class="cyber-box" id="totalBox"></div>
-              <div class="cyber-note">it dont work properly yet</div>
+              <div class="cyber-note" id="svcNote" style="display:none;">The service is down</div>
             </div>
             <div class="box" style="margin-top:10px;">
               <div class="box-title">&gt; LINKS &lt;</div>
@@ -1156,11 +1156,11 @@
       totalBox.set(0);
       function showMy(n) { myBox.set(n); }
       function showTotal(n) { totalBox.set(n); }
-      // Cloud is proven working: drop the "dont work properly yet" note.
-      // Failures keep it (and fall back to local counting below).
-      function hideNote() {
-        var n = document.querySelector('.cyber-note');
-        if (n) n.style.display = 'none';
+      // Backend unreachable: say so (and fall back to local counting).
+      // Stays hidden otherwise — including pure local mode.
+      function showNote() {
+        var n = document.getElementById('svcNote');
+        if (n) n.style.display = '';
       }
 
       function localFlow() {
@@ -1179,8 +1179,8 @@
         if (!db) return;
         db.from('site_stats').select('visits').eq('id', 1).single()
           .then(function (res) {
-            if (!res.error && res.data) { showTotal(res.data.visits); hideNote(); }
-            else localFlow();
+            if (!res.error && res.data) showTotal(res.data.visits);
+            else { localFlow(); showNote(); }
           });
       }
       if (CLOUD) {
@@ -1192,9 +1192,9 @@
               lsSet(MY, String(res.data));
               showMy(res.data);
               showTotal(res.data);
-              hideNote();
             } else {
               localFlow();
+              showNote();
             }
           });
         } else {

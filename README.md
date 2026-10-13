@@ -164,8 +164,8 @@ skin stays clean.
   The anon key in `CONFIG` is public by design (RLS: reads + bump only —
   nothing writable through it).
 - If cloud reads fail, the page silently falls back to per-browser local
-  counting and keeps the *"it dont work properly yet"* note; the note hides
-  only once a real cloud number loads.
+  counting and shows *"The service is down"* under the boxes. The note is
+  hidden otherwise — including pure local mode.
 - **Free-tier naps:** Supabase pauses projects after ~1 week of no activity.
   Symptom = counter frozen on old numbers → Dashboard → Restore project and
   it resumes. Returning visitors keep their frozen souvenir numbers.
