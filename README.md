@@ -42,6 +42,8 @@ API — there are zero audio files to host.
 | `pixeelbb2-button.png` | 88×31 web-button, also embedded in the homepage LINKS box. |
 | `cover.png` | Current "Song of the Week" cover art — the round label in the middle of the about-page vinyl. |
 | `song.txt` | Current "Song of the Week" text — 3 lines: `SONG` / `ARTIST` / `YOUTUBE-URL`. The about page loads it live. |
+| `scripts/weekly_song.py` | The Monday picker — pulls your Last.fm top 5, rotates, writes `song.txt` + `cover.png`. |
+| `.github/workflows/weekly-song.yml` | The schedule: runs the script Mondays 06:00 UTC, commits, uploads to Neocities. |
 
 ## Song of the Week (about page)
 
@@ -86,6 +88,37 @@ Repo secrets needed (Settings → Secrets → Actions): `LASTFM_USER`,
 `LASTFM_API_KEY` (free at `last.fm/api/account/create`), `NEOCITIES_API_KEY`.
 Logic lives in `scripts/weekly_song.py` (stdlib + `pillow`, installed by the
 workflow).
+
+### First-time setup (one time, ~10 min)
+
+1. **Link Deezer → Last.fm:** at `deezer.com/account/share`. Your plays
+   on mobile + web player scrobble automatically afterwards. (The desktop
+   app scrobbler is unreliable — don't count on it for charts.)
+2. **Get a Last.fm API key:** log in → `last.fm/api/account/create` → name it
+   anything (no callback URL needed, we only read charts) → copy the
+   **API key** shown on your new app's page. The "shared secret" next to it
+   is unused — ignore it.
+3. **Add the 3 repo secrets** (Settings → Secrets → Actions):
+   - `LASTFM_USER` — your Last.fm username
+   - `LASTFM_API_KEY` — the 32-char key from step 2
+   - `NEOCITIES_API_KEY` — your Neocities dashboard key
+4. **Make sure the workflow file is in the repo.** GitHub refuses commit
+   pushes created by tools without `workflow` scope, so commit
+   `.github/workflows/weekly-song.yml` from the GitHub web UI
+   (Add file → Create new file → paste contents → Commit directly to main)
+   once. It won't change after that.
+5. **Test it:** Actions tab → *Weekly song* → **Run workflow**. First run:
+   the chart needs at least a couple of scrobbles, otherwise it logs
+   *"empty chart — keeping current song"* and changes nothing (green ✔ —
+   that's correct behavior, not an error). With data it picks, commits, and
+   uploads to Neocities within ~1 minute.
+6. **Consider a hard refresh** on the about page after a change — Neocities
+   and browsers cache `song.txt`/`cover.png` aggressively.
+
+After setup, nothing to do. Every Monday 08:00 CEST a fresh Song of the
+Week appears and the button links to a YouTube search for it. If the upper
+charts are unchanged from last week, the old song stays until there's a
+new pick.
 
 ## Theming
 
