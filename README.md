@@ -1,5 +1,5 @@
 # PIXEELBB2
-/// This file was AI-generated ///
+/// This file was AI-generated ///  
 -> I will rewrite it when I feel like it.
 
 A retro CRT/terminal personal website — a phosphor-purple,
