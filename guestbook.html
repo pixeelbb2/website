@@ -30,6 +30,12 @@
     /* Book as a native terminal panel: the shared .box gives the
        border + title bar, the frame sits flush inside. Height fits
        ~5 entries; the book scrolls internally. */
+    /* The book box sits flush above the footer: its bottom border is
+       the divider, so the footer's own top border (a double line) goes. */
+    .vintage-footer {
+      border-top: 0;
+    }
+
     .gb-body {
       padding: 0;
     }
