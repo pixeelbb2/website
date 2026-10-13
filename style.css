@@ -486,6 +486,15 @@ html {
   padding: 12px 10px;
   border-top: 1px solid var(--neon-purple);
   color: var(--body-purple);
+  white-space: nowrap;
+}
+
+/* Footer flush under a box: the box's bottom border is the divider, so
+   the footer's own top border (a double line) and top padding go — the
+   12px box margin keeps the gap even like the bottom. */
+.box + .vintage-footer {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .webring {
@@ -622,5 +631,11 @@ html {
     display: block;
     width: 100%;
     border: 0;
+  }
+
+  /* Narrow screens: shrink footer type so the one-liner still holds. */
+  .vintage-footer {
+    font-size: 10px;
+    letter-spacing: 0;
   }
 }

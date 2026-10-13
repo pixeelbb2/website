@@ -30,22 +30,8 @@
     /* Book as a native terminal panel: the shared .box gives the
        border + title bar, the frame sits flush inside. Height fits
        ~5 entries; the book scrolls internally. */
-    /* The book box sits flush above the footer: its bottom border is
-       the divider, so the footer's own top border (a double line) goes. */
-    .vintage-footer {
-      border-top: 0;
-      white-space: nowrap;
-      padding: 0 10px 12px;
-    }
-
-    @media (max-width: 700px) {
-      /* Narrow screens: shrink type so the line still holds. */
-      .vintage-footer {
-        font-size: 10px;
-        letter-spacing: 0;
-      }
-    }
-
+    /* Shared skin now owns the footer (one line, single divider under
+       a box, narrow-screen shrink) — nothing page-specific left. */
     .gb-body {
       padding: 0;
     }
