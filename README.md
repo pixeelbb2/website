@@ -41,18 +41,51 @@ API — there are zero audio files to host.
 | `shutdown.js` | The fake `[X]` power-cut gag (wobble → bright line → dying dot → black screen). Loaded by every page. Documented at the top. |
 | `pixeelbb2-button.png` | 88×31 web-button, also embedded in the homepage LINKS box. |
 | `cover.png` | Current "Song of the Week" cover art — the round label in the middle of the about-page vinyl. |
+| `song.txt` | Current "Song of the Week" text — 3 lines: `SONG` / `ARTIST` / `YOUTUBE-URL`. The about page loads it live. |
 
 ## Song of the Week (about page)
 
-The about page spins a vinyl whose center label is `cover.png`. To change the
-song:
+The about page spins a vinyl whose center label is `cover.png` and whose
+title/artist/button link are loaded from `song.txt` at view time (the values
+baked into `about.html` are only a fallback). The loader then asks the
+**iTunes Search API** (free, no key, CORS-open) for the track: on an artist
+match it swaps the vinyl label to Apple's 600px artwork and makes the vinyl
+clickable for a 30s preview. A miss keeps `cover.png` and no preview —
+never the wrong song.
 
-1. Rename the new cover to `cover.png` and delete the old one (or just upload
-   `cover.png` over it — same filename keeps the code untouched).
-2. Update the song/artist title in the `> SONG OF THE WEEK <` block and/or the
-   YouTube link on the `GO CHECK THAT OUT` button (spot on line `about.html`).
-3. Re-upload `about.html` + `cover.png` (see Deploying) and hard-refresh —
-   image caching means the new cover may need `Cmd/Ctrl+Shift+R`.
+Manual changes (no code edits needed):
+
+1. Upload a new `cover.png` over the old one.
+2. Upload a new `song.txt` (exactly 3 lines):
+   ```
+   SEASONAL DEPRESSION
+   THE HAUNT
+   https://www.youtube.com/watch?v=4H3ImwtTvpw
+   ```
+3. Hard-refresh — `Cmd/Ctrl+Shift+R`. (Neocities and browsers cache the
+   text and image files, so the new song may need the hard refresh to show.)
+
+## Automation: new song every Monday
+
+A GitHub Action (`.github/workflows/weekly-song.yml`, Mondays 06:00 UTC =
+08:00 CEST, plus a manual Run button) picks the song for you:
+
+- Reads your last-7-days top 5 from **Last.fm** (`user.getTopTracks`,
+  `period=7day`) — Deezer scrobbles there automatically once linked at
+  `deezer.com/account/share`. Read-only API key, no account access.
+- **Rotate, skip repeats:** takes the highest-ranked track that isn't the
+  current `song.txt`. Silent week or same song on top → no commit, old song
+  stays.
+- Writes `song.txt` (UPPERCASED title/artist + a YouTube **search** URL —
+  no keyless API can resolve the real video ID) and refreshes `cover.png`
+  from Deezer's `cover_xl`, normalized to PNG. Art fallbacks: Last.fm image
+  → keep the old file. Never a broken label.
+- Commits + pushes, then uploads `song.txt` + `cover.png` to Neocities.
+
+Repo secrets needed (Settings → Secrets → Actions): `LASTFM_USER`,
+`LASTFM_API_KEY` (free at `last.fm/api/account/create`), `NEOCITIES_API_KEY`.
+Logic lives in `scripts/weekly_song.py` (stdlib + `pillow`, installed by the
+workflow).
 
 ## Theming
 
@@ -119,7 +152,7 @@ curl -H "Authorization: Bearer YOUR_API_KEY" -X POST https://neocities.org/api/u
   -F "index.html=@index.html" -F "style.css=@style.css" -F "shutdown.js=@shutdown.js" \
   -F "about.html=@about.html" -F "chat.html=@chat.html" -F "projects.html=@projects.html" \
   -F "links.html=@links.html" -F "guestbook.html=@guestbook.html" \
-  -F "cover.png=@cover.png" -F "pixeelbb2-button.png=@pixeelbb2-button.png"
+  -F "cover.png=@cover.png" -F "song.txt=@song.txt" -F "pixeelbb2-button.png=@pixeelbb2-button.png"
 
 # GitHub
 git add -A && git commit -m "update" && git push origin main
