@@ -1,11 +1,10 @@
-# /// This file was AI-genrated ///
-
 # Every Monday: pick the new Song of the Week from your Last.fm chart
 # (Deezer scrobbles there automatically) and ship it to GitHub + Neocities.
 # Manual runs: Actions tab -> "Weekly song" -> Run workflow.
+# NOTE: cron is UTC — 06:00 UTC = 08:00 CEST (summer) / 07:00 CET (winter).
 on:
   schedule:
-    - cron: "0 6 * * 1" # Mondays 06:00 UTC = 08:00 CEST
+    - cron: "0 6 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -18,19 +17,25 @@ concurrency:
 
 jobs:
   update-song:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # pinned: avoids the ubuntu-latest->26 migration
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
         with:
-          python-version: "3.x"
-      - run: python -m pip install pillow
+          # Don't leave the write token on disk for pip/Pillow/curl steps.
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pillow==12.3.0
       - name: Pick the new song
         run: python scripts/weekly_song.py
         env:
           LASTFM_USER: ${{ secrets.LASTFM_USER }}
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
       - id: commit
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name pixeelbb2
           git config user.email 99426355+pixeelbb2@users.noreply.github.com
@@ -40,12 +45,18 @@ jobs:
             echo "nothing new — keeping last week's song"
           else
             git commit -m "Weekly song: $(head -1 song.txt) — $(sed -n 2p song.txt)"
-            git push
+            git push "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" HEAD
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+      # Runs on every schedule trigger too, so a song with no art change
+      # still gets its (idempotent) upload — and manual runs always force
+      # a fresh upload even if nothing changed in git.
       - name: Upload to Neocities
-        if: steps.commit.outputs.changed == 'true'
+        if: steps.commit.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        env:
+          NEOCITIES_API_KEY: ${{ secrets.NEOCITIES_API_KEY }}
         run: |
-          curl -f -s -H "Authorization: Bearer ${{ secrets.NEOCITIES_API_KEY }}" \
+          curl -sS --fail-with-body --max-time 60 \
+            -H "Authorization: Bearer $NEOCITIES_API_KEY" \
             -X POST https://neocities.org/api/upload \
             -F "song.txt=@song.txt" -F "cover.png=@cover.png"
