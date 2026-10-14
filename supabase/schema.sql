@@ -45,7 +45,9 @@ alter table visit_log enable row level security;
 
 -- ============ 4. HIT REGISTRAR (the only writer the page calls) ============
 create or replace function register_hit() returns jsonb
-language plpgsql security definer set search_path = public as $$
+-- search_path covers both extension layouts (older projects: public,
+-- newer ones: extensions schema) so digest() always resolves.
+language plpgsql security definer set search_path = public, extensions as $$
 declare
   hdrs jsonb;
   ipf text;

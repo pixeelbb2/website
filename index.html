@@ -1097,7 +1097,7 @@
          alter table visit_log enable row level security;
          -- NO policies on visit_log: anon cannot read it at all.
          create or replace function register_hit() returns jsonb
-         language plpgsql security definer set search_path = public as $$
+         language plpgsql security definer set search_path = public, extensions as $$
          declare hdrs jsonb; ipf text; ua text; fp text;
            myseq bigint; v bigint; h bigint;
          begin
