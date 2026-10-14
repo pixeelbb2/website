@@ -58,6 +58,17 @@
       margin: 3px;
     }
 
+    /* Steal-my-button, same as homepage: glows on hover, copies on click */
+    #myButtonImg {
+      transition: filter 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #realWebsite #myButtonImg:hover {
+      filter: brightness(1.7);
+      border-color: #fff;
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.9);
+    }
+
     textarea.codebox {
       width: 100%;
       background: var(--panel-black);
@@ -113,9 +124,10 @@
             </div>
             <p style="text-align:center; margin-top:8px;">&gt; STEAL MY BUTTON &lt;</p>
             <div class="buttons-row">
-              <img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" width="88" height="31" alt="PixeelBB2">
+              <img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" width="88" height="31" alt="PixeelBB2"
+                id="myButtonImg" title="click to copy the embed code" style="cursor:pointer;">
+              <div id="copyBtnMsg" style="display:none; margin-top:4px;"><font size="2" color="#33ff66">COPIED!</font></div>
             </div>
-            <textarea class="codebox" rows="3" readonly onclick="this.select()">&lt;a href="https://pixeelbb2.neocities.org/" target="_blank"&gt;&lt;img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" alt="PixeelBB2"&gt;&lt;/a&gt;</textarea>
           </div>
         </div>
       </div>
@@ -135,6 +147,41 @@
   </main>
 
   <script src="shutdown.js"></script>
+  <script>
+    // "Steal my button", same as homepage: clicking the 88x31 itself copies
+    // the embed code and flashes a confirmation.
+    (function () {
+      var btn = document.getElementById('myButtonImg');
+      var msg = document.getElementById('copyBtnMsg');
+      if (!btn) return;
+      var code = '<a href="https://pixeelbb2.neocities.org/" target="_blank"><img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" alt="PixeelBB2"></a>';
+      function done() {
+        if (!msg) return;
+        msg.style.display = 'block';
+        setTimeout(function () { msg.style.display = 'none'; }, 2200);
+      }
+      function fallback() {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = code;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          done();
+        } catch (e) { }
+      }
+      btn.addEventListener('click', function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(done, fallback);
+        } else {
+          fallback();
+        }
+      });
+    })();
+  </script>
 </body>
 
 </html>
