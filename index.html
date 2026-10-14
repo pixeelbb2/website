@@ -1065,105 +1065,83 @@
 
   <!--
     =====================================================================
-    GLOBAL VISIT COUNTER SETUP (owner: needs its own Supabase project):
-    LIVE since Oct 2026 — project gvvlbffccrcdxpzbluwl. History: site_stats
-    was seeded at 110 (Neocities views), then RESET to 0 so the shared
-    sequence starts clean — first visitor after the reset drew #1. Storage
-    keys are v5 for the same reason (v1 pre-cloud souvenirs, v2 early
-    112-115 draws, v3 old+new domain draws, v4 domain-move draws — all
-    retired; a backend reset never unfreezes a browser, only a key
-    version does). Domain moved pixeelbb2-node → pixeelbb2, so both
-    counters were reset to 0 again for a true fresh start on the
-    new origin.
+    GLOBAL VISITOR COUNTER SETUP (owner: needs its own Supabase project):
+    LIVE since Oct 2026 — project gvvlbffccrcdxpzbluwl. Since the
+    fingerprint migration the browser holds NO identity token: uniqueness
+    is decided server-side per hit (first-seen IP+UA hash in visit_log),
+    so deploys, cache-busts and storage quirks cannot inflate uniques.
+    History: site_stats was seeded at 110 (Neocities views), reset to 0
+    twice (cloud launch, domain move pixeelbb2-node → pixeelbb2); the
+    per-browser token generations (v1-v5 + cookie fallback) are retired.
+    Everyone re-drew once into server sequence numbers at migration.
     Canonical setup — the ONLY query needed, safe to re-run any time
-    (it never resets the number; the reset stays a separate manual step):
+    (it never resets the number; the reset stays a separate manual step).
+    Full text lives in supabase/schema.sql; the working core:
+         create extension if not exists pgcrypto;
          create table if not exists site_stats (
            id int primary key,
-           visits bigint not null default 0
+           visits bigint not null default 0,
+           hits bigint not null default 0
          );
-         insert into site_stats (id, visits) values (1, 0)
+         insert into site_stats (id, visits, hits) values (1, 0, 0)
          on conflict (id) do nothing;
          alter table site_stats enable row level security;
          drop policy if exists "read all" on site_stats;
          create policy "read all" on site_stats for select using (true);
-         create or replace function bump_visits() returns bigint
+         create sequence if not exists visit_log_seq;
+         create table if not exists visit_log (
+           fp_hash text primary key,
+           seq bigint not null default nextval('visit_log_seq'),
+           first_seen timestamptz not null default now()
+         );
+         alter table visit_log enable row level security;
+         -- NO policies on visit_log: anon cannot read it at all.
+         create or replace function register_hit() returns jsonb
          language plpgsql security definer set search_path = public as $$
-         declare n bigint;
+         declare hdrs jsonb; ipf text; ua text; fp text;
+           myseq bigint; v bigint; h bigint;
          begin
-           update site_stats set visits = visits + 1 where id = 1 returning visits into n;
-           return n;
+           hdrs := coalesce(nullif(current_setting('request.headers', true), '')::jsonb, '{}'::jsonb);
+           ipf := split_part(coalesce(hdrs->>'x-forwarded-for', hdrs->>'x-real-ip', hdrs->>'cf-connecting-ip', 'unknown'), ',', 1);
+           ua := coalesce(hdrs->>'user-agent', 'unknown');
+           fp := encode(digest(ipf || '|' || ua || '|pixeel-pepper-7f3a9c', 'sha256'), 'hex');
+           insert into visit_log(fp_hash) values (fp)
+           on conflict (fp_hash) do nothing
+           returning seq into myseq;
+           if myseq is null then
+             select seq into myseq from visit_log where fp_hash = fp;
+             update site_stats set hits = hits + 1 where id = 1 returning hits into h;
+             select visits into v from site_stats where id = 1;
+           else
+             update site_stats set visits = visits + 1, hits = hits + 1 where id = 1
+             returning visits, hits into v, h;
+           end if;
+           return jsonb_build_object('visitors', v, 'hits', h, 'my', myseq);
          end $$;
-         grant execute on function bump_visits() to anon;
-         drop table if exists visit_log;
-    TOTAL-VISITS column (one bump per tab session — refreshes in the
-    same tab only read; unique sequence untouched):
-         alter table site_stats add column if not exists hits bigint not null default 0;
-         create or replace function bump_hits() returns bigint
-         language plpgsql security definer set search_path = public as $$
-         declare n bigint;
-         begin
-           update site_stats set hits = hits + 1 where id = 1 returning hits into n;
-           return n;
-         end $$;
-         grant execute on function bump_hits() to anon;
-         -- ONE-TIME seed to the Neocities baseline (run once, never re-run):
-         -- update site_stats set hits = 221 where id = 1;
-    No per-visit logging on purpose: the counter stores only the aggregate
-    total — no IPs, no timestamps, nothing identifying. Your visitors stay
-    anonymous by design.
+         grant execute on function register_hit() to anon;
+    Only the SHA-256(IP+UA+pepper) is stored — never raw IPs, no other
+    per-visit logging. Your visitors stay anonymous by design. Legacy
+    bump_visits()/bump_hits() stay granted so older cached pages keep
+    working through the transition.
     Then paste that project's URL + anon key into CONFIG below.
-    Until then, TOTAL shows this browser's own visits (local fallback).
     =====================================================================
   -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- (counter uses plain fetch; no supabase-js needed) -->
 
   <script>
-    // Visitor numbers: your number is assigned ONCE (your place in line,
-    // frozen forever); TOTAL is the live count. Only first-ever visits bump
-    // the total — coming back never changes your number or inflates it.
+    // Visitor numbers, server-side fingerprint model: the browser holds
+    // NO identity token, so deploys and cache-busts cannot inflate
+    // uniques. One POST per page load; the server decides new vs known.
     (function () {
       // ===== CONFIG: Supabase counter backend (URL + public anon key).
-      // The anon key is public by design: RLS allows reads + bump_visits()
-      // only, so it is safe in page source and in the public repo. =====
+      // The anon key is public by design: it can only execute
+      // register_hit() (and read the aggregate site_stats row) — no
+      // visit_log access, nothing else writable through it. Safe in page
+      // source and in the public repo. =====
       var SUPABASE_URL = 'https://gvvlbffccrcdxpzbluwl.supabase.co';
       var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2dmxiZmZjY3JjZHhwemJsdXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4ODQyMDAsImV4cCI6MjEwNzQ2MDIwMH0.F_0wiuCn37CzxADee8VbwNqEDKweBNmwF4Md8dsagLo';
-      var CLOUD = SUPABASE_URL.indexOf('PASTE') !== 0 &&
-        SUPABASE_ANON_KEY.indexOf('PASTE') !== 0 &&
-        typeof supabase !== 'undefined';
-      var db = CLOUD ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-
-      // Storage keys are v5: v1 pre-cloud souvenirs, v2 112-115,
-      // v3 old+new domain draws, v4 domain-move redraws — all retired.
-      // (Backend resets alone can't unfreeze a browser; only a key
-      //  version does. Every private window / new browser also draws
-      //  anew, so test draws with API reads, not fresh profiles.)
-      var KEY = 'pixeel_counter5';
-      var MY = 'pixeel_my_number5';
-      var HITS = 'pixeel_hits5'; // local-fallback total-loads counter
-      function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-      function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
-      function getCookie(name) {
-        try {
-          var m = document.cookie.match(new RegExp('(^|;\\s*)' + name + '=([^;]+)'));
-          return m ? decodeURIComponent(m[2]) : null;
-        } catch (e) { return null; }
-      }
-      function setCookie(name, value) {
-        try {
-          var d = new Date();
-          d.setFullYear(d.getFullYear() + 10);
-          document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + d.toUTCString() + '; path=/; SameSite=Lax';
-        } catch (e) { }
-      }
-      function getMyNumber() {
-        var v = lsGet(MY);
-        if (!v) v = getCookie(MY);
-        return v ? parseInt(v, 10) : 0;
-      }
-      function setMyNumber(n) {
-        try { lsSet(MY, String(n)); } catch (e) { }
-        try { setCookie(MY, String(n)); } catch (e) { }
-      }
+      var HIT_URL = SUPABASE_URL + '/rest/v1/rpc/register_hit';
+      // (no client identity token: the server fingerprints IP+UA per hit)
 
       /* CyberCounter(root, length): fixed 7-segment slots (default 6).
          Leading positions stay dark ghosts; the lit run glows neon green
@@ -1228,87 +1206,39 @@
       function showMy(n) { myBox.set(n); }
       function showTotal(n) { totalBox.set(n); }
       function showAll(n) { allBox.set(n); }
-      // Backend unreachable: say so (and fall back to local counting).
-      // Stays hidden otherwise — including pure local mode.
+      // Backend unreachable: say so. Stays hidden otherwise.
       function showNote() {
         var n = document.getElementById('svcNote');
         if (n) n.style.display = '';
       }
 
-      function localFlow() {
-        var n = parseInt(lsGet(KEY) || '0', 10) || 0;
-        var my = getMyNumber();
-        var h = parseInt(lsGet(HITS) || '0', 10) || 0;
-        if (!my) {
-          n += 1;
-          my = n;
-          lsSet(KEY, String(n));
-          setMyNumber(my);
-        }
-        if (!sessionCounted()) {
-          h += 1;
-          lsSet(HITS, String(h));
-          markSessionCounted();
-        }
-        showMy(my);
-        showTotal(n);
-        showAll(h);
+      // (counting lives server-side in register_hit(); the client renders.)
+      function hitAndRender() {
+        // One POST per page load: refreshes count as pageviews (hits+1);
+        // uniques move only for fingerprints the server never saw.
+        // No token is sent or stored — nothing for a deploy to invalidate.
+        fetch(HIT_URL, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: '{}'
+        }).then(function (r) {
+          if (!r.ok) throw new Error('hit failed');
+          return r.json();
+        }).then(function (res) {
+          if (!res || typeof res.my !== 'number' ||
+            typeof res.visitors !== 'number' || typeof res.hits !== 'number') {
+            throw new Error('bad shape');
+          }
+          showMy(res.my);
+          showTotal(res.visitors);
+          showAll(res.hits);
+        }).catch(function () { showNote(); });
       }
-      function readTotal() {
-        if (!db) return;
-        db.from('site_stats').select('visits').eq('id', 1).single()
-          .then(function (res) {
-            if (!res.error && res.data) showTotal(res.data.visits);
-            else { localFlow(); showNote(); }
-          });
-      }
-      // One total-hits bump per TAB session: refreshes in the same tab
-      // must not inflate it, so a counted session only READS the total.
-      // Each box has exactly one writer per load — no display races.
-      function sessionCounted() {
-        try { return !!sessionStorage.getItem('pixeel_hit_session'); } catch (e) { return false; }
-      }
-      function markSessionCounted() {
-        try { sessionStorage.setItem('pixeel_hit_session', '1'); } catch (e) { }
-      }
-      function readHits() {
-        if (!db) return;
-        db.from('site_stats').select('hits').eq('id', 1).single()
-          .then(function (res) {
-            if (!res.error && res.data) showAll(res.data.hits);
-            else showNote();
-          });
-      }
-      function bumpHits() {
-        if (!db) return;
-        if (sessionCounted()) { readHits(); return; }
-        db.rpc('bump_hits').then(function (res) {
-          if (!res.error && typeof res.data === 'number') { markSessionCounted(); showAll(res.data); }
-          else readHits();
-        });
-      }
-      if (CLOUD) {
-        bumpHits();
-        var my = getMyNumber();
-        if (!my) {
-          // First visit ever: the bumped total IS your number (atomic)
-          db.rpc('bump_visits').then(function (res) {
-            if (!res.error && typeof res.data === 'number') {
-              setMyNumber(res.data);
-              showMy(res.data);
-              showTotal(res.data);
-            } else {
-              localFlow();
-              showNote();
-            }
-          });
-        } else {
-          showMy(my);
-          readTotal();
-        }
-      } else {
-        localFlow();
-      }
+      hitAndRender();
     })();
   </script>
 
