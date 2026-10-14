@@ -63,7 +63,8 @@
       transition: filter 0.15s ease, box-shadow 0.15s ease;
     }
 
-    #realWebsite #myButtonImg:hover {
+    #realWebsite #myButtonImg:hover,
+    #realWebsite #myButtonImgGlow:hover {
       filter: brightness(1.7);
       border-color: #fff;
       box-shadow: 0 0 14px rgba(255, 255, 255, 0.9);
@@ -123,17 +124,20 @@
               <a href="https://thenamelessarchiv3.neocities.org/" target="_blank" rel="noopener"><img src="https://file.garden/aNIRkiNjtzNrWers/images/my%20buttons/button2.png" alt="the nameless archive" style="height: 31px"></a>
             </div>
             <p style="text-align:left; margin-top:8px;">&gt; STEAL MY BUTTON &lt;</p>
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div style="text-align:center;">
+            <div style="display:flex;align-items:flex-start;gap:16px;">
+              <div style="flex:1; text-align:center;">
+                <font size="2">PLAIN:</font><br>
                 <img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png?v=4" width="88" height="31" alt="PixeelBB2"
                   id="myButtonImg" title="click to copy the embed code" style="cursor:pointer;">
                 <div id="copyBtnMsg" style="display:none; margin-top:4px;"><font size="2" color="#33ff66">COPIED!</font></div>
-              </div>
-              <div style="flex:1;">
-                <font size="2">PLAIN:</font>
                 <textarea class="codebox" rows="2" readonly onclick="this.select()">&lt;a href="https://pixeelbb2.neocities.org/" target="_blank"&gt;&lt;img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" alt="PixeelBB2"&gt;&lt;/a&gt;</textarea>
-                <font size="2">WITH GLOW:</font>
-                <textarea class="codebox" rows="2" readonly onclick="this.select()">&lt;a href="https://pixeelbb2.neocities.org/" target="_blank"&gt;&lt;img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" alt="PixeelBB2" style="filter:drop-shadow(0 0 6px #9d00ff);"&gt;&lt;/a&gt;</textarea>
+              </div>
+              <div style="flex:1; text-align:center;">
+                <font size="2">WITH GLOW:</font><br>
+                <img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png?v=4" width="88" height="31" alt="PixeelBB2"
+                  id="myButtonImgGlow" title="click to copy the embed code" style="cursor:pointer; filter:drop-shadow(0 0 6px #9d00ff);">
+                <div id="copyBtnMsgGlow" style="display:none; margin-top:4px;"><font size="2" color="#33ff66">COPIED!</font></div>
+                <textarea class="codebox" rows="3" readonly onclick="this.select()">&lt;a href="https://pixeelbb2.neocities.org/" target="_blank"&gt;&lt;img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" alt="PixeelBB2" style="filter:drop-shadow(0 0 6px #9d00ff);"&gt;&lt;/a&gt;</textarea>
               </div>
             </div>
           </div>
@@ -156,13 +160,12 @@
 
   <script src="shutdown.js"></script>
   <script>
-    // "Steal my button", same as homepage: clicking the 88x31 itself copies
-    // the embed code and flashes a confirmation.
-    (function () {
-      var btn = document.getElementById('myButtonImg');
-      var msg = document.getElementById('copyBtnMsg');
+    // Steal-my-button, twice: plain button and glowing button, each with
+    // its own embed code. Clicking an image copies its code + flashes.
+    function wireButton(btnId, msgId, code) {
+      var btn = document.getElementById(btnId);
+      var msg = document.getElementById(msgId);
       if (!btn) return;
-      var code = '<a href="https://pixeelbb2.neocities.org/" target="_blank"><img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" alt="PixeelBB2"></a>';
       function done() {
         if (!msg) return;
         msg.style.display = 'block';
@@ -188,7 +191,9 @@
           fallback();
         }
       });
-    })();
+    }
+    wireButton('myButtonImg', 'copyBtnMsg', '<a href="https://pixeelbb2.neocities.org/" target="_blank"><img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" alt="PixeelBB2"></a>');
+    wireButton('myButtonImgGlow', 'copyBtnMsgGlow', '<a href="https://pixeelbb2.neocities.org/" target="_blank"><img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" alt="PixeelBB2" style="filter:drop-shadow(0 0 6px #9d00ff);"></a>');
   </script>
 </body>
 
