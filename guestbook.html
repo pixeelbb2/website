@@ -3,10 +3,9 @@
   =============================================================================
   GUESTBOOK — PixeelBB2
   Standard subpage: shared terminal skin (style.css) + the fake-[X]
-  power-cut gag (shutdown.js). The book itself is currently Atabook
-  (pixeelbb2.atabook.org) in an iframe — interim, until BlackPirateX
-  fixes its form focus-loss bug (see the block comment above the frame).
-  Moderation happens in the host's dashboard, not in this file.
+  power-cut gag (shutdown.js). The book itself is Atabook
+  (pixeelbb2.atabook.org) in an iframe. Moderation happens in the host's
+  dashboard, not in this file.
   =============================================================================
 -->
 <html lang="en">
@@ -70,14 +69,8 @@
           href="guestbook.html" class="active">[ GUESTBOOK ]</a>
       </div>
 
-      <!-- INTERIM book: Atabook (pixeelbb2.atabook.org) in an iframe.
-           BlackPirateX has an upstream focus-loss bug (form remounts per
-           keystroke — issue filed on their repo), so Atabook holds the
-           fort until that's fixed; then the src flips back to
-           tools.blackpiratex.com/u/pixeelbb2?embed=1. The book's own
-           colors are set in Atabook's Change-layout page (values in the
-           README/guestbook section); the frame is Atabook's page with its
-           own rules, so Neocities' strict CSP doesn't touch it. -->
+      <!-- Atabook (pixeelbb2.atabook.org) in an iframe. Colors set in
+           Atabook's Change-layout page. -->
       <div class="box">
         <div class="box-body gb-body">
           <iframe src="https://pixeelbb2.atabook.org" title="Guestbook" id="gbFrame"
@@ -100,22 +93,6 @@
   </main>
 
   <script src="shutdown.js"></script>
-  <script>
-    // Guestbook auto-resize (dormant while Atabook is embedded): the
-    // BlackPirateX app posts { type: 'guestbook:resize', height } as it
-    // grows. Origin-checked; the 600px frame height stays as fallback.
-    (function () {
-      var frame = document.getElementById('gbFrame');
-      if (!frame) return;
-      window.addEventListener('message', function (ev) {
-        if (ev.origin !== 'https://tools.blackpiratex.com') return;
-        var d = ev.data || {};
-        if (d.type === 'guestbook:resize' && +d.height > 0) {
-          frame.style.height = Math.max(400, +d.height) + 'px';
-        }
-      });
-    })();
-  </script>
 </body>
 
 </html>

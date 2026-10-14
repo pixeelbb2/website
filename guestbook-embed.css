@@ -1,15 +1,6 @@
 /* =====================================================================
    GUESTBOOK EMBED SKIN — PixeelBB2
-   This file styles the book INSIDE its iframe. It is loaded by the
-   BlackPirateX guestbook app itself (dashboard → Embed CSS URL), because
-   parent-page CSS cannot cross the iframe boundary. Hosted alongside the
-    site (https://pixeelbb2.neocities.org/guestbook-embed.css) so the
-   URL never rots.
-   Selectors mirror src/pages/PublicGuestbook.jsx in
-   github.com/blackpirateapps/guestbook-service. The app's own rules are
-   single-class specificity and this file loads after them, so plain
-   matches win; !important is only used against the app's inline <style>.
-   Palette = style.css :root (neon-purple #9d00ff, body #d9a7ff, ...).
+   Dormant (unused while Atabook is embedded). Kept for reference only.
    ===================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
