@@ -801,8 +801,8 @@
 
     #win95Win {
       position: absolute;
-      left: 50%;
-      top: 44%;
+      left: 68%;
+      top: 56%;
       transform: translate(-50%, -50%);
       width: 340px;
       max-width: 92vw;
@@ -1961,8 +1961,15 @@
             var win = document.getElementById('win95Win');
             if (box && win) {
               var r = box.getBoundingClientRect();
-              win.style.width = r.width + 'px';
-              win.style.height = (r.height * 2) + 'px';
+              var w = r.width, h = r.height * 2;
+              win.style.width = w + 'px';
+              win.style.height = h + 'px';
+              // Side-and-lower placement, clamped into the viewport.
+              var rr = win.getBoundingClientRect();
+              var cx = window.innerWidth * 0.68, cy = window.innerHeight * 0.56;
+              win.style.transform = 'none';
+              win.style.left = Math.max(8, Math.min(cx - rr.width / 2, window.innerWidth - rr.width - 8)) + 'px';
+              win.style.top = Math.max(8, Math.min(cy - rr.height / 2, window.innerHeight - rr.height - 8)) + 'px';
             }
           }
           btn.disabled = true;
@@ -1987,7 +1994,13 @@
       var win = document.getElementById('win95Win');
       var title = document.getElementById('win95Title');
       if (!modal || !win || !title) return;
-      function close() { modal.style.display = 'none'; }
+      // Closing re-arms the gate: the button comes back so the
+      // window can be re-opened (fields keep their values).
+      function close() {
+        modal.style.display = 'none';
+        var b = document.getElementById('vaultBtn');
+        if (b) { b.disabled = false; b.style.opacity = ''; b.style.cursor = ''; }
+      }
       var c = document.getElementById('win95Close');
       var ok = document.getElementById('win95Ok');
       if (c) c.addEventListener('click', close);
