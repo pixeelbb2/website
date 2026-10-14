@@ -11,8 +11,8 @@
   VISITOR CARD (right-hand column)
     #myBox     your personal number, assigned ONCE and frozen forever
     #totalBox  unique visits: distinct browsers that ever drew a number
-    #allBox    total visits: every homepage load bumps it (seeded at 221
-               to match the Neocities baseline, then counts for real)
+    #allBox    total visits: one bump per tab session — refreshes in the
+               same tab don't count (seeded at 221 to the Neocities baseline)
   Both run on a per-browser LOCAL fallback until Supabase keys are
   pasted in CONFIG below — see the setup comment above that script.
 
@@ -1071,7 +1071,8 @@
          end $$;
          grant execute on function bump_visits() to anon;
          drop table if exists visit_log;
-    TOTAL-VISITS column (every homepage load; unique sequence untouched):
+    TOTAL-VISITS column (one bump per tab session — refreshes in the
+    same tab only read; unique sequence untouched):
          alter table site_stats add column if not exists hits bigint not null default 0;
          create or replace function bump_hits() returns bigint
          language plpgsql security definer set search_path = public as $$
@@ -1196,27 +1197,46 @@
           lsSet(KEY, String(n));
           lsSet(MY, String(my));
         }
-        h += 1;
-        lsSet(HITS, String(h));
+        if (!sessionCounted()) {
+          h += 1;
+          lsSet(HITS, String(h));
+          markSessionCounted();
+        }
         showMy(my);
         showTotal(n);
         showAll(h);
       }
       function readTotal() {
         if (!db) return;
-        db.from('site_stats').select('visits,hits').eq('id', 1).single()
+        db.from('site_stats').select('visits').eq('id', 1).single()
           .then(function (res) {
-            if (!res.error && res.data) { showTotal(res.data.visits); showAll(res.data.hits); }
+            if (!res.error && res.data) showTotal(res.data.visits);
             else { localFlow(); showNote(); }
           });
       }
-      // Every homepage load bumps the total-hits count (fire-and-forget).
-      // Runs on its own so a hits failure never disturbs the unique draw.
+      // One total-hits bump per TAB session: refreshes in the same tab
+      // must not inflate it, so a counted session only READS the total.
+      // Each box has exactly one writer per load — no display races.
+      function sessionCounted() {
+        try { return !!sessionStorage.getItem('pixeel_hit_session'); } catch (e) { return false; }
+      }
+      function markSessionCounted() {
+        try { sessionStorage.setItem('pixeel_hit_session', '1'); } catch (e) { }
+      }
+      function readHits() {
+        if (!db) return;
+        db.from('site_stats').select('hits').eq('id', 1).single()
+          .then(function (res) {
+            if (!res.error && res.data) showAll(res.data.hits);
+            else showNote();
+          });
+      }
       function bumpHits() {
         if (!db) return;
+        if (sessionCounted()) { readHits(); return; }
         db.rpc('bump_hits').then(function (res) {
-          if (!res.error && typeof res.data === 'number') showAll(res.data);
-          else showNote();
+          if (!res.error && typeof res.data === 'number') { markSessionCounted(); showAll(res.data); }
+          else readHits();
         });
       }
       if (CLOUD) {
