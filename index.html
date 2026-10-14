@@ -1142,6 +1142,28 @@
       var HITS = 'pixeel_hits5'; // local-fallback total-loads counter
       function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
       function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
+      function getCookie(name) {
+        try {
+          var m = document.cookie.match(new RegExp('(^|\\s)' + name + '=([^;]+)'));
+          return m ? decodeURIComponent(m[2]) : null;
+        } catch (e) { return null; }
+      }
+      function setCookie(name, value) {
+        try {
+          var d = new Date();
+          d.setFullYear(d.getFullYear() + 10);
+          document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + d.toUTCString() + '; path=/; SameSite=Lax';
+        } catch (e) { }
+      }
+      function getMyNumber() {
+        var v = lsGet(MY);
+        if (!v) v = getCookie(MY);
+        return v ? parseInt(v, 10) : 0;
+      }
+      function setMyNumber(n) {
+        lsSet(MY, String(n));
+        setCookie(MY, String(n));
+      }
 
       /* CyberCounter(root, length): fixed 7-segment slots (default 6).
          Leading positions stay dark ghosts; the lit run glows neon green
@@ -1215,13 +1237,13 @@
 
       function localFlow() {
         var n = parseInt(lsGet(KEY) || '0', 10) || 0;
-        var my = parseInt(lsGet(MY) || '', 10) || 0;
+        var my = getMyNumber();
         var h = parseInt(lsGet(HITS) || '0', 10) || 0;
         if (!my) {
           n += 1;
           my = n;
           lsSet(KEY, String(n));
-          lsSet(MY, String(my));
+          setMyNumber(my);
         }
         if (!sessionCounted()) {
           h += 1;
@@ -1267,12 +1289,12 @@
       }
       if (CLOUD) {
         bumpHits();
-        var my = parseInt(lsGet(MY) || '', 10) || 0;
+        var my = getMyNumber();
         if (!my) {
           // First visit ever: the bumped total IS your number (atomic)
           db.rpc('bump_visits').then(function (res) {
             if (!res.error && typeof res.data === 'number') {
-              lsSet(MY, String(res.data));
+              setMyNumber(res.data);
               showMy(res.data);
               showTotal(res.data);
             } else {
