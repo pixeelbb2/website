@@ -763,6 +763,19 @@
       accent-color: var(--neon-purple);
     }
 
+    /* Secret vault gate: terminal-styled credential fields */
+    #realWebsite .vault-input {
+      background: var(--panel-black);
+      border: 1px solid var(--neon-purple);
+      color: var(--term-green);
+      font-family: var(--font-stack);
+      font-size: 12px;
+      padding: 3px 6px;
+      margin: 2px 0;
+      width: 170px;
+      outline: none;
+    }
+
     @media (max-width: 700px) {
 
       .col-left,
@@ -954,6 +967,25 @@
               <p>Keep the connection alive as long as your journey allows, and don’t forget to commit an entry to the
                 <a href="guestbook.html">guestbook</a> before terminating the session.
               </p>
+              <div class="box" style="margin-top:12px;">
+                <div class="box-title" style="text-align:center;">&gt; MY SUPER-HYPER-DUPER SECRET VAULT &lt;</div>
+                <div class="box-body" style="text-align:center;">
+                  <font size="2">AUTHORIZED PERSONNEL ONLY.<br>STATE YOUR CREDENTIALS, OPERATOR.</font><br>
+                  <font size="2">LOGIN:</font>
+                  <input type="text" id="vaultLogin" class="vault-input" autocomplete="off"><br>
+                  <font size="2">PASSWORD:</font>
+                  <input type="password" id="vaultPass" class="vault-input" autocomplete="off"><br>
+                  <button id="vaultBtn">[ UNLOCK ]</button>
+                  <div id="vaultMsg" style="margin-top:6px;"></div>
+                  <div id="vaultLoot" style="display:none; margin-top:6px; text-align:left;">
+                    <hr class="thin-hr">
+                    <font size="2" color="#33ff66"><b>VAULT CONTENTS (1 file):</b><br>
+                      <i>the_real_secret.txt</i> — "There is no gold in here. The machine runs on spite,
+                      synthwave, and 3AM YouTube tutorials. (EASTER EGG 3/3 — the vault was the
+                      third one all along.)"</font>
+                  </div>
+                </div>
+              </div>
               <div class="box" style="margin-top:12px;">
                 <div class="box-title" style="text-align:center;">&gt; CONSTRUCTION ZONE &lt;</div>
                 <div class="box-body" style="text-align:center;">
@@ -1805,6 +1837,34 @@
           fallback();
         }
       });
+    })();
+  </script>
+  <script>
+    // Secret vault gate: theater, not security — the password lives in
+    // view-source by design, like every other gag on this page. Only
+    // static strings ever touch the DOM (user input is compared, never
+    // rendered), so there is nothing to inject through.
+    (function () {
+      var login = document.getElementById('vaultLogin');
+      var pass = document.getElementById('vaultPass');
+      var btn = document.getElementById('vaultBtn');
+      var msg = document.getElementById('vaultMsg');
+      var loot = document.getElementById('vaultLoot');
+      if (!login || !pass || !btn || !msg || !loot) return;
+      function unlock() {
+        if (login.value === '2137' && pass.value === 'MYREALLYSECRTEPASSWORD') {
+          msg.innerHTML = '<font size="2" color="#33ff66">ACCESS GRANTED. WELCOME, OPERATOR 2137.</font>';
+          loot.style.display = 'block';
+          btn.disabled = true;
+          btn.style.opacity = '0.4';
+          btn.style.cursor = 'default';
+        } else {
+          msg.innerHTML = '<font size="2" color="#ff1818">ACCESS DENIED. THE VAULT KEEPS ITS SECRETS.</font>';
+        }
+      }
+      btn.addEventListener('click', unlock);
+      login.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') unlock(); });
+      pass.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') unlock(); });
     })();
   </script>
 </body>
