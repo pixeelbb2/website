@@ -801,7 +801,7 @@
 
     #win95Win {
       position: absolute;
-      left: 68%;
+      left: 32%;
       top: 56%;
       transform: translate(-50%, -50%);
       width: 340px;
@@ -1966,7 +1966,7 @@
               win.style.height = h + 'px';
               // Side-and-lower placement, clamped into the viewport.
               var rr = win.getBoundingClientRect();
-              var cx = window.innerWidth * 0.68, cy = window.innerHeight * 0.56;
+              var cx = window.innerWidth * 0.32, cy = window.innerHeight * 0.56;
               win.style.transform = 'none';
               win.style.left = Math.max(8, Math.min(cx - rr.width / 2, window.innerWidth - rr.width - 8)) + 'px';
               win.style.top = Math.max(8, Math.min(cy - rr.height / 2, window.innerHeight - rr.height - 8)) + 'px';
