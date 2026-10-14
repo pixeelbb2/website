@@ -1049,10 +1049,12 @@
     LIVE since Oct 2026 — project gvvlbffccrcdxpzbluwl. History: site_stats
     was seeded at 110 (Neocities views), then RESET to 0 so the shared
     sequence starts clean — first visitor after the reset drew #1. Storage
-    keys are v4 for the same reason (v1 pre-cloud souvenirs, v2 early
-    112-115 draws, v3 old+new domain draws — all retired). Domain moved
-    pixeelbb2-node → pixeelbb2, so both counters were reset to 0 again
-    for a true fresh start on the new origin.
+    keys are v5 for the same reason (v1 pre-cloud souvenirs, v2 early
+    112-115 draws, v3 old+new domain draws, v4 domain-move draws — all
+    retired; a backend reset never unfreezes a browser, only a key
+    version does). Domain moved pixeelbb2-node → pixeelbb2, so both
+    counters were reset to 0 again for a true fresh start on the
+    new origin.
     Canonical setup — the ONLY query needed, safe to re-run any time
     (it never resets the number; the reset stays a separate manual step):
          create table if not exists site_stats (
@@ -1110,12 +1112,14 @@
         typeof supabase !== 'undefined';
       var db = CLOUD ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-      // Storage keys are v4: v1 held pre-cloud souvenirs, v2 drew
-      // 112-115 before the first reset, v3 drew on both the old and the
-      // new domain — all retired, so every browser draws fresh.
-      var KEY = 'pixeel_counter4';
-      var MY = 'pixeel_my_number4';
-      var HITS = 'pixeel_hits4'; // local-fallback total-loads counter
+      // Storage keys are v5: v1 pre-cloud souvenirs, v2 112-115,
+      // v3 old+new domain draws, v4 domain-move redraws — all retired.
+      // (Backend resets alone can't unfreeze a browser; only a key
+      //  version does. Every private window / new browser also draws
+      //  anew, so test draws with API reads, not fresh profiles.)
+      var KEY = 'pixeel_counter5';
+      var MY = 'pixeel_my_number5';
+      var HITS = 'pixeel_hits5'; // local-fallback total-loads counter
       function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
       function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
 
