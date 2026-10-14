@@ -806,6 +806,9 @@
       transform: translate(-50%, -50%);
       width: 340px;
       max-width: 92vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
       background: #c0c0c0;
       border: 2px outset #ffffff;
       box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.55);
@@ -857,6 +860,8 @@
       font-size: 12px;
       padding: 8px;
       min-height: 70px;
+      flex: 1;
+      overflow: auto;
     }
 
     #win95OkWrap {
@@ -1069,7 +1074,7 @@
               <p>Keep the connection alive as long as your journey allows, and don’t forget to commit an entry to the
                 <a href="guestbook.html">guestbook</a> before terminating the session.
               </p>
-              <div class="box" style="margin-top:12px;">
+              <div class="box" id="vaultBox" style="margin-top:12px;">
                 <div class="box-title" style="text-align:left;">&gt; MY SUPER HYPER DUPER SECRET VAULT &lt;</div>
                 <div class="box-body" style="text-align:left;">
                   <font size="2">AUTHORIZED PERSONNEL ONLY.<br>STATE YOUR CREDENTIALS, OPERATOR.</font><br>
@@ -1948,7 +1953,17 @@
       function unlock() {
         if (login.value === '2137' && pass.value === 'MYREALLYSECRTEPASSWORD') {
           var modal = document.getElementById('win95Modal');
-          if (modal) modal.style.display = 'block';
+          if (modal) {
+            modal.style.display = 'block';
+            // Size the popup off the live vault box: same width, 2x height.
+            var box = document.getElementById('vaultBox');
+            var win = document.getElementById('win95Win');
+            if (box && win) {
+              var r = box.getBoundingClientRect();
+              win.style.width = r.width + 'px';
+              win.style.height = (r.height * 2) + 'px';
+            }
+          }
           btn.disabled = true;
           btn.style.opacity = '0.4';
           btn.style.cursor = 'default';
