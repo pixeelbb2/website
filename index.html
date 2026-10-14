@@ -968,8 +968,8 @@
                 <a href="guestbook.html">guestbook</a> before terminating the session.
               </p>
               <div class="box" style="margin-top:12px;">
-                <div class="box-title" style="text-align:center;">&gt; MY SUPER-HYPER-DUPER SECRET VAULT &lt;</div>
-                <div class="box-body" style="text-align:center;">
+                <div class="box-title" style="text-align:left;">&gt; MY SUPER HYPER DUPER SECRET VAULT &lt;</div>
+                <div class="box-body" style="text-align:left;">
                   <font size="2">AUTHORIZED PERSONNEL ONLY.<br>STATE YOUR CREDENTIALS, OPERATOR.</font><br>
                   <font size="2">LOGIN:</font>
                   <input type="text" id="vaultLogin" class="vault-input" autocomplete="off"><br>
@@ -1867,6 +1867,9 @@
       pass.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') unlock(); });
     })();
   </script>
+  <!-- ARG whisper: invisible on the background (#020005 on #020005),
+       outside the web box. Only text selection reveals it. -->
+  <div style="position:fixed;right:10px;bottom:8px;font-size:10px;color:var(--bg-dark);z-index:2;cursor:default;">MYREALLYSECRTEPASSWORD</div>
 </body>
 
 </html>
