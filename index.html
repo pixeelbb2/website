@@ -12,7 +12,7 @@
     #myBox     your personal number, assigned ONCE and frozen forever
     #totalBox  unique visits: distinct browsers that ever drew a number
     #allBox    total visits: one bump per tab session — refreshes in the
-               same tab don't count (seeded at 221 to the Neocities baseline)
+               same tab don't count (fresh start at 0 on the domain move)
   Both run on a per-browser LOCAL fallback until Supabase keys are
   pasted in CONFIG below — see the setup comment above that script.
 
@@ -1049,8 +1049,10 @@
     LIVE since Oct 2026 — project gvvlbffccrcdxpzbluwl. History: site_stats
     was seeded at 110 (Neocities views), then RESET to 0 so the shared
     sequence starts clean — first visitor after the reset drew #1. Storage
-    keys are v3 for the same reason (v1 pre-cloud souvenirs + v2 early
-    112-115 draws, both retired).
+    keys are v4 for the same reason (v1 pre-cloud souvenirs, v2 early
+    112-115 draws, v3 old+new domain draws — all retired). Domain moved
+    pixeelbb2-node → pixeelbb2, so both counters were reset to 0 again
+    for a true fresh start on the new origin.
     Canonical setup — the ONLY query needed, safe to re-run any time
     (it never resets the number; the reset stays a separate manual step):
          create table if not exists site_stats (
@@ -1108,12 +1110,12 @@
         typeof supabase !== 'undefined';
       var db = CLOUD ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-      // Storage keys are v3: v1 held pre-cloud souvenirs (every browser
-      // its own #1), v2 drew 112-115 before the reset ran — both retired,
-      // so all browsers draw fresh from the cloud total below.
-      var KEY = 'pixeel_counter3';
-      var MY = 'pixeel_my_number3';
-      var HITS = 'pixeel_hits3'; // local-fallback total-loads counter
+      // Storage keys are v4: v1 held pre-cloud souvenirs, v2 drew
+      // 112-115 before the first reset, v3 drew on both the old and the
+      // new domain — all retired, so every browser draws fresh.
+      var KEY = 'pixeel_counter4';
+      var MY = 'pixeel_my_number4';
+      var HITS = 'pixeel_hits4'; // local-fallback total-loads counter
       function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
       function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
 
