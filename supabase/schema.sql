@@ -22,6 +22,9 @@ drop policy if exists "read all" on site_stats;
 create policy "read all" on site_stats for select using (true);
 
 create sequence if not exists visit_log_seq;
+-- If a visit_log table from an older experiment already exists (different
+-- shape), drop it first — it was never written to by any live code:
+--   drop table if exists visit_log;
 create table if not exists visit_log (
   fp_hash text primary key,
   seq bigint not null default nextval('visit_log_seq'),
