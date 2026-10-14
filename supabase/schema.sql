@@ -79,6 +79,31 @@ begin
 end $$;
 grant execute on function register_hit() to anon;
 
+-- Read-only twin: same fingerprint lookup, zero writes. The page calls
+-- this on repeat loads within one tab session (refresh, back-nav) so
+-- TOTAL moves once per session, never per load — while uniques stay
+-- purely server-side and deploy-proof.
+create or replace function peek_stats() returns jsonb
+language plpgsql security definer set search_path = public, extensions as $$
+declare
+  hdrs jsonb;
+  ipf text;
+  ua text;
+  fp text;
+  myseq bigint;
+  v bigint;
+  h bigint;
+begin
+  hdrs := coalesce(nullif(current_setting('request.headers', true), '')::jsonb, '{}'::jsonb);
+  ipf := split_part(coalesce(hdrs->>'x-forwarded-for', hdrs->>'x-real-ip', hdrs->>'cf-connecting-ip', 'unknown'), ',', 1);
+  ua := coalesce(hdrs->>'user-agent', 'unknown');
+  fp := encode(digest(ipf || '|' || ua || '|pixeel-pepper-7f3a9c', 'sha256'), 'hex');
+  select seq into myseq from visit_log where fp_hash = fp;
+  select visits, hits into v, h from site_stats where id = 1;
+  return jsonb_build_object('visitors', v, 'hits', h, 'my', myseq);
+end $$;
+grant execute on function peek_stats() to anon;
+
 -- Legacy per-browser RPCs (kept defined + granted so older cached pages
 -- keep working through the transition; fresh draws stop as pages refresh).
 create or replace function bump_visits() returns bigint

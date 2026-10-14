@@ -1119,6 +1119,21 @@
            return jsonb_build_object('visitors', v, 'hits', h, 'my', myseq);
          end $$;
          grant execute on function register_hit() to anon;
+         -- Read-only twin for repeat loads in one tab session (zero writes):
+         create or replace function peek_stats() returns jsonb
+         language plpgsql security definer set search_path = public, extensions as $$
+         declare hdrs jsonb; ipf text; ua text; fp text;
+           myseq bigint; v bigint; h bigint;
+         begin
+           hdrs := coalesce(nullif(current_setting('request.headers', true), '')::jsonb, '{}'::jsonb);
+           ipf := split_part(coalesce(hdrs->>'x-forwarded-for', hdrs->>'x-real-ip', hdrs->>'cf-connecting-ip', 'unknown'), ',', 1);
+           ua := coalesce(hdrs->>'user-agent', 'unknown');
+           fp := encode(digest(ipf || '|' || ua || '|pixeel-pepper-7f3a9c', 'sha256'), 'hex');
+           select seq into myseq from visit_log where fp_hash = fp;
+           select visits, hits into v, h from site_stats where id = 1;
+           return jsonb_build_object('visitors', v, 'hits', h, 'my', myseq);
+         end $$;
+         grant execute on function peek_stats() to anon;
     Only the SHA-256(IP+UA+pepper) is stored — never raw IPs, no other
     per-visit logging. Your visitors stay anonymous by design. Legacy
     bump_visits()/bump_hits() stay granted so older cached pages keep
@@ -1213,11 +1228,29 @@
       }
 
       // (counting lives server-side in register_hit(); the client renders.)
-      function hitAndRender() {
-        // One POST per page load: refreshes count as pageviews (hits+1);
-        // uniques move only for fingerprints the server never saw.
-        // No token is sent or stored — nothing for a deploy to invalidate.
-        fetch(HIT_URL, {
+      // Session rule: FIRST load in a tab session POSTs register_hit()
+      // (new fingerprint => unique+1, known => pageview+1); repeat loads
+      // in the SAME tab (refresh, back-nav) only PEEK — live numbers,
+      // zero bumps. No token is stored — nothing for a deploy to invalidate.
+      var SES = 'pixeel_hit_session';
+      var PEEK_URL = SUPABASE_URL + '/rest/v1/rpc/peek_stats';
+      function sessionCounted() {
+        try { return !!sessionStorage.getItem(SES); } catch (e) { return false; }
+      }
+      function markSessionCounted() {
+        try { sessionStorage.setItem(SES, '1'); } catch (e) { }
+      }
+      function render(res) {
+        showMy(res.my);
+        showTotal(res.visitors);
+        showAll(res.hits);
+      }
+      function badShape(res) {
+        return !res || typeof res.my !== 'number' ||
+          typeof res.visitors !== 'number' || typeof res.hits !== 'number';
+      }
+      function post(url) {
+        return fetch(url, {
           method: 'POST',
           headers: {
             'apikey': SUPABASE_ANON_KEY,
@@ -1226,16 +1259,21 @@
           },
           body: '{}'
         }).then(function (r) {
-          if (!r.ok) throw new Error('hit failed');
+          if (!r.ok) throw new Error('request failed');
           return r.json();
-        }).then(function (res) {
-          if (!res || typeof res.my !== 'number' ||
-            typeof res.visitors !== 'number' || typeof res.hits !== 'number') {
-            throw new Error('bad shape');
-          }
-          showMy(res.my);
-          showTotal(res.visitors);
-          showAll(res.hits);
+        });
+      }
+      function hitAndRender() {
+        var attempt = sessionCounted()
+          ? post(PEEK_URL).then(function (res) {
+            if (res && typeof res.my === 'number') return res;
+            return post(HIT_URL); // fingerprint unknown (edge) — register
+          })
+          : post(HIT_URL);
+        attempt.then(function (res) {
+          if (badShape(res)) throw new Error('bad shape');
+          markSessionCounted();
+          render(res);
         }).catch(function () { showNote(); });
       }
       hitAndRender();

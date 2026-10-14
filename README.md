@@ -157,7 +157,9 @@ skin stays clean.
 ### Visitor counter (`index.html`, right column)
 - `#myBox` = your **personal number** (server sequence, first-seen order).
 - `#totalBox` = **unique visitors, all-time** (distinct server fingerprints).
-- `#allBox` = **total pageviews** (every page load counts, refreshes too).
+- `#allBox` = **total pageviews, one per tab session** — first load in a
+  tab POSTs `register_hit()`; refreshes and back-nav in the same tab call
+  the read-only `peek_stats()` (live numbers, zero bumps). New tab = +1.
 - **Server-side fingerprint model** (since the deploy-bug fix): the browser
   holds NO identity token — each load POSTs once to `register_hit()`, which
   fingerprints `SHA-256(IP + User-Agent + pepper)` and counts new vs known
