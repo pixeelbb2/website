@@ -1161,8 +1161,8 @@
         return v ? parseInt(v, 10) : 0;
       }
       function setMyNumber(n) {
-        lsSet(MY, String(n));
-        setCookie(MY, String(n));
+        try { lsSet(MY, String(n)); } catch (e) { }
+        try { setCookie(MY, String(n)); } catch (e) { }
       }
 
       /* CyberCounter(root, length): fixed 7-segment slots (default 6).
