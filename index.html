@@ -816,7 +816,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(90deg, #000080, #1084d0);
+      background: linear-gradient(90deg, #3d0075, #9d00ff);
       color: #fff;
       font-size: 12px;
       letter-spacing: 1px;
@@ -1079,13 +1079,6 @@
                     <div style="flex:1;text-align:right;padding-right:12px;"><button id="vaultBtn">[ UNLOCK ]</button></div>
                   </div>
                   <div id="vaultMsg" style="margin-top:6px;"></div>
-                  <div id="vaultLoot" style="display:none; margin-top:6px; text-align:left;">
-                    <hr class="thin-hr">
-                    <font size="2" color="#33ff66"><b>VAULT CONTENTS (1 file):</b><br>
-                      <i>the_real_secret.txt</i> — "There is no gold in here. The machine runs on spite,
-                      synthwave, and 3AM YouTube tutorials. (EASTER EGG 3/3 — the vault was the
-                      third one all along.)"</font>
-                  </div>
                 </div>
               </div>
               <div class="box" style="margin-top:12px;">
@@ -1951,12 +1944,9 @@
       var pass = document.getElementById('vaultPass');
       var btn = document.getElementById('vaultBtn');
       var msg = document.getElementById('vaultMsg');
-      var loot = document.getElementById('vaultLoot');
-      if (!login || !pass || !btn || !msg || !loot) return;
+      if (!login || !pass || !btn || !msg) return;
       function unlock() {
         if (login.value === '2137' && pass.value === 'MYREALLYSECRTEPASSWORD') {
-          msg.innerHTML = '<font size="2" color="#33ff66">ACCESS GRANTED. WELCOME, OPERATOR 2137.</font>';
-          loot.style.display = 'block';
           var modal = document.getElementById('win95Modal');
           if (modal) modal.style.display = 'block';
           btn.disabled = true;
@@ -1973,6 +1963,9 @@
   </script>
   <script>
     // Win95 secret window: X / OK / Escape close it, title bar drags it.
+    // Deferred to DOMContentLoaded: the modal markup sits AFTER the scripts,
+    // so wiring it synchronously finds nothing (that was the dead-drag bug).
+    document.addEventListener('DOMContentLoaded', function () {
     (function () {
       var modal = document.getElementById('win95Modal');
       var win = document.getElementById('win95Win');
@@ -2006,6 +1999,7 @@
         ev.preventDefault();
       });
     })();
+    });
   </script>
   <!-- ARG whisper: invisible on the background (#020005 on #020005),
        outside the web box. Only text selection reveals it. -->
