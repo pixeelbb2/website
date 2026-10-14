@@ -3,7 +3,7 @@
    This file styles the book INSIDE its iframe. It is loaded by the
    BlackPirateX guestbook app itself (dashboard → Embed CSS URL), because
    parent-page CSS cannot cross the iframe boundary. Hosted alongside the
-   site (https://pixeelbb2-node.neocities.org/guestbook-embed.css) so the
+    site (https://pixeelbb2.neocities.org/guestbook-embed.css) so the
    URL never rots.
    Selectors mirror src/pages/PublicGuestbook.jsx in
    github.com/blackpirateapps/guestbook-service. The app's own rules are
