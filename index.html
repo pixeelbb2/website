@@ -1144,7 +1144,7 @@
       function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
       function getCookie(name) {
         try {
-          var m = document.cookie.match(new RegExp('(^|\\s)' + name + '=([^;]+)'));
+          var m = document.cookie.match(new RegExp('(^|;\\s*)' + name + '=([^;]+)'));
           return m ? decodeURIComponent(m[2]) : null;
         } catch (e) { return null; }
       }
