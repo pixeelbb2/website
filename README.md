@@ -166,6 +166,10 @@ skin stays clean.
   server-side. Deploys, cache-busts and storage quirks cannot inflate
   uniques by construction. Canonical SQL lives in `supabase/schema.sql`
   (safe to re-run; never resets). Only the hash is stored — never raw IPs.
+  The truncated User-Agent (300 chars) is also kept per fingerprint for bot
+  diagnosis. Bots (incl. the Neocities screenshotter) are filtered
+  server-side: no insert, no counter change; the client renders totals with
+  a zeroed personal box instead of the service note.
   History: seeded at 110 (Neocities views), reset twice (cloud launch,
   domain move); per-browser token generations v1–v5 + cookie fallback
   retired — everyone re-drew once into server sequence at migration.
@@ -176,8 +180,9 @@ skin stays clean.
 - **Free-tier naps:** Supabase pauses projects after ~1 week of no activity.
   Symptom = counter frozen on old numbers → Dashboard → Restore project and
   it resumes.
-- **Anonymous by design:** only salted fingerprint hashes + aggregate
-  totals — nothing identifying to leak or maintain.
+- **Anonymous by design:** only salted fingerprint hashes (+ truncated UAs
+  for bot diagnosis) and aggregate totals — nothing identifying to leak
+  or maintain.
 
 ### Guestbook (`guestbook.html`)
 - **Interim: Atabook** (`pixeelbb2.atabook.org`) in an `<iframe>`, themed

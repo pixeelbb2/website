@@ -787,6 +787,97 @@
       line-height: 1;
     }
 
+    /* Win95 secret window: floating app modal, opens on vault unlock.
+       Lives outside #realWebsite so the purple button skin can't leak in. */
+    #win95Modal {
+      display: none;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+    }
+
+    #win95Win {
+      position: absolute;
+      left: 50%;
+      top: 44%;
+      transform: translate(-50%, -50%);
+      width: 340px;
+      max-width: 92vw;
+      background: #c0c0c0;
+      border: 2px outset #ffffff;
+      box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.55);
+      font-family: var(--font-stack);
+    }
+
+    #win95Title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, #000080, #1084d0);
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 1px;
+      padding: 3px 3px 3px 8px;
+      cursor: move;
+      user-select: none;
+    }
+
+    #win95Close {
+      background: #c0c0c0;
+      border: 2px outset #ffffff;
+      color: #000;
+      font-family: var(--font-stack);
+      font-size: 11px;
+      font-weight: bold;
+      width: 22px;
+      height: 20px;
+      line-height: 1;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    #win95Close:active {
+      border-style: inset;
+    }
+
+    #win95Menu {
+      font-size: 12px;
+      color: #000;
+      padding: 2px 8px;
+    }
+
+    #win95Body {
+      margin: 4px 8px 8px 8px;
+      background: #fff;
+      border: 2px inset #ffffff;
+      color: #000;
+      font-size: 12px;
+      padding: 8px;
+      min-height: 70px;
+    }
+
+    #win95OkWrap {
+      text-align: center;
+      padding-bottom: 10px;
+    }
+
+    #win95Ok {
+      background: #c0c0c0;
+      border: 2px outset #ffffff;
+      color: #000;
+      font-family: var(--font-stack);
+      font-size: 12px;
+      padding: 2px 22px;
+      cursor: pointer;
+    }
+
+    #win95Ok:active {
+      border-style: inset;
+    }
+
     @media (max-width: 700px) {
 
       .col-left,
@@ -1103,8 +1194,10 @@
          create table if not exists visit_log (
            fp_hash text primary key,
            seq bigint not null default nextval('visit_log_seq'),
-           first_seen timestamptz not null default now()
+           first_seen timestamptz not null default now(),
+           ua text
          );
+         alter table visit_log add column if not exists ua text;
          alter table visit_log enable row level security;
          -- NO policies on visit_log: anon cannot read it at all.
          create or replace function register_hit() returns jsonb
@@ -1115,8 +1208,13 @@
            hdrs := coalesce(nullif(current_setting('request.headers', true), '')::jsonb, '{}'::jsonb);
            ipf := split_part(coalesce(hdrs->>'x-forwarded-for', hdrs->>'x-real-ip', hdrs->>'cf-connecting-ip', 'unknown'), ',', 1);
            ua := coalesce(hdrs->>'user-agent', 'unknown');
+           -- Bots (incl. Neocities screenshots): no insert, no counter change.
+           if ua ~* '(screenjesus|bot|crawl|spider|headless|puppeteer|playwright|selenium|lighthouse|curl|wget|python-requests|node-fetch|axios|go-http)' then
+             select visits, hits into v, h from site_stats where id = 1;
+             return jsonb_build_object('visitors', v, 'hits', h, 'my', null);
+           end if;
            fp := encode(digest(ipf || '|' || ua || '|pixeel-pepper-7f3a9c', 'sha256'), 'hex');
-           insert into visit_log(fp_hash) values (fp)
+           insert into visit_log(fp_hash, ua) values (fp, left(ua, 300))
            on conflict (fp_hash) do nothing
            returning seq into myseq;
            if myseq is null then
@@ -1145,8 +1243,9 @@
            return jsonb_build_object('visitors', v, 'hits', h, 'my', myseq);
          end $$;
          grant execute on function peek_stats() to anon;
-    Only the SHA-256(IP+UA+pepper) is stored — never raw IPs, no other
-    per-visit logging. Your visitors stay anonymous by design. Legacy
+    Only the SHA-256(IP+UA+pepper) plus the (truncated, 300-char)
+    User-Agent for bot diagnosis is stored — never raw IPs. Your visitors
+    stay anonymous by design. Legacy
     bump_visits()/bump_hits() stay granted so older cached pages keep
     working through the transition.
     Then paste that project's URL + anon key into CONFIG below.
@@ -1257,6 +1356,8 @@
         showAll(res.hits);
       }
       function badShape(res) {
+        // Bots are counted out server-side (my:null) — still render totals.
+        if (res && res.my === null) { res.my = 0; }
         return !res || typeof res.my !== 'number' ||
           typeof res.visitors !== 'number' || typeof res.hits !== 'number';
       }
@@ -1856,6 +1957,8 @@
         if (login.value === '2137' && pass.value === 'MYREALLYSECRTEPASSWORD') {
           msg.innerHTML = '<font size="2" color="#33ff66">ACCESS GRANTED. WELCOME, OPERATOR 2137.</font>';
           loot.style.display = 'block';
+          var modal = document.getElementById('win95Modal');
+          if (modal) modal.style.display = 'block';
           btn.disabled = true;
           btn.style.opacity = '0.4';
           btn.style.cursor = 'default';
@@ -1868,10 +1971,55 @@
       pass.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') unlock(); });
     })();
   </script>
+  <script>
+    // Win95 secret window: X / OK / Escape close it, title bar drags it.
+    (function () {
+      var modal = document.getElementById('win95Modal');
+      var win = document.getElementById('win95Win');
+      var title = document.getElementById('win95Title');
+      if (!modal || !win || !title) return;
+      function close() { modal.style.display = 'none'; }
+      var c = document.getElementById('win95Close');
+      var ok = document.getElementById('win95Ok');
+      if (c) c.addEventListener('click', close);
+      if (ok) ok.addEventListener('click', close);
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && modal.style.display === 'block') close();
+      });
+      title.addEventListener('mousedown', function (ev) {
+        if (ev.target !== title && ev.target.tagName !== 'SPAN') return;
+        var r = win.getBoundingClientRect();
+        win.style.transform = 'none';
+        win.style.left = r.left + 'px';
+        win.style.top = r.top + 'px';
+        var dx = ev.clientX - r.left, dy = ev.clientY - r.top;
+        function move(e2) {
+          win.style.left = (e2.clientX - dx) + 'px';
+          win.style.top = (e2.clientY - dy) + 'px';
+        }
+        function up() {
+          document.removeEventListener('mousemove', move);
+          document.removeEventListener('mouseup', up);
+        }
+        document.addEventListener('mousemove', move);
+        document.addEventListener('mouseup', up);
+        ev.preventDefault();
+      });
+    })();
+  </script>
   <!-- ARG whisper: invisible on the background (#020005 on #020005),
        outside the web box. Only text selection reveals it. -->
   <div style="position:fixed;right:10px;bottom:8px;font-size:10px;color:var(--bg-dark);z-index:2;cursor:default;">MYREALLYSECRTEPASSWORD</div>
   <!-- deploy note: post screenshot-fix push (Neocities screenshots no longer counted — see register_hit) -->
+  <!-- Win95 secret window: opens on vault unlock. Draggable by title bar. -->
+  <div id="win95Modal">
+    <div id="win95Win">
+      <div id="win95Title"><span>the_real_secret.txt — Notepad</span><button id="win95Close" title="Close">X</button></div>
+      <div id="win95Menu">File&nbsp;&nbsp;Edit&nbsp;&nbsp;View&nbsp;&nbsp;Help</div>
+      <div id="win95Body">"There is no gold in here. The machine runs on spite, synthwave, and 3AM YouTube tutorials. (EASTER EGG 3/3 — the vault was the third one all along.)"</div>
+      <div id="win95OkWrap"><button id="win95Ok">OK</button></div>
+    </div>
+  </div>
 </body>
 
 </html>
