@@ -1951,7 +1951,8 @@
       var msg = document.getElementById('vaultMsg');
       if (!login || !pass || !btn || !msg) return;
       function unlock() {
-        if (login.value === '2137' && pass.value === 'MYREALLYSECRETPASSWORD') {
+        var pwOk = pass.value === 'MYREALLYSECRETPASSWORD' || pass.value === 'myreallysecretpassword';
+        if (login.value === '2137' && pwOk) {
           var modal = document.getElementById('win95Modal');
           if (modal) {
             modal.style.display = 'block';
