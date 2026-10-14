@@ -3,9 +3,9 @@
   =============================================================================
   LINKS — PixeelBB2
   Standard subpage: shared terminal skin (style.css) + the fake-[X]
-  power-cut gag (shutdown.js). A SOON_ placeholder for the neighborhood.
-  The .link-row styles in <head> are ready for real links: copy one
-  block per site you want to list.
+  power-cut gag (shutdown.js). The neighborhood: link rows with why-blurbs
+  plus an 88x31 button wall (neighbors + own button with embed code).
+  Blurbs marked TODO are neutral placeholders for the owner to flavor.
   =============================================================================
 -->
 <html lang="en">
@@ -87,7 +87,7 @@
       </div>
 
       <div class="marquee-bar">
-        <marquee behavior="scroll" direction="left" scrollamount="5">+++ QUIET NEIGHBORHOOD +++ LINKS LOADING +++ STAY TUNED +++</marquee>
+        <marquee behavior="scroll" direction="left" scrollamount="5">+++ THE NEIGHBORHOOD IS OPEN +++ SAY HI IN THE GUESTBOOK +++ STAY TUNED +++</marquee>
       </div>
 
       <div class="vintage-nav">
@@ -96,10 +96,79 @@
           LINKS ]</a><a href="guestbook.html">[ GUESTBOOK ]</a>
       </div>
 
-      <!-- SOON_ placeholder: swap this block for the real links list -->
-      <div class="section" style="text-align:center; padding:34px 12px;">
-        <h2 style="font-size:34px; letter-spacing:6px;">SOON_</h2>
-        <p>THE NEIGHBORHOOD IS EMPTY... FOR NOW.</p>
+      <!-- Neighborhood list: one .link-row per site (name + why + button).
+           Blurbs marked TODO are neutral placeholders for the owner to flavor. -->
+      <div class="links-wrap">
+        <p style="text-align:center;">&gt; THE NEIGHBORHOOD IS OPEN. EVERY ENTRY EARNS ITS PLACE WITH A WHY. &lt;</p>
+
+        <div class="link-row">
+          <a href="https://dimden.dev/" target="_blank" rel="noopener">dimden.dev</a>
+          <div class="why">TODO: rewrite — dev toys and web experiments.</div>
+          <a href="https://dimden.dev/" target="_blank" rel="noopener"><img src="https://dimden.dev/services/images/88x31.gif" width="88" height="31" alt="dimden.dev"></a>
+        </div>
+
+        <div class="link-row">
+          <a href="https://aithere.neocities.org/" target="_blank" rel="noopener">Aithere</a>
+          <div class="why">TODO: rewrite — a neighbor worth visiting.</div>
+          <a href="https://aithere.neocities.org/" target="_blank" rel="noopener"><img src="https://aithere.neocities.org/homemedia/mybutton.gif" width="88" height="31" alt="Aithere's website"></a>
+        </div>
+
+        <div class="link-row">
+          <a href="https://summer-o.neocities.org/" target="_blank" rel="noopener">Shadow Knight Ninja</a>
+          <div class="why">TODO: rewrite — a ninja-themed corner.</div>
+          <a href="https://summer-o.neocities.org/" target="_blank" rel="noopener"><img src="https://summer-o.neocities.org/ShadowKnightNinjaButton.gif" width="88" height="31" alt="Shadow Knight Ninja"></a>
+        </div>
+
+        <div class="link-row">
+          <a href="https://cybervixen.dev" target="_blank" rel="noopener">Cybervixen / foxOS</a>
+          <div class="why">TODO: rewrite — foxOS ver. 1.33.7.</div>
+          <a href="https://cybervixen.dev" target="_blank" rel="noopener"><img src="https://cybervixen.dev/img/CyberButton.gif" title="foxOS ver. 1.33.7" alt="Harmony Engineered" width="88" height="31"></a>
+        </div>
+
+        <div class="link-row">
+          <a href="https://c-nder.neocities.org/" target="_blank" rel="noopener" title="c-nder">c-nder</a>
+          <div class="why">TODO: rewrite — c-nder's corner.</div>
+          <a href="https://c-nder.neocities.org/" target="_blank" rel="noopener" title="c-nder"><img src="https://c-nder.neocities.org/buttons/c-nder-button.gif" width="88" height="31" alt="c-nder"></a>
+        </div>
+
+        <div class="link-row">
+          <a href="https://404city.neocities.org/" target="_blank" rel="noopener">404city</a>
+          <div class="why">TODO: rewrite — lost pages welcome.</div>
+          <a href="https://404city.neocities.org/" rel="noopener noreferrer" target="_blank"><img src="https://404city.neocities.org/btn.gif" alt="Website button of https://404city.neocities.org" width="88" height="31" style="image-rendering: pixelated;"></a>
+        </div>
+
+        <div class="link-row">
+          <a href="https://onio.neocities.org" target="_blank" rel="noopener">onio</a>
+          <div class="why">TODO: rewrite — come chat with us!</div>
+          <a href="https://onio.neocities.org" target="_blank" rel="noopener"><img src="https://onio.neocities.org/buttons/onio.gif" width="88" height="31" alt="Come Chat With Us!"></a>
+        </div>
+
+        <div class="link-row">
+          <a href="https://thenamelessarchiv3.neocities.org/" target="_blank" rel="noopener">The Nameless Archiv3</a>
+          <div class="why">TODO: rewrite — the nameless archive.</div>
+          <a href="https://thenamelessarchiv3.neocities.org/" target="_blank" rel="noopener"><img src="https://file.garden/aNIRkiNjtzNrWers/images/my%20buttons/button2.png" alt="the nameless archive" style="height: 31px"></a>
+        </div>
+
+        <div class="box" style="margin-top:12px;">
+          <div class="box-title" style="text-align:center;">&gt; BUTTON WALL &lt;</div>
+          <div class="box-body">
+            <div class="buttons-row">
+              <a href="https://dimden.dev/" target="_blank" rel="noopener"><img src="https://dimden.dev/services/images/88x31.gif" width="88" height="31" alt="dimden.dev"></a>
+              <a href="https://aithere.neocities.org/" target="_blank" rel="noopener"><img src="https://aithere.neocities.org/homemedia/mybutton.gif" width="88" height="31" alt="Aithere's website"></a>
+              <a href="https://summer-o.neocities.org/" target="_blank" rel="noopener"><img src="https://summer-o.neocities.org/ShadowKnightNinjaButton.gif" width="88" height="31" alt="Shadow Knight Ninja"></a>
+              <a href="https://cybervixen.dev" target="_blank" rel="noopener"><img src="https://cybervixen.dev/img/CyberButton.gif" title="foxOS ver. 1.33.7" alt="Harmony Engineered" width="88" height="31"></a>
+              <a href="https://c-nder.neocities.org/" target="_blank" rel="noopener" title="c-nder"><img src="https://c-nder.neocities.org/buttons/c-nder-button.gif" width="88" height="31" alt="c-nder"></a>
+              <a href="https://404city.neocities.org/" rel="noopener noreferrer" target="_blank"><img src="https://404city.neocities.org/btn.gif" alt="Website button of https://404city.neocities.org" width="88" height="31" style="image-rendering: pixelated;"></a>
+              <a href="https://onio.neocities.org" target="_blank" rel="noopener"><img src="https://onio.neocities.org/buttons/onio.gif" width="88" height="31" alt="Come Chat With Us!"></a>
+              <a href="https://thenamelessarchiv3.neocities.org/" target="_blank" rel="noopener"><img src="https://file.garden/aNIRkiNjtzNrWers/images/my%20buttons/button2.png" alt="the nameless archive" style="height: 31px"></a>
+            </div>
+            <p style="text-align:center; margin-top:8px;">&gt; STEAL MY BUTTON &lt;</p>
+            <div class="buttons-row">
+              <a href="https://pixeelbb2.neocities.org/" target="_blank" rel="noopener"><img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" width="88" height="31" alt="PixeelBB2"></a>
+            </div>
+            <textarea class="codebox" rows="3" readonly onclick="this.select()">&lt;a href="https://pixeelbb2.neocities.org/" target="_blank"&gt;&lt;img src="https://pixeelbb2.neocities.org/pixeelbb2-button.png" alt="PixeelBB2"&gt;&lt;/a&gt;</textarea>
+          </div>
+        </div>
       </div>
 
       <div class="vintage-footer">
