@@ -10,7 +10,9 @@
 
   VISITOR CARD (right-hand column)
     #myBox     your personal number, assigned ONCE and frozen forever
-    #totalBox  the global visit count (only first-ever visits bump it)
+    #totalBox  unique visits: distinct browsers that ever drew a number
+    #allBox    total visits: every homepage load bumps it (seeded at 221
+               to match the Neocities baseline, then counts for real)
   Both run on a per-browser LOCAL fallback until Supabase keys are
   pasted in CONFIG below — see the setup comment above that script.
 
@@ -979,8 +981,10 @@
               <div class="cyber-head">&gt; VISITORS &lt;</div>
               <div class="cyber-sub">YOU ARE LUCKY<br>VISITOR NO.</div>
               <div class="cyber-box" id="myBox"></div>
-              <div class="cyber-mid">TOTAL VISITS:</div>
+              <div class="cyber-mid">UNIQUE VISITS:</div>
               <div class="cyber-box" id="totalBox"></div>
+              <div class="cyber-mid">TOTAL VISITS:</div>
+              <div class="cyber-box" id="allBox"></div>
               <div class="cyber-note" id="svcNote" style="display:none;">The service is down</div>
             </div>
             <div class="box" style="margin-top:10px;">
@@ -1067,6 +1071,18 @@
          end $$;
          grant execute on function bump_visits() to anon;
          drop table if exists visit_log;
+    TOTAL-VISITS column (every homepage load; unique sequence untouched):
+         alter table site_stats add column if not exists hits bigint not null default 0;
+         create or replace function bump_hits() returns bigint
+         language plpgsql security definer set search_path = public as $$
+         declare n bigint;
+         begin
+           update site_stats set hits = hits + 1 where id = 1 returning hits into n;
+           return n;
+         end $$;
+         grant execute on function bump_hits() to anon;
+         -- ONE-TIME seed to the Neocities baseline (run once, never re-run):
+         -- update site_stats set hits = 221 where id = 1;
     No per-visit logging on purpose: the counter stores only the aggregate
     total — no IPs, no timestamps, nothing identifying. Your visitors stay
     anonymous by design.
@@ -1096,6 +1112,7 @@
       // so all browsers draw fresh from the cloud total below.
       var KEY = 'pixeel_counter3';
       var MY = 'pixeel_my_number3';
+      var HITS = 'pixeel_hits3'; // local-fallback total-loads counter
       function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
       function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
 
@@ -1155,10 +1172,13 @@
 
       var myBox = new CyberCounter(document.getElementById('myBox'), 6);
       var totalBox = new CyberCounter(document.getElementById('totalBox'), 6);
+      var allBox = new CyberCounter(document.getElementById('allBox'), 6);
       myBox.set(0);
       totalBox.set(0);
+      allBox.set(0);
       function showMy(n) { myBox.set(n); }
       function showTotal(n) { totalBox.set(n); }
+      function showAll(n) { allBox.set(n); }
       // Backend unreachable: say so (and fall back to local counting).
       // Stays hidden otherwise — including pure local mode.
       function showNote() {
@@ -1169,24 +1189,38 @@
       function localFlow() {
         var n = parseInt(lsGet(KEY) || '0', 10) || 0;
         var my = parseInt(lsGet(MY) || '', 10) || 0;
+        var h = parseInt(lsGet(HITS) || '0', 10) || 0;
         if (!my) {
           n += 1;
           my = n;
           lsSet(KEY, String(n));
           lsSet(MY, String(my));
         }
+        h += 1;
+        lsSet(HITS, String(h));
         showMy(my);
         showTotal(n);
+        showAll(h);
       }
       function readTotal() {
         if (!db) return;
-        db.from('site_stats').select('visits').eq('id', 1).single()
+        db.from('site_stats').select('visits,hits').eq('id', 1).single()
           .then(function (res) {
-            if (!res.error && res.data) showTotal(res.data.visits);
+            if (!res.error && res.data) { showTotal(res.data.visits); showAll(res.data.hits); }
             else { localFlow(); showNote(); }
           });
       }
+      // Every homepage load bumps the total-hits count (fire-and-forget).
+      // Runs on its own so a hits failure never disturbs the unique draw.
+      function bumpHits() {
+        if (!db) return;
+        db.rpc('bump_hits').then(function (res) {
+          if (!res.error && typeof res.data === 'number') showAll(res.data);
+          else showNote();
+        });
+      }
       if (CLOUD) {
+        bumpHits();
         var my = parseInt(lsGet(MY) || '', 10) || 0;
         if (!my) {
           // First visit ever: the bumped total IS your number (atomic)
