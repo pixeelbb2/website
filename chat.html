@@ -3,9 +3,8 @@
   =============================================================================
   CHAT — PixeelBB2
   Standard subpage: shared terminal skin (style.css) + the fake-[X]
-  power-cut gag (shutdown.js). Intended to become a direct line to
-  MACHINE ID 2137; for now it's a SOON_ placeholder holding the
-  frequency quiet.
+  power-cut gag (shutdown.js). Live Cbox embed (owner snippet, verbatim)
+  in a phosphor doorway frame + house rules box.
   =============================================================================
 -->
 <html lang="en">
@@ -31,9 +30,9 @@
       font-size: 13px;
     }
 
-    /* Live public chat (IRC). The frame is a guest from another server,
+    /* Live Cbox chat. The frame is a guest from another server,
        so it keeps its own face — we just give it a phosphor doorway. */
-    .irc-frame {
+    .chat-frame {
       display: block;
       width: 100%;
       height: 480px;
@@ -102,7 +101,7 @@
     }
 
     @media (max-width: 700px) {
-      .irc-frame {
+      .chat-frame {
         height: 380px;
       }
     }
@@ -120,11 +119,11 @@
 
       <div class="banner">
         <h1>~ CHAT ~</h1>
-        <div class="subtitle">&gt; frequency temporarily quiet &lt;</div>
+        <div class="subtitle">&gt; live channel, all visitors &lt;</div>
       </div>
 
       <div class="marquee-bar">
-        <marquee behavior="scroll" direction="left" scrollamount="5">+++ QUIET FREQUENCY +++ SOMETHING IS COMING +++ STAY TUNED +++</marquee>
+        <marquee behavior="scroll" direction="left" scrollamount="5">+++ FREQUENCY OPEN +++ SAY SOMETHING +++ STAY TUNED +++</marquee>
       </div>
 
       <div class="vintage-nav">
@@ -133,10 +132,15 @@
           ]</a><a href="guestbook.html">[ GUESTBOOK ]</a>
       </div>
 
-      <!-- SOON_ placeholder: swap this block for the real chat feature -->
-      <div class="section" style="text-align:center; padding:34px 12px;">
-        <h2 style="font-size:34px; letter-spacing:6px;">SOON_</h2>
-        <p>THE FREQUENCY IS QUIET... FOR NOW.</p>
+      <!-- Live Cbox embed (owner snippet, verbatim) + house rules -->
+      <div class="chat-wrap">
+        <iframe class="chat-frame" src="https://www5.cbox.ws/box/?boxid=967989&boxtag=DcLf8a" width="100%" height="450" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+        <div class="rules-box">
+          <font size="2">HOUSE RULES (owner: rewrite in your voice):<br>
+            1. BE DECENT — NO SPAM, NO HATE.<br>
+            2. THE OWNER MODERATES AND DELETES.<br>
+            3. HAVE FUN. THAT'S AN ORDER.</font>
+        </div>
       </div>
 
       <div class="vintage-footer">
@@ -144,7 +148,7 @@
       </div>
     </div>
     <div style="text-align:center;font-size:11px;color:#d9a7ff;margin-top:10px;position:relative;z-index:2;">&gt;
-      silence is temporary &lt;</div>
+      mind the static &lt;</div>
   </main>
 
   <div id="killLine"></div>
