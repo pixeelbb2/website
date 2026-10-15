@@ -37,20 +37,36 @@
       margin: 14px 0;
     }
 
-    .proj-head {
+    /* Always visible: photo left, title + short desc beside it.
+       Click anywhere on it to expand the full article below. */
+    .proj-main {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
       padding: 14px 16px;
-      font-size: 16px;
-      letter-spacing: 2px;
-      color: var(--link-purple);
       cursor: pointer;
       user-select: none;
     }
 
-    .proj-head:hover {
+    .proj-headcol {
+      flex: 1;
+    }
+
+    .proj-title {
+      font-size: 16px;
+      letter-spacing: 2px;
+      color: var(--link-purple);
+    }
+
+    .proj-main:hover .proj-title {
       text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
+    }
+
+    .proj-short {
+      margin-top: 6px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--body-purple);
     }
 
     .proj-toggle {
@@ -58,20 +74,14 @@
       font-size: 14px;
     }
 
-    /* Teaser: closed cards show the photo top + first lines under a
-       fade (proof there is more inside); opening reveals it all. */
     .proj-body {
-      max-height: 88px;
+      max-height: 0;
       overflow: hidden;
       transition: max-height 0.35s ease;
-      -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
-      mask-image: linear-gradient(to bottom, #000 55%, transparent);
     }
 
     .proj-card.open .proj-body {
       max-height: 800px;
-      -webkit-mask-image: none;
-      mask-image: none;
     }
 
     .proj-inner {
@@ -79,12 +89,6 @@
       font-size: 14px;
       line-height: 1.6;
       color: var(--body-purple);
-    }
-
-    .proj-content {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
     }
 
     /* Photo slot: swap the span for an <img> when a real photo exists */
@@ -108,22 +112,18 @@
       display: block;
     }
 
-    .proj-desc {
-      flex: 1;
+    .proj-inner .status {
+      color: var(--term-green);
     }
 
     @media (max-width: 700px) {
-      .proj-content {
+      .proj-main {
         flex-direction: column;
       }
       .proj-photo {
         flex: none;
         width: 100%;
       }
-    }
-
-    .proj-inner .status {
-      color: var(--term-green);
     }
   </style>
 </head>
@@ -152,47 +152,54 @@
           LINKS ]</a><a href="guestbook.html">[ GUESTBOOK ]</a>
       </div>
 
-      <!-- Project accordion: click a header to expand that card -->
+      <!-- Project cards: photo + title + short always visible,
+           click anywhere on the top row to expand the full article -->
       <div class="proj-list">
         <div class="proj-card">
-          <div class="proj-head"><span>&gt; PIXEELBB2.NEOCITIES.ORG_</span><span class="proj-toggle">[+]</span></div>
-          <div class="proj-body"><div class="proj-inner">
-            <div class="proj-content">
-              <div class="proj-photo"><span>NO PHOTO_</span><!-- TODO: replace the span with <img src="..." alt="..."> --></div>
-              <div class="proj-desc">
-                <span class="status">[STATUS: ONLINE]</span><br>
-                This very site. Hand-built HTML/CSS/JS on Neocities: CRT boot sequence,
-                Supabase visitor counter, Atabook guestbook, weekly song automation,
-                and a secret vault that definitely contains nothing of value.<br>
-                <a href="index.html">&gt; visit homepage</a>
-              </div>
+          <div class="proj-main">
+            <div class="proj-photo"><span>NO PHOTO_</span><!-- TODO: replace the span with <img src="..." alt="..."> --></div>
+            <div class="proj-headcol">
+              <div class="proj-title">&gt; PIXEELBB2.NEOCITIES.ORG_</div>
+              <div class="proj-short">My corner of the web — CRT terminal, live counter, secret vault.</div>
             </div>
+            <span class="proj-toggle">[+]</span>
+          </div>
+          <div class="proj-body"><div class="proj-inner">
+            <span class="status">[STATUS: ONLINE]</span><br>
+            This very site. Hand-built HTML/CSS/JS on Neocities: CRT boot sequence,
+            Supabase visitor counter, Atabook guestbook, weekly song automation,
+            and a secret vault that definitely contains nothing of value.<br>
+            <a href="index.html">&gt; visit homepage</a>
           </div></div>
         </div>
         <div class="proj-card">
-          <div class="proj-head"><span>&gt; HOMELAB_</span><span class="proj-toggle">[+]</span></div>
-          <div class="proj-body"><div class="proj-inner">
-            <div class="proj-content">
-              <div class="proj-photo"><span>NO PHOTO_</span><!-- TODO: replace the span with <img src="..." alt="..."> --></div>
-              <div class="proj-desc">
-                <span class="status">[STATUS: HUMMING]</span><br>
-                A growing pile of hardware and self-hosted services. Networking lab,
-                tinkering bench, and the place where things break at 3AM so the
-                website doesn't have to.
-              </div>
+          <div class="proj-main">
+            <div class="proj-photo"><span>NO PHOTO_</span><!-- TODO: replace the span with <img src="..." alt="..."> --></div>
+            <div class="proj-headcol">
+              <div class="proj-title">&gt; HOMELAB_</div>
+              <div class="proj-short">Hardware pile and self-hosted services. It hums.</div>
             </div>
+            <span class="proj-toggle">[+]</span>
+          </div>
+          <div class="proj-body"><div class="proj-inner">
+            <span class="status">[STATUS: HUMMING]</span><br>
+            A growing pile of hardware and self-hosted services. Networking lab,
+            tinkering bench, and the place where things break at 3AM so the
+            website doesn't have to.
           </div></div>
         </div>
         <div class="proj-card">
-          <div class="proj-head"><span>&gt; EMPTY SLOT_</span><span class="proj-toggle">[+]</span></div>
-          <div class="proj-body"><div class="proj-inner">
-            <div class="proj-content">
-              <div class="proj-photo"><span>NO PHOTO_</span><!-- TODO: replace the span with <img src="..." alt="..."> --></div>
-              <div class="proj-desc">
-                <span class="status">[STATUS: IDLE]</span><br>
-                Nothing compiled here yet. Check back after the next late night.
-              </div>
+          <div class="proj-main">
+            <div class="proj-photo"><span>NO PHOTO_</span><!-- TODO: replace the span with <img src="..." alt="..."> --></div>
+            <div class="proj-headcol">
+              <div class="proj-title">&gt; EMPTY SLOT_</div>
+              <div class="proj-short">Nothing compiled here yet.</div>
             </div>
+            <span class="proj-toggle">[+]</span>
+          </div>
+          <div class="proj-body"><div class="proj-inner">
+            <span class="status">[STATUS: IDLE]</span><br>
+            Nothing compiled here yet. Check back after the next late night.
           </div></div>
         </div>
       </div>
@@ -213,18 +220,17 @@
 
   <script src="shutdown.js"></script>
   <script>
-    // Project accordion: clicking a card header toggles that card open.
-    // In-flow expansion pushes the cards below it down, no layout tricks.
+    // Project cards: clicking the always-visible top row (photo +
+    // title + short desc) toggles the full article open below it.
     (function () {
-      var heads = document.querySelectorAll('.proj-head');
-      for (var i = 0; i < heads.length; i++) {
-        heads[i].addEventListener('click', function () {
+      var mains = document.querySelectorAll('.proj-main');
+      for (var i = 0; i < mains.length; i++) {
+        mains[i].addEventListener('click', function () {
           var card = this.parentNode;
           if (!card) return;
-          var open = card.className.indexOf('open') !== -1;
-          card.className = open
-            ? card.className.replace('open', '').replace(/\s+/g, ' ')
-            : (card.className + ' open');
+          var open = card.classList.contains('open');
+          if (open) card.classList.remove('open');
+          else card.classList.add('open');
           var t = this.querySelector('.proj-toggle');
           if (t) t.textContent = open ? '[+]' : '[-]';
         });
