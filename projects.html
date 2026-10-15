@@ -58,14 +58,20 @@
       font-size: 14px;
     }
 
+    /* Teaser: closed cards show the photo top + first lines under a
+       fade (proof there is more inside); opening reveals it all. */
     .proj-body {
-      max-height: 0;
+      max-height: 88px;
       overflow: hidden;
       transition: max-height 0.35s ease;
+      -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+      mask-image: linear-gradient(to bottom, #000 55%, transparent);
     }
 
     .proj-card.open .proj-body {
       max-height: 800px;
+      -webkit-mask-image: none;
+      mask-image: none;
     }
 
     .proj-inner {
