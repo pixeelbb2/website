@@ -1472,14 +1472,13 @@
     /*
       =========================================================================
       BOOT SEQUENCE SCRIPT (index.html only)
-      Drives the CRT power-on seen at the top of the page:
-        1. seed no-select audio, locking the keyclack sounds global-side
-        2. white slit folds out -> the black terminal card expands
-        3. text types line-by-line (the values come from sequenceData)
-        4. white loading bar fills, then a neon purple beam rips past the
+      Drives the CRT power-on seen at the top of the page (silent):
+        1. white slit folds out -> the black terminal card expands
+        2. text types line-by-line (the values come from sequenceData)
+        3. white loading bar fills, then a neon purple beam rips past the
            right edge of the screen
-        5. classic switch-off: flash -> thin line -> dot -> black tube
-        6. after a beat, the overlay fades out to reveal the real site
+        4. classic switch-off: flash -> thin line -> dot -> black tube
+        5. after a beat, the overlay fades out to reveal the real site
       Boot memory: `pixeel_booted` in sessionStorage makes the boot play
       once per tab; in-tab navigation to other pages then skips it. A stored
       nickname (localStorage `pixeel_nick`, legacy from the old guestbook)
@@ -1487,138 +1486,9 @@
       =========================================================================
     */
 
-    /*
-      AUDIO SYNTHESIZER (Web Audio API)
-      Creates old mechanical keyboard clacks with zero audio files.
-    */
-    class RetroSoundSystem {
-      constructor() {
-        this.ctx = null;
-        this.noiseBuf = null;
-        this.enabled = true; // Enabled by default; starts as soon as user interacts
-      }
+    /* Boot visuals are silent by design: no audio engine, no listeners. */
 
-      init() {
-        if (!this.ctx) {
-          const AudioCtx = window.AudioContext || window.webkitAudioContext;
-          this.ctx = new AudioCtx();
-          // One reusable white-noise buffer for all the keycap snaps
-          const len = Math.floor(this.ctx.sampleRate * 0.1);
-          this.noiseBuf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
-          const d = this.noiseBuf.getChannelData(0);
-          for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-        }
-        if (this.ctx.state === 'suspended') {
-          this.ctx.resume();
-        }
-      }
 
-      // One mechanical keystroke: cap snap (filtered noise) + stem thock.
-      // Pitch and velocity jitter every hit so it clatters, not beeps.
-      playTypeTick() {
-        if (!this.enabled || !this.ctx) return;
-        try {
-          const t = this.ctx.currentTime;
-          const snap = this.ctx.createBufferSource();
-          snap.buffer = this.noiseBuf;
-          const bp = this.ctx.createBiquadFilter();
-          bp.type = 'bandpass';
-          bp.frequency.value = 1800 + Math.random() * 2200;
-          bp.Q.value = 1.1;
-          const g = this.ctx.createGain();
-          g.gain.setValueAtTime(0.10 + Math.random() * 0.06, t);
-          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.03);
-          snap.connect(bp);
-          bp.connect(g);
-          g.connect(this.ctx.destination);
-          snap.start(t);
-          snap.stop(t + 0.05);
-
-          const osc = this.ctx.createOscillator();
-          osc.type = 'triangle';
-          osc.frequency.value = 150 + Math.random() * 90;
-          const g2 = this.ctx.createGain();
-          g2.gain.setValueAtTime(0.08, t);
-          g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
-          osc.connect(g2);
-          g2.connect(this.ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.04);
-        } catch (e) { }
-      }
-
-      // Progress bars rattle along: sparse, deep spacebar thuds. Quieter.
-      playHum(pitchRatio) {
-        if (!this.enabled || !this.ctx) return;
-        try {
-          const t = this.ctx.currentTime;
-          const osc = this.ctx.createOscillator();
-          osc.type = 'triangle';
-          osc.frequency.value = 105 + pitchRatio * 55;
-          const gain = this.ctx.createGain();
-          gain.gain.setValueAtTime(0.05, t);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.055);
-
-          const snap = this.ctx.createBufferSource();
-          snap.buffer = this.noiseBuf;
-          const lp = this.ctx.createBiquadFilter();
-          lp.type = 'lowpass';
-          lp.frequency.value = 750;
-          const g2 = this.ctx.createGain();
-          g2.gain.setValueAtTime(0.028, t);
-          g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
-          snap.connect(lp);
-          lp.connect(g2);
-          g2.connect(this.ctx.destination);
-          snap.start(t);
-          snap.stop(t + 0.05);
-        } catch (e) { }
-      }
-
-      // The beam moment is an ENTER slam: loud bottom-out clack + deep thump.
-      playBeamHum() {
-        if (!this.enabled || !this.ctx) return;
-        try {
-          const t = this.ctx.currentTime;
-          const snap = this.ctx.createBufferSource();
-          snap.buffer = this.noiseBuf;
-          const bp = this.ctx.createBiquadFilter();
-          bp.type = 'bandpass';
-          bp.frequency.value = 900;
-          bp.Q.value = 0.8;
-          const gain = this.ctx.createGain();
-          gain.gain.setValueAtTime(0.22, t);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
-          snap.connect(bp);
-          bp.connect(gain);
-          gain.connect(this.ctx.destination);
-          snap.start(t);
-          snap.stop(t + 0.07);
-
-          const osc = this.ctx.createOscillator();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(220, t);
-          osc.frequency.exponentialRampToValueAtTime(70, t + 0.09);
-          const g2 = this.ctx.createGain();
-          g2.gain.setValueAtTime(0.2, t);
-          g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
-          osc.connect(g2);
-          g2.connect(this.ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.12);
-        } catch (e) { }
-      }
-    }
-
-    const sound = new RetroSoundSystem();
-
-    // Unlock Web Audio context seamlessly on the first tap/click anywhere on page
-    window.addEventListener('click', () => sound.init(), { once: true });
-    window.addEventListener('keydown', () => sound.init(), { once: true });
 
     /* DOM Elements */
     const bootOverlay = document.getElementById('bootOverlay');
@@ -1663,7 +1533,6 @@
         function step() {
           if (index < fullText.length) {
             cursor.insertAdjacentText('beforebegin', fullText.charAt(index));
-            sound.playTypeTick();
             index++;
             const jitter = Math.random() * 22 - 10;
             setTimeout(step, Math.max(14, speed + jitter));
@@ -1690,10 +1559,6 @@
           const factor = Math.min(1, elapsed / duration);
           const progress = factor * (2 - factor) * 100;
           progressBarWhite.style.width = `${progress}%`;
-
-          if (Math.floor(elapsed) % 120 < 16) {
-            sound.playHum(factor);
-          }
 
           if (factor < 1) {
             requestAnimationFrame(frame);
@@ -1727,14 +1592,9 @@
           if (elapsed <= innerDuration) {
             const factor = elapsed / innerDuration;
             purpleBeam.style.width = `${innerWidth * factor}px`;
-
-            if (Math.floor(elapsed) % 110 < 16) {
-              sound.playHum(factor);
-            }
           } else {
             if (!soundTriggered) {
               soundTriggered = true;
-              sound.playBeamHum();
               progressTrack.classList.add('done');
             }
 
@@ -1840,7 +1700,6 @@
       // 1. Slit unfolds horizontally
       await wait(280);
       terminalBox.classList.add('state-line');
-      sound.playTypeTick();
 
       // 2. Card expands vertically
       await wait(420);

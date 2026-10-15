@@ -13,8 +13,8 @@ old-web corner hosted on [Neocities](https://pixeelbb2-node.neocities.org).
 
 ## What it is
 
-The homepage boots up like a CRT monitor: synthesized keyboard clacks chime in
-while the machine types out its specs, a loading track fills, a neon purple beam
+The homepage boots up like a CRT monitor: the machine silently types out
+its specs, a loading track fills, a neon purple beam
 rips past the screen's right edge, and the overlay dissolves into the real site.
 Underneath it greets you with a long welcome story about this "corner of the
 World Wide Web" and how the whole mess started with one late-night YouTube video.
@@ -22,8 +22,8 @@ Every other page shares the same terminal skin — a black window with a gradien
 title bar and a fake `[X]` button that yanks the plug when you click it.
 
 No frameworks, no build step. Plain HTML/CSS/JS + Google Fonts + a CDN-hosted
-terminal font (`VCR OSD Mono`). Sounds are synthesized live with the Web Audio
-API — there are zero audio files to host.
+terminal font (`VCR OSD Mono`). The site is silent by design — the only
+sound left is the shutdown gag's synthesized snap/whine/thump.
 
 ## Pages
 
@@ -56,9 +56,9 @@ The about page spins a vinyl whose center label is `cover.png` and whose
 title/artist/button link are loaded from `song.txt` at view time (the values
 baked into `about.html` are only a fallback). The loader then asks the
 **iTunes Search API** (free, no key, CORS-open) for the track: on an artist
-match it swaps the vinyl label to Apple's 600px artwork and makes the vinyl
-clickable for a 30s preview. A miss keeps `cover.png` and no preview —
-never the wrong song.
+match it swaps the vinyl label to Apple's 600px artwork. A miss keeps
+`cover.png` — never the wrong song. (The old 30s click-preview is gone:
+the vinyl stays silent.)
 
 Manual changes (no code edits needed):
 

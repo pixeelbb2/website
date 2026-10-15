@@ -261,17 +261,7 @@
             if (hit.artworkUrl100 && img) {
               img.src = hit.artworkUrl100.replace('100x100bb', '600x600bb');
             }
-            if (hit.previewUrl) {
-              var vinyl = document.querySelector('.vinyl');
-              var audio = new Audio(hit.previewUrl);
-              var playing = false;
-              vinyl.style.cursor = 'pointer';
-              vinyl.title += ' — CLICK TO PREVIEW';
-              vinyl.addEventListener('click', function () {
-                if (playing) { audio.pause(); } else { audio.play(); }
-                playing = !playing;
-              });
-            }
+            /* (vinyl click-preview removed: the vinyl stays silent) */
           });
       })
       .catch(function () { /* keep the baked-in fallback */ });
