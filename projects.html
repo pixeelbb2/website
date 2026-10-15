@@ -3,8 +3,8 @@
   =============================================================================
   PROJECTS — PixeelBB2
   Standard subpage: shared terminal skin (style.css) + the fake-[X]
-  power-cut gag (shutdown.js). A SOON_ placeholder for the workshop.
-  Drop your actual projects into the .section block below.
+  power-cut gag (shutdown.js). The workshop: an accordion of project
+  cards, one per row — click a header to expand it in place.
   =============================================================================
 -->
 <html lang="en">
@@ -24,8 +24,60 @@
 
   <style>
     /* Shared terminal skin, panels and tables live in style.css.
-       No page-specific rules yet — add project styles here when the
-       workshop has something to show off. */
+       Project accordion: one card per row, click a header to expand
+       it in place (others get pushed down, normal document flow). */
+
+    .proj-list {
+      padding: 12px;
+    }
+
+    .proj-card {
+      background: var(--panel-black);
+      border: 1px solid var(--line-purple);
+      margin: 10px 0;
+    }
+
+    .proj-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--link-purple);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .proj-head:hover {
+      text-shadow: 0 0 8px rgba(178, 44, 255, 0.9);
+    }
+
+    .proj-toggle {
+      color: var(--term-green);
+      font-size: 14px;
+    }
+
+    .proj-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+
+    .proj-card.open .proj-body {
+      max-height: 500px;
+    }
+
+    .proj-inner {
+      padding: 0 12px 12px 12px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--body-purple);
+    }
+
+    .proj-inner .status {
+      color: var(--term-green);
+    }
   </style>
 </head>
 
@@ -44,7 +96,7 @@
       </div>
 
       <div class="marquee-bar">
-        <marquee behavior="scroll" direction="left" scrollamount="5">+++ QUIET WORKSHOP +++ PROJECTS COMPILING +++ STAY TUNED +++</marquee>
+        <marquee behavior="scroll" direction="left" scrollamount="5">+++ WORKSHOP OPEN +++ 2 BUILDS AND COUNTING +++ CLICK A CARD +++</marquee>
       </div>
 
       <div class="vintage-nav">
@@ -53,10 +105,34 @@
           LINKS ]</a><a href="guestbook.html">[ GUESTBOOK ]</a>
       </div>
 
-      <!-- SOON_ placeholder: swap this block for the real project list -->
-      <div class="section" style="text-align:center; padding:34px 12px;">
-        <h2 style="font-size:34px; letter-spacing:6px;">SOON_</h2>
-        <p>THE WORKSHOP IS QUIET... FOR NOW.</p>
+      <!-- Project accordion: click a header to expand that card -->
+      <div class="proj-list">
+        <div class="proj-card">
+          <div class="proj-head"><span>&gt; PIXEELBB2.NEOCITIES.ORG_</span><span class="proj-toggle">[+]</span></div>
+          <div class="proj-body"><div class="proj-inner">
+            <span class="status">[STATUS: ONLINE]</span><br>
+            This very site. Hand-built HTML/CSS/JS on Neocities: CRT boot sequence,
+            Supabase visitor counter, Atabook guestbook, weekly song automation,
+            and a secret vault that definitely contains nothing of value.<br>
+            <a href="index.html">&gt; visit homepage</a>
+          </div></div>
+        </div>
+        <div class="proj-card">
+          <div class="proj-head"><span>&gt; HOMELAB_</span><span class="proj-toggle">[+]</span></div>
+          <div class="proj-body"><div class="proj-inner">
+            <span class="status">[STATUS: HUMMING]</span><br>
+            A growing pile of hardware and self-hosted services. Networking lab,
+            tinkering bench, and the place where things break at 3AM so the
+            website doesn't have to.
+          </div></div>
+        </div>
+        <div class="proj-card">
+          <div class="proj-head"><span>&gt; EMPTY SLOT_</span><span class="proj-toggle">[+]</span></div>
+          <div class="proj-body"><div class="proj-inner">
+            <span class="status">[STATUS: IDLE]</span><br>
+            Nothing compiled here yet. Check back after the next late night.
+          </div></div>
+        </div>
       </div>
 
       <div class="vintage-footer">
@@ -64,7 +140,7 @@
       </div>
     </div>
     <div style="text-align:center;font-size:11px;color:#d9a7ff;margin-top:10px;position:relative;z-index:2;">&gt;
-      compiling soon &lt;</div>
+      click a card to expand &lt;</div>
     <div id="killLine"></div>
     <div id="killDot"></div>
     <div id="shutOverlay">
@@ -74,6 +150,25 @@
   </main>
 
   <script src="shutdown.js"></script>
+  <script>
+    // Project accordion: clicking a card header toggles that card open.
+    // In-flow expansion pushes the cards below it down, no layout tricks.
+    (function () {
+      var heads = document.querySelectorAll('.proj-head');
+      for (var i = 0; i < heads.length; i++) {
+        heads[i].addEventListener('click', function () {
+          var card = this.parentNode;
+          if (!card) return;
+          var open = card.className.indexOf('open') !== -1;
+          card.className = open
+            ? card.className.replace('open', '').replace(/\s+/g, ' ')
+            : (card.className + ' open');
+          var t = this.querySelector('.proj-toggle');
+          if (t) t.textContent = open ? '[+]' : '[-]';
+        });
+      }
+    })();
+  </script>
 </body>
 
 </html>
