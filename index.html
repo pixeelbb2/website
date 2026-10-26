@@ -1280,7 +1280,13 @@
       var SUPABASE_URL = 'https://gvvlbffccrcdxpzbluwl.supabase.co';
       var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2dmxiZmZjY3JjZHhwemJsdXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4ODQyMDAsImV4cCI6MjEwNzQ2MDIwMH0.F_0wiuCn37CzxADee8VbwNqEDKweBNmwF4Md8dsagLo';
       var HIT_URL = SUPABASE_URL + '/rest/v1/rpc/register_hit';
+      var PEEK_URL = SUPABASE_URL + '/rest/v1/rpc/peek_stats';
       // (no client identity token: the server fingerprints IP+UA per hit)
+
+      // localStorage keys for the offline fallback (last-known numbers).
+      var LS_VISITORS = 'pixeel_counter_visitors';
+      var LS_HITS = 'pixeel_counter_hits';
+      var LS_MY = 'pixeel_counter_my';
 
       /* CyberCounter(root, length): fixed 7-segment slots (default 6).
          Leading positions stay dark ghosts; the lit run glows neon green
@@ -1351,13 +1357,34 @@
         if (n) n.style.display = '';
       }
 
+      // Persist last-known numbers to localStorage for offline fallback.
+      function persist(res) {
+        try {
+          localStorage.setItem(LS_VISITORS, res.visitors);
+          localStorage.setItem(LS_HITS, res.hits);
+          localStorage.setItem(LS_MY, res.my);
+        } catch (e) { }
+      }
+
+      // Restore last-known numbers from localStorage.
+      function restore() {
+        try {
+          return {
+            visitors: parseInt(localStorage.getItem(LS_VISITORS), 10) || 0,
+            hits: parseInt(localStorage.getItem(LS_HITS), 10) || 0,
+            my: parseInt(localStorage.getItem(LS_MY), 10) || 0
+          };
+        } catch (e) {
+          return { visitors: 0, hits: 0, my: 0 };
+        }
+      }
+
       // (counting lives server-side in register_hit(); the client renders.)
       // Session rule: FIRST load in a tab session POSTs register_hit()
       // (new fingerprint => unique+1, known => pageview+1); repeat loads
       // in the SAME tab (refresh, back-nav) only PEEK — live numbers,
       // zero bumps. No token is stored — nothing for a deploy to invalidate.
       var SES = 'pixeel_hit_session';
-      var PEEK_URL = SUPABASE_URL + '/rest/v1/rpc/peek_stats';
       function sessionCounted() {
         try { return !!sessionStorage.getItem(SES); } catch (e) { return false; }
       }
@@ -1368,6 +1395,7 @@
         showMy(res.my);
         showTotal(res.visitors);
         showAll(res.hits);
+        persist(res);
       }
       function badShape(res) {
         // Bots are counted out server-side (my:null) — still render totals.
@@ -1400,7 +1428,12 @@
           if (badShape(res)) throw new Error('bad shape');
           markSessionCounted();
           render(res);
-        }).catch(function () { showNote(); });
+        }).catch(function () {
+          // Supabase unreachable: fall back to last-known numbers.
+          var cached = restore();
+          render(cached);
+          showNote();
+        });
       }
       hitAndRender();
     })();

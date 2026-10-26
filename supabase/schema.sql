@@ -93,3 +93,8 @@ grant execute on function bump_hits() to anon;
 -- update site_stats set visits = 0, hits = 0 where id = 1;
 -- truncate visit_log;
 -- alter sequence visit_log_seq restart with 1;
+
+-- Resync visitor counter: make site_stats.visitors match visit_log row count.
+-- Run once after deploy to fix desync between visitors aggregate and visit_log.
+UPDATE site_stats SET visitors = (SELECT COUNT(*) FROM visit_log) WHERE id = 1;
+SELECT setval('visit_log_seq', COALESCE((SELECT MAX(seq) FROM visit_log), 1));
